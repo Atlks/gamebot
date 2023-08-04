@@ -7,18 +7,18 @@ namespace app\controller;
 use think\Request;
 use app\model\Setting;
 use app\model\BotWords;
-use app\common\Game;
-use app\common\NNGame;
+ use app\common\Game2 as Game;
+//use app\common\NNGame;
 use app\model\Test;
 use app\common\Logs;
 use app\common\GameLogic;
 
-class Handle
+class Handle2
 {
     public $Bot_Token = "";
     /**
      * 显示资源列表
-     *
+     *    s=handle/processMessage
      * @return \think\Response
      */
     public function index()
@@ -65,11 +65,41 @@ class Handle
         $payload = json_encode($parameters);
         //header('Content-Length:' . strlen($payload));
         //echo $payload;
-
+     //   var_dump($parameters);
+       //  var_dump(json($parameters));
         return json($parameters)->header(['Content-Length' => $payload]);
     }
+    public function processMessageTest()
+    {
+       //   var_dump(999);
+          $t=file_get_contents('C:\w\sdkprj\732.json');
+          $j=json_decode($t,true);
+          $this-> processMessage($j);
+      //    var_dump(111);
+    }
 
-    private function processMessage($message)
+
+
+
+      //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/processMessageTest
+    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/gettypex
+    function gettypex()
+    {
+
+        file_put_contents("kkkk.log",111,FILE_APPEND);
+      //  var_dump(111);
+
+    $rows=  \think\Facade\Db::name('bet_types00') ->whereRaw("玩法='龙虎和玩法'")->select();
+     // $rows=  \think\Db::query('select * from bet_typeds where 1=1');
+     //$rows=  \think\Facade\Db::name('bet_types')->select();
+     $rows=  \think\Facade\Db::name('bet_types') ->whereRaw("玩法='龙虎和玩法'")->select();
+
+     file_put_contents("351.json",json_encode($rows));
+    //  var_dump($rows);
+   //   var_dump($rows[0]['玩法']);
+    }
+
+    public function processMessage($message)
     {
         $bot = new \TelegramBot\Api\BotApi($this->Bot_Token);
         // process incoming message
@@ -132,14 +162,22 @@ class Handle
         if (isset($message['text'])) {
             // incoming text message
             $text = $message['text'];
-            $game = new Game();
+          //  $cmd= ' return new '. parse_ini_file(__DIR__."/../../.env")['handle_game'].'();';
+          //  var_dump($cmd);
+          //  $game=  eval($cmd);
+          $game=new \app\common\Game2();
+
+          //  $game   new app\common\GameSsc();
+            var_dump($game);
 
             if (empty($game->getPlayer($user_id))) {
                 $game->createPlayer($user_id, $full_name, $user_name);
             }
 
             $game->receive($message_id);
+            //start bet
             $reply_text =  $game->player_exec($text, Setting::find(3)->value == 1);
+            var_dump( $reply_text);   //"下注命令错误"
 
             if (!empty($reply_text)) {
 
@@ -163,7 +201,8 @@ class Handle
                     {
                         $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($game->keyboard);
                     }
-
+                    //keyboard just menu list
+                //    var_dump( $keyboard); //null
                     $params =
                         [
                             'chat_id' => $chat_id,

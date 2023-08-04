@@ -14,22 +14,11 @@ use app\common\helper;
 
 function sendmessage($text)
 {
-    //echo $text;   http://localhost:888/index.php?s=gamelogic/fff
-    //   s=gamelogic/fff
+    //echo $text;
 }
 
 class Gamelogic
 {
-
-    function fff()
-{
-    require_once __DIR__."/../common/function.php";
-    require_once __DIR__."/../lotry.php";
-    var_dump(ff449()) ;
-     echo 999;
-
-     var_dump(dwijyo("前顺33", "90175"));
-}
     /**
      * 显示资源列表
      *

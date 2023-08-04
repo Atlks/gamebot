@@ -15,7 +15,7 @@ use app\common\helper;
 use app\model\GameString;
 use think\log;
 
-class Game
+class Game2
 {
     // 当前玩家
     private $player = null;
@@ -204,9 +204,11 @@ class Game
         return $this->player;
     }
 
-
+    //  bet v2222
     public function regex_betV2($content)
     {
+
+        var_dump($content);
         if (!$this->player) return;
         $config = Config::find(1);
         $this->min_limit = $config['Min_limit'];
@@ -223,6 +225,8 @@ class Game
         $text = $content;
 
         $bet_types = [];
+        var_dump($this->bet_types); //   bet RX FROM DB
+        // select betrx from db
         foreach ($this->bet_types as $type) {
             array_push($bet_types, $type['Regex']);
         }
@@ -237,31 +241,7 @@ class Game
 
         foreach ($bet_types as $v) {
 
-            if (preg_match('/^[A-C]大双$|^[A-C]大单$|^[A-C]小双$|^[A-C]小单$/iu', $v)) {
-                $pattern_abc_zuhe = $pattern_abc_zuhe === null ? $v . "[1-9]\d+" : $pattern_abc_zuhe . "|" . $v . "[1-9]\d+";
-            }
-
-            if (preg_match('/^大单$|^大双$|^小单$|^小双$|^尾大双$|^尾大单$|^尾小双$|^尾小单$/u', $v)) {
-                if ($first) {
-                    $pattern_zuhe = $pattern_zuhe === null ? "[1-9]\d+" . $v : $pattern_zuhe . "|" . "[1-9]\d+" . $v;
-                } else {
-                    $pattern_zuhe = $pattern_zuhe === null ?  $v . "[1-9]\d+" : $pattern_zuhe . "|" . $v . "[1-9]\d+";
-                }
-            } else if (preg_match('/^尾双$|^尾单$|^尾小$|^尾大$/u', $v)) {
-                if ($first) {
-                    $pattern = $pattern === null ?  "[1-9]\d+" . $v : $pattern . "|" . "[1-9]\d+" . $v;
-                } else {
-                    $pattern = $pattern === null ?  $v . "[1-9]\d+" : $pattern . "|" . $v . "[1-9]\d+";
-                }
-            } else if (preg_match('/^[大|小|单|双]$/u', $v)) {
-                if ($first) {
-                    $pattern = $pattern === null ?  "[1-9]\d+" . $v : $pattern . "|" . "[1-9]\d+" . $v;
-                } else {
-                    $pattern = $pattern === null ?  $v . "[1-9]\d+" : $pattern . "|" . $v . "[1-9]\d+";
-                }
-            } else {
-                $pattern = $pattern === null ?  $v . "[1-9]\d+" : $pattern . "|" . $v . "[1-9]\d+";
-            }
+            //....
         }
 
         $pattern_abc_zuhe = '/' . $pattern_abc_zuhe . '/iu';
@@ -291,103 +271,112 @@ class Game
             }
         }
         $text = preg_replace('/\ /', "", $text);
+        $text = "";
+        var_dump($text);   // "1/大/10"
         if (!empty($text))
             return "下注命令错误";
+
+        array_push($bet_str, $content);
 
         $before_bet = $this->player->getBetRecord($this->lottery_no);
         $bets = array();
         $text = "";
+        $bet_str = array_filter($bet_str);
+        var_dump($bet_str);
         foreach ($bet_str as $str) {
-            foreach ($this->bet_types as $t) {
-                $match = false;
-                if (preg_match('/^' . $t['Regex'] . '\d+$/iu', $str, $out)) {
-                    $type = $t;
-                    $temp = preg_replace('/^' . $t['Regex'] . '/iu', "", $str);
-                    preg_match('/\d+/', $temp, $m);
-                    $amount = intval($m[0]) * 100;
-                    $match = true;
-                } else if (preg_match('/^\d+' . $t['Regex'] . '$/iu', $str, $out)) {
-                    $type = $t;
-                    $temp = preg_replace('/' . $t['Regex'] . '$/iu', "", $str);
-                    preg_match('/\d+/', $temp, $m);
-                    $amount = intval($m[0]) * 100;
-                    $match = true;
-                }
-                if ($match) {
-                    $bet_text = $type['Display'];
-                    $bet_text = $bet_text . " " . $amount / 100;
-                    $bet = [
-                        'bet_type' => $type,
-                        'text' => $bet_text,
-                        'amount' => $amount,
-                    ];
 
-                    if ($bet['amount'] == 0)
-                        break;
+            $match = false;
 
-                    $min = $type['Bet_Min'];
-                    if ($min <= 0)
-                        $min = $this->min_limit;
-                    if ($bet['amount'] < $min) {
-                        return $text = "没有达到最小下注:" . $min / 100;
-                    }
+            require_once __DIR__ . "/../lotry.php";
+            $bet_nums = $str;
+            $bet_nums = trim($bet_nums);
+            var_dump($bet_nums);
+            var_dump(getWefa($bet_nums));
+            //  if (getWefa($bet_nums) != "") {
+            $amount = getAmt_frmBetStr($bet_nums) * 100;  //bcs money amt is base fen...so   cheni 100
 
-                    if ($bet['amount'] > $type['Bet_Max']) {
-                        return $text = "超过单笔的最大下注,限额:" . $type['Bet_Max'] / 100;
-                    }
 
-                    if (isset($before_bet[$type['Id']]))
-                        $before_bet[$type['Id']] += $bet['amount'];
-                    else
-                        $before_bet[$type['Id']] = $bet['amount'];
 
-                    if ($before_bet[$type['Id']] > $type['Bet_Max_Total']) {
-                        return $text = "超过总最大下注,限额:" . $type['Bet_Max_Total'] / 100;
-                    }
 
-                    $text = $text . $bet_text . "(" . $type['Odds'] . "赔率)\r\n";
-                    $total_bet_amount += $bet['amount'];
 
-                    array_push($bets, $bet);
-                }
+            $bet_text = $type['Display'];
+            $bet_text = $bet_text . " " . $amount / 100;
+            $bet = [
+                'bet_type' => $type,
+                'text' => $bet_text,
+                'amount' => $amount,
+            ];
+
+            if ($bet['amount'] == 0)
+                break;
+
+            $min = $type['Bet_Min'];
+            if ($min <= 0)
+                $min = $this->min_limit;
+            if ($bet['amount'] < $min) {
+                return $text = "没有达到最小下注:" . $min / 100;
             }
+
+            if ($bet['amount'] > $type['Bet_Max']) {
+                return $text = "超过单笔的最大下注,限额:" . $type['Bet_Max'] / 100;
+            }
+
+            if (isset($before_bet[$type['Id']]))
+                $before_bet[$type['Id']] += $bet['amount'];
+            else
+                $before_bet[$type['Id']] = $bet['amount'];
+
+            if ($before_bet[$type['Id']] > $type['Bet_Max_Total']) {
+                return $text = "超过总最大下注,限额:" . $type['Bet_Max_Total'] / 100;
+            }
+
+            $text = $text . $bet_text . "(" . $type['Odds'] . "赔率)\r\n";
+            $total_bet_amount += $bet['amount'];
+
+            array_push($bets, $bet);
         }
+
 
         if ($total_bet_amount > $this->player->getBalance(false)) {
             return $this->getWords('下注余额不足');
         }
 
-        if (count($bets) > 0) {
-            $this->action = true;
-            $text = $text . "\r\n";
+        var_dump(count($bets));
 
-            foreach ($bets as $key => $value) {
-                if (!$this->player->Bet($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'])) {
-                    $text = "下注失败:" . $this->player->get_last_error();
-                    $this->action = false;
-                    return $text;
-                }
-            };
+        $this->action = true;
+        $text = $text . "\r\n";
 
-            $current_bets = $this->player->getBetRecord($this->lottery_no);
-            $text = "";
-            foreach ($current_bets as $k => $v) {
-                $res = BetTypes::where('Id', $k)->find();
-                $text .= $res->Display . "-" . $v / 100 . "(" . $res->Odds . "赔率)\r\n";
+        foreach ($bets as $key => $value) {
+            if (!$this->player->Bet($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'])) {
+                $text = "下注失败:" . $this->player->get_last_error();
+                $this->action = false;
+                return $text;
             }
+        };
 
-            $text =
-                "【" . $this->player->getName() . '-' . $this->player->getId() . '】' . "\r\n"
-                . '下注内容：' . "\r\n"
-                . $text
-                . "\r\n"
-                . "余额:" . $this->player->getBalance();
-            return $text;
+        $current_bets = $this->player->getBetRecord($this->lottery_no);
+        $text = "";
+        foreach ($current_bets as $k => $v) {
+            $res = BetTypes::where('Id', $k)->find();
+            $text .= $res->Display . "-" . $v / 100 . "(" . $res->Odds . "赔率)\r\n";
         }
+
+        $betNums105 = $content;
+        $text =
+            "【" . $this->player->getName() . '-' . $this->player->getId() . '】' . "\r\n"
+            . '下注内容：' . $content . "\r\n"
+            //   . $text
+            . "\r\n"
+            . "余额:" . $this->player->getBalance();
+        return $text;
+
 
         return "";
     }
 
+  
+
+    //depx
     public function regex_bet($content)
     {
         if (!$this->player) return;
@@ -612,10 +601,12 @@ class Game
         return "";
     }
 
-
+    //bet acton
     public function player_exec($text, $stop_bet = false)
     {
         // 先判断是否是执行一般指令
+    //    var_dump($this->exec_pattern);   //"/^(余额|流水|取消全部注单|取消全部|取消下注|取消|下分\d+$|回\d+$|下\d+$|最近下注|zd|开奖|上分|地址|财务|充值|返水|反水|查\d+$|上分\d+$|上\d+$|走势|历史|汇旺)$/u"
+        //  var_dump( $cmd);
         if (preg_match($this->exec_pattern, $text, $cmd)) {
             if (preg_match('/\d+$/u', $cmd[0], $test)) {
                 $cmd[0] = substr($cmd[0], 0, -strlen($test[0])) . "\d+$";
@@ -627,6 +618,7 @@ class Game
         }
 
         if ($stop_bet) return "封盘时请不要下注!";
+
         $res = $this->regex_betV2($text);
 
         return $res;

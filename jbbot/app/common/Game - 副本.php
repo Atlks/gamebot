@@ -204,9 +204,11 @@ class Game
         return $this->player;
     }
 
-
+//  bet v2222
     public function regex_betV2($content)
     {
+
+        var_dump($content);
         if (!$this->player) return;
         $config = Config::find(1);
         $this->min_limit = $config['Min_limit'];
@@ -223,6 +225,8 @@ class Game
         $text = $content;
 
         $bet_types = [];
+        var_dump($this->bet_types);//   bet RX FROM DB
+        // select betrx from db
         foreach ($this->bet_types as $type) {
             array_push($bet_types, $type['Regex']);
         }
@@ -291,6 +295,8 @@ class Game
             }
         }
         $text = preg_replace('/\ /', "", $text);
+        $text="";
+        var_dump(  $text );   // "1/大/10"
         if (!empty($text))
             return "下注命令错误";
 
@@ -612,10 +618,12 @@ class Game
         return "";
     }
 
-
+     //bet acton
     public function player_exec($text, $stop_bet = false)
     {
         // 先判断是否是执行一般指令
+        var_dump($this->exec_pattern);   //"/^(余额|流水|取消全部注单|取消全部|取消下注|取消|下分\d+$|回\d+$|下\d+$|最近下注|zd|开奖|上分|地址|财务|充值|返水|反水|查\d+$|上分\d+$|上\d+$|走势|历史|汇旺)$/u"
+      //  var_dump( $cmd);
         if (preg_match($this->exec_pattern, $text, $cmd)) {
             if (preg_match('/\d+$/u', $cmd[0], $test)) {
                 $cmd[0] = substr($cmd[0], 0, -strlen($test[0])) . "\d+$";
@@ -627,6 +635,7 @@ class Game
         }
 
         if ($stop_bet) return "封盘时请不要下注!";
+
         $res = $this->regex_betV2($text);
 
         return $res;

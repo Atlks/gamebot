@@ -38,6 +38,10 @@ class ExceptionHandle extends Handle
     {
         // 使用内置的方式记录异常日志
         parent::report($exception);
+        $errdir="";
+        $j=json_encode($exception,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt", $exception->getMessage() .PHP_EOL, FILE_APPEND);
+        file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt",  $j.PHP_EOL, FILE_APPEND);
     }
 
     /**

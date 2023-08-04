@@ -34,6 +34,26 @@ class Index extends BaseController
         var_dump($res);
     }
 
+    public function setHookSsc()
+    {
+        $token = Setting::find(1)->s_value;
+        $bot = new \TelegramBot\Api\BotApi($token);
+        $host = Request::host();
+        $url = $host . "/index.php?s=handle2/index";
+        $res = $bot->setWebhook($url);
+        var_dump($res);
+    }
+
+    public function setHook2()
+    {
+        $token = Setting::find(1)->s_value;
+        $bot = new \TelegramBot\Api\BotApi($token);
+        $host = Request::host();
+        $url = $host . urldecode($_GET['hookurl']);
+        $res = $bot->setWebhook($url);
+        var_dump($res);
+    }
+
     public function HookInfo()
     {
         $token = Setting::find(1)->s_value;
