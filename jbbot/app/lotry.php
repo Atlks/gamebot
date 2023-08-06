@@ -74,16 +74,15 @@ function getWefa($bet_nums)
     $numb = $bet_nums;
    // echo "betnum:" . $numb;
     $wefa_rex = '特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d[大|小|单|双]\d+,和值大小单双玩法=和[大|小|单|双]\d+,龙虎和玩法=[龙|虎|和]\d+,前后三玩法=[前|后][豹|顺|对|半|杂]\d+';
-    $wefa_rex = '特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d\/[大小单双],和值大小单双玩法=和[大小单双],龙虎和玩法=[龙虎和],前后三玩法=[前中后][豹顺对半杂]';
-
+    $wefa_rex = '特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d\/[大小单双]\/\d+';
+    $wefa_rex = $wefa_rex .",和值大小单双玩法=和[大小单双]\d+,龙虎和玩法=[龙虎和]\d+,,前后三玩法=[前中后][豹顺对半杂]\d+";
     // 和值单独判断.bcs rex cant ok... in php 
     var_dumpx($numb);
     // 和值单独判断.bcs rex cant ok... in php 
-    if (startsWith($numb, "和"))
-        return  "和值大小单双玩法";
-    else if (startsWith($numb, "前") || startsWith($numb, "中") || startsWith($numb, "后"))
+ 
+      if (startsWith($numb, "前") || startsWith($numb, "中") || startsWith($numb, "后"))
         return  "前后三玩法";
-    else if (startsWith($numb, "龙") || startsWith($numb, "虎") || startsWith($numb, "和"))
+    else if (startsWith($numb, "龙") || startsWith($numb, "虎") )
         return  "龙虎和玩法";
 
     global $wefa_rex;
@@ -101,20 +100,20 @@ function getWefa($bet_nums)
         $wefa = $a100[0];
         $rx = $a100[1];
 
-        echo PHP_EOL;
-        echo "----------------------------------";
-        echo PHP_EOL;
-        print_r($numb);
-        print_r($wefa);
-        print_r($rx);
-        $p = '/'  . $rx . '/';
-        print_r($p);
+      //  echo PHP_EOL;
+     //   echo "----------------------------------";
+     //   echo PHP_EOL;
+        print_rx($numb);
+        print_rx($wefa);
+        print_rx($rx);
+        $p = '/^'  . $rx . '$/iu';
+        print_rx($p);
 
         if (preg_match($p, $numb)) {
-            print_r("     match..");
+            print_rx("     match..");
             return   $wefa;
         } else
-            print_r("   not match..");
+            print_rx("   not match..");
     }
 
     $arr = array_map(function ($item) {
@@ -130,7 +129,7 @@ function dwijyo($betNum,   $bonusNum)
     $wefa = getWefa($betNum);
     //global $glb;
     $glb['wefa'] = $wefa;
- //   print_r($glb);
+ //   print_rx($glb);
     var_dumpx($wefa);
     if ($wefa == "特码球玩法") {
         $cyoIdex = str_split($betNum)[0];

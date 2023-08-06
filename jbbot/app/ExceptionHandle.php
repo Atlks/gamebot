@@ -40,8 +40,12 @@ class ExceptionHandle extends Handle
         parent::report($exception);
         $errdir="";
         $j=json_encode($exception,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+
+        \think\facade\Log::info($exception->getFile().":".$exception->getLine());
+        \think\facade\Log::info($exception->getMessage());
         file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt", $exception->getMessage() .PHP_EOL, FILE_APPEND);
         file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt",  $j.PHP_EOL, FILE_APPEND);
+        throw  $exception;
     }
 
     /**
@@ -54,8 +58,10 @@ class ExceptionHandle extends Handle
      */
     public function render($request, Throwable $e): Response
     {
+        $exception=$e;
         // 添加自定义异常处理机制
-
+        \think\facade\Log::info($exception->getFile().":".$exception->getLine());
+        \think\facade\Log::info($exception->getMessage());
         // 其他错误交给系统处理
         return parent::render($request, $e);
     }

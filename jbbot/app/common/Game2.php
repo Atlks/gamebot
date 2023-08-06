@@ -15,6 +15,9 @@ use app\common\helper;
 use app\model\GameString;
 use think\log;
 
+function var_dumpx($o){
+  //  echo  json_decode($o);
+}
 class Game2
 {
     // 当前玩家
@@ -65,6 +68,8 @@ class Game2
             $this->getPlayer($from);
         }
         $bot_words = BotWords::where('Id', 1)->find();
+
+    
 
         $this->bot_words =
             [
@@ -204,85 +209,39 @@ class Game2
         return $this->player;
     }
 
+ 
+
     //  bet v2222
     public function regex_betV2($content)
     {
-
-        var_dump($content);
+     //   define('NO_CACHE_RUNTIME',True);
+        var_dumpx("218L betnums:".$content);
+        \think\facade\Log::info("215L");
+        \think\facade\Log::info($content);
         if (!$this->player) return;
         $config = Config::find(1);
         $this->min_limit = $config['Min_limit'];
         $total_bet_amount = 0;
 
-        $regext_first = '/^[1-9]/';
-        // ABC组合位
-        $pattern_abc_zuhe = null;
-        // 组合
-        $pattern_zuhe = null;
+
         $pattern = null;
 
         // 先判断
         $text = $content;
 
         $bet_types = [];
-        var_dump($this->bet_types); //   bet RX FROM DB
+        var_dumpx($this->bet_types); //   bet RX FROM DB
         // select betrx from db
-        foreach ($this->bet_types as $type) {
-            array_push($bet_types, $type['Regex']);
-        }
+//echo  var_export($content,true) ;
 
-        $first = preg_match($regext_first, $content);
-
-        foreach ($bet_types as $v) {
-            if (preg_match('/^' . $v . '/iu', $text)) {
-                $first = false;
-            }
-        }
-
-        foreach ($bet_types as $v) {
-
-            //....
-        }
-
-        $pattern_abc_zuhe = '/' . $pattern_abc_zuhe . '/iu';
-        $pattern = '/' . $pattern . '/iu';
-        $pattern_zuhe = '/' . $pattern_zuhe . '/u';
-        //下注语句 array
-        $bet_str = [];
-        /*
-        if (preg_match_all($pattern_abc_zuhe, $text, $out)) {
-            foreach ($out[0] as $bet) {
-                $text = preg_replace('/' . $bet . '/iu', "", $text, 1);
-                array_push($bet_str, $bet);
-            }
-        }
-*/
-        if (preg_match_all($pattern_zuhe, $text, $out)) {
-            foreach ($out[0] as $bet) {
-                $text = preg_replace('/' . $bet . '/u', "", $text, 1);
-                array_push($bet_str, $bet);
-            }
-        }
-
-        if (preg_match_all($pattern, $text, $out)) {
-            foreach ($out[0] as $bet) {
-                $text = preg_replace('/' . $bet . '/iu', "", $text, 1);
-                array_push($bet_str, $bet);
-            }
-        }
-        $text = preg_replace('/\ /', "", $text);
-        $text = "";
-        var_dump($text);   // "1/大/10"
-        if (!empty($text))
-            return "下注命令错误";
-
+        $bet_str=[];
         array_push($bet_str, $content);
 
         $before_bet = $this->player->getBetRecord($this->lottery_no);
         $bets = array();
         $text = "";
         $bet_str = array_filter($bet_str);
-        var_dump($bet_str);
+        var_dumpx( var_export($bet_str,true) );
         foreach ($bet_str as $str) {
 
             $match = false;
@@ -290,14 +249,26 @@ class Game2
             require_once __DIR__ . "/../lotry.php";
             $bet_nums = $str;
             $bet_nums = trim($bet_nums);
-            var_dump($bet_nums);
-            var_dump(getWefa($bet_nums));
-            //  if (getWefa($bet_nums) != "") {
+            var_dumpx($bet_nums);
+            var_dumpx(getWefa($bet_nums));
+
+
+
+            //  var_dumpx($rows);
+            //   var_dumpx($rows[0]['玩法']);
+            if (getWefa($bet_nums) == "")
+                continue;
             $amount = getAmt_frmBetStr($bet_nums) * 100;  //bcs money amt is base fen...so   cheni 100
 
 
-
-
+            $wanfa = getWefa($bet_nums);
+            var_dump("265L wanfa:".$wanfa);
+            $rows =  \think\facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
+            \think\facade\Log::info("262L rows count:". count($rows)); 
+            if (count($rows) == 0)
+                continue;
+            $type = $rows[0];
+            //  file_put_contents("351.json",json_encode($rows));
 
             $bet_text = $type['Display'];
             $bet_text = $bet_text . " " . $amount / 100;
@@ -336,12 +307,12 @@ class Game2
             array_push($bets, $bet);
         }
 
-
+        \think\facade\Log::info("305L  "); 
         if ($total_bet_amount > $this->player->getBalance(false)) {
             return $this->getWords('下注余额不足');
         }
 
-        var_dump(count($bets));
+        var_dumpx(count($bets));
 
         $this->action = true;
         $text = $text . "\r\n";
@@ -368,13 +339,19 @@ class Game2
             //   . $text
             . "\r\n"
             . "余额:" . $this->player->getBalance();
+
+         //   var_dump($text);
+            file_put_contents( "exGlb304_55808.txt",   $text, FILE_APPEND);
+            file_put_contents( "exGlb304_55808.txt",   var_export( $text, true), FILE_APPEND);
+            \think\facade\Log::info("340L");
+            \think\facade\Log::info($text);
         return $text;
 
 
         return "";
     }
 
-  
+
 
     //depx
     public function regex_bet($content)
@@ -605,8 +582,8 @@ class Game2
     public function player_exec($text, $stop_bet = false)
     {
         // 先判断是否是执行一般指令
-    //    var_dump($this->exec_pattern);   //"/^(余额|流水|取消全部注单|取消全部|取消下注|取消|下分\d+$|回\d+$|下\d+$|最近下注|zd|开奖|上分|地址|财务|充值|返水|反水|查\d+$|上分\d+$|上\d+$|走势|历史|汇旺)$/u"
-        //  var_dump( $cmd);
+        //    var_dumpx($this->exec_pattern);   //"/^(余额|流水|取消全部注单|取消全部|取消下注|取消|下分\d+$|回\d+$|下\d+$|最近下注|zd|开奖|上分|地址|财务|充值|返水|反水|查\d+$|上分\d+$|上\d+$|走势|历史|汇旺)$/u"
+        //  var_dumpx( $cmd);
         if (preg_match($this->exec_pattern, $text, $cmd)) {
             if (preg_match('/\d+$/u', $cmd[0], $test)) {
                 $cmd[0] = substr($cmd[0], 0, -strlen($test[0])) . "\d+$";
@@ -620,6 +597,8 @@ class Game2
         if ($stop_bet) return "封盘时请不要下注!";
 
         $res = $this->regex_betV2($text);
+
+        \think\facade\Log::info("596L betRzt: ". $res ); 
 
         return $res;
     }

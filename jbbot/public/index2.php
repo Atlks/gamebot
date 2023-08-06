@@ -39,6 +39,8 @@ function exceptions_error_handler($errno, $message, $filename, $lineno) {
     $j=json_encode($ex229);
     global $errdir;
     file_put_contents( $errdir.date('Y-m-d H')."ex648_Glb304_55808.txt",  $j.PHP_EOL, FILE_APPEND);
+    \think\facade\Log::info( $j);
+   // \think\facade\Log::info($exception->getMessage());
 }
 
  
@@ -46,7 +48,7 @@ function exceptions_error_handler($errno, $message, $filename, $lineno) {
 
 set_error_handler("think\\exceptions_error_handler");
 ini_set('display_errors', 'on');
-error_reporting(E_ALL);
+error_reporting(E_ALL ^(E_NOTICE | E_WARNING)); 
 ini_set("log_errors", 1);
 ini_set("error_log", $errdir.date('Y-m-d H')."ex648_error_log236_55808.txt");
 
@@ -60,6 +62,7 @@ function shutdown()
         global $errdir;
         $j=json_encode(error_get_last(),JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         file_put_contents( $errdir.date('Y-m-d H')."ex648_shutdownCatchErr_55808.txt",  $j.PHP_EOL, FILE_APPEND);
+        \think\facade\Log::info( $j);
        //print_r(error_get_last());
     }
    // echo  PHP_EOL.PHP_EOL."-----------shutdown echo finish--------------------".PHP_EOL;
@@ -69,11 +72,12 @@ function shutdown()
 register_shutdown_function('think\shutdown');
 
 
-function var_dump($o)
+function var_dumpx($o)
 {
-    
+  var_dump($o);
 }
 
+define('NO_CACHE_RUNTIME',True);
 
 // 执行HTTP应用并响应
 $http = (new App())->http;

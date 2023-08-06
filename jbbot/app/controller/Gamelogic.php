@@ -14,11 +14,19 @@ use app\common\helper;
 
 function sendmessage($text)
 {
+    //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   gamelogic/start2
+    // must start2 ..bcs indx inm router,so cant acc
     //echo $text;
 }
 
 class Gamelogic
 {
+
+    public function start2($issue = null)
+    {
+        var_dump(111);
+       $this-> start($issue);
+    }
     /**
      * 显示资源列表
      *
@@ -28,10 +36,12 @@ class Gamelogic
     {
         //开奖时间
         $show_time = Setting::find(8)->value; //10*1000;
-        $gl = new GL($issue);
+        $gl = new GL($issue);  //comm/gamelogc
         //swoole_timer_tick(10000,function($timer_id) use($gl){
         while (true) {
             try{
+                var_dump($gl->game_state);  //"start"
+              
             switch ($gl->game_state) {
                 case 'start':
                     if ($gl->Start()) {
@@ -44,6 +54,7 @@ class Gamelogic
                             $gl->game_state = 'show_waring';
                         });
                         $gl->send_notice('start');
+                        //     $this->game_state = 'waiting_bet';
                     }
                     break;
                 case 'show_waring':
