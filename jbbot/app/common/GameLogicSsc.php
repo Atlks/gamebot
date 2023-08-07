@@ -17,9 +17,9 @@ use app\model\GameString;
 
 use app\common\LotteryHash28 as Hash28;
 use app\common\LotteryPC28 as PC28;
+use Nette\Utils\Arrays;
 
-//   app\common\GameLogic
-class GameLogic
+class GameLogicSsc
 {
     public $lottery_no = 2;
     public $lottery_id = 4;
@@ -32,7 +32,7 @@ class GameLogic
 
     private $userDb = null;
     private $limit_special = 1000000;
-    private $lottery = null;
+    public $lottery = null;
     // 特殊玩法 0,1,2,3
     // 0 4.2 正常玩法
     // 1 4.6 遇13,14 总注小于1万 大小单双1.6 大于6万 大小单双保本 组合保本
@@ -138,8 +138,8 @@ class GameLogic
         $this->chat_id = Setting::find(2)->value;
         $this->bot = new \TelegramBot\Api\BotApi($this->bot_token);
         $this->userDb = new User();
-        $this->lottery = new PC28();
-        $this->game_type = 0;
+        //    $this->lottery = new PC28();
+        //    $this->game_type = 0;
 
         $this->lottery = new LotteryHash28();
         $this->game_type = 1;
@@ -169,13 +169,10 @@ class GameLogic
     public function Start()
     {
         $today = date("Y-m-d", time());
-        if (empty($this->start_issue))
-        {
+        if (empty($this->start_issue)) {
             $data = $this->lottery->get_last_no();
-            $data['opentime']= time();
-        }
-          
-        else {
+            $data['opentime'] = time();
+        } else {
             $data =  [
                 'lottery_no' => intval($this->start_issue) + 1,
                 'hash_no' => intval($this->start_issue) + 1,
@@ -544,7 +541,7 @@ class GameLogic
         return false;
     }
 
-
+    //depx
     public function DrawFor($no, $result)
     {
         $lottery = Logs::getlotteryByNo($no);
@@ -871,7 +868,7 @@ class GameLogic
                             ) {
                                 $win_bet_ids[$v['Id']] = $card_types[$v['type']];
                             }
-                        } else{
+                        } else {
                             $win_bet_ids[$v['Id']] = $card_types[$v['type']];
                         }
                     }
@@ -975,438 +972,132 @@ class GameLogic
         return $this->result;
     }
 
-
+    //  对讲计算
     public function DrawLottery()
     {
-        $hash = $this->lottery->drawV2();
+        //  lotry=LotteryHash28()
+        $hash = $this->lottery->drawV2();    //   use for LotteryHash28 from eth block hash
         if (is_bool($hash)) return;
         $this->hash = substr($hash, 0, 15) . "..." . substr($hash, -10);
         $total_payout = 0;
-        // 6.0 赔率要改变下特殊赔率表
-        if ($this->special_mode == 3) {
-            $this->limit_special = 0;
-        } else
-            $this->limit_special = 1000000;
-        if (preg_match_all('/\d{1}+/', $hash, $matches)) {
-            $arr = $matches[0];
-            $count = count($arr);
-            $card_types = [];
-            $A = $arr[$count - 3];
-            $B = $arr[$count - 2];
-            $C = $arr[$count - 1];
-            $tail = $C;
-            $result = array($arr[$count - 3], $arr[$count - 2], $arr[$count - 1]);
-            $result = array($arr[$count - 3], $arr[$count - 2], $arr[$count - 1]);
+        require_once  __DIR__ . "/../lotry.php";
+        $kaij_num = getKaijNumFromBlkhash($hash);
+        $result_text = $kaij_num;
+
+        //if not inc number exit prcs
+        if (!preg_match('/\d{1}+/', $hash))
+            return;
 
 
-            // 和值
-            $sum = $result[0] + $result[1] + $result[2];
 
-            //13/14 特殊算法
-            $special = $sum == 13 || $sum == 14 ? true : false;
-            if ($this->special_mode === 0) {
-                $special = false;
+
+
+        //计算输赢
+        $bet_types = BetTypes::select()->toArray();
+        $win_bet_ids = [];
+
+        //print_r($win_bet_ids); 
+        var_dump($this->lottery_no);
+        //select from  BetRecord
+        $records = Logs::getBetRecordByLotteryNo($this->lottery_no);
+        //var_dump( $records);
+        var_dump(count($records));
+        $players = [];    //zhonjyo wanja
+        // bet_records需要跟新字段 Payout,Status,ResultId,Rebate
+        $records_update = [];  //中奖记录
+        $temp_arr = [];  //榜单显示临时变量
+        //---------------------开始计算输赢   得到中奖玩家名单 get bingo user lst
+        foreach ($records as $k => $v) {
+            $record_id = $v['Id'];
+            $user_id = $v['UserId'];  //tg id
+            $betType_id = $v['Type'];
+
+
+
+            $betContext = $v['BetContent'];
+            $wanfa = getWefa($betContext);
+
+            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+            var_dump(" dwijyo() betnumL:" . $betContext . "  kaijnum:" . $kaij_num  . $lineNumStr);
+            if (!dwijyo($betContext, $kaij_num)) {
+
+                var_dump("dwijyuo rzt false");
+                continue;
             }
-            $text = "开奖数字: " . $result[0] . $result[1] . $result[2] . "\r\n";
-            $text .= "数字计算: " . $result[0] . " + " . $result[1] . " + "  . $result[2] . " = " . $sum;
-            $result_text = $result[0] . "+" . $result[1] . "+"  . $result[2] . "=" . $sum;
-            $type = $this->result_type['和值'];
-            $card_types[$type] = $sum;
+            var_dump("dwijyuo rzt true");
+            $odds = $v['Odds'];
+            var_dump($odds);
+            $payout = $v['Bet'] * $odds;
+            var_dump($payout);
+            //--------------------- 结算之后计入玩家流水----------------------
+       
 
-            // 大小
-            $big = $sum > 13 ? true : false;
-            $b_text = $big ? "大" : "小";
-            $type = $this->result_type[$b_text];
-            $card_types[$type] = $this->special_odds[$b_text];
+            $player = $v['player'];
+            $income = $payout - $v['bet'];
+            var_dump($income);
+            // 玩家需要更新字段,Total_Payout;
+            // 玩家的日报需要更新字段 PayoutAmount,Income;
+            // 结算之后计入玩家流水
+            $user = $this->userDb->findByUserId($user_id);
+            //  var_dump(  $user);
 
-            // 单双
-            $double = $sum % 2 ? false : true;
-            $d_text = $double ? "双" : "单";
-            $type = $this->result_type[$d_text];
-            $card_types[$type] = $this->special_odds[$d_text];
+            $player = new \app\common\Player($user);
+            //  win （betAmt,PaybackAmt,IncomeAmt
+            $player->win($v['bet'], $payout, $income);
+          
 
-            // 大/小双/单
-            $type = $this->result_type[$b_text . $d_text];
-            $card_types[$type] = $this->special_odds[$b_text . $d_text];
 
-            $text = $text . " " . $b_text . " " . $d_text;
-            $result_text = $result_text . " " . $b_text . $d_text;
-            $limit = false;
-            if ($sum < 6) {
-                $b_text = "极小";
-                $limit = true;
-                $type = $this->result_type[$b_text];
-                $card_types[$type] = $this->special_odds[$b_text];
+            ////======-------------================= 回显榜单 zhun背
+            // Rebate还没有计算过,暂时搁浅
+            //   $user_id=12;
+            array_push($temp_arr, array('player' => $player, 'income' => $income));
+            var_dump($players);
+            var_dump($user_id); // uid just tgid
+            if (!isset($players)) {
+
+
+                $players = [];
             }
-            if ($sum > 21) {
-                $b_text = "极大";
-                $limit = true;
-                $type = $this->result_type[$b_text];
-                $card_types[$type] = $this->special_odds[$b_text];
+            if (!isset($players[$user_id])) {
+                //  var_dump("ini arrkey")
+
+                $players[$user_id] = [];
             }
+            var_dump($players[$user_id]);
+            if (!isset($players[$user_id]['payout']))
+                $players[$user_id]['payout'] = 0;
+
+            $players[$user_id]['payout'] += $payout;
+            $update['Payout'] = $payout;
+            $total_payout += $payout;
+        }
+        //  结束对讲
 
 
-            if ($limit)
-                $result_text = $result_text . "|" . $b_text;
-
-            // 牌型 顺子
-            $t_text = "";
-            $check = true;
-            $straight = false;
-            if ($this->special_mode != 3) {
-                for ($i = 0; $i < 3; $i++) {
-                    if ($result[$i] == 0) {
-                        $check = false;
-                        break;
-                    }
-                }
-            }
-            if ($check) {
-                $straight = $this->checkStraight($result[0], $result[1], $result[2]);
-            }
-
-
-            if ($straight) {
-                $t_text = "顺子";
-                $result_text = $result_text . "|" . $t_text;
-                $type = $this->result_type[$t_text];
-                $card_types[$type] = $this->special_odds[$t_text];
-            }
-
-            // 豹子 | 对子
-            $s_text = "";
-            $p_text = "";
-            $same = $result[0] == $result[1] ? $result[1] == $result[2] : false;
-
-            $pair = false;
-            if ($same) {
-                $s_text = "豹子";
-                $result_text = $result_text . "|" . $s_text;
-                $type = $this->result_type[$s_text];
-                $card_types[$type] = $this->special_odds[$s_text];
-            } elseif ($result[0] == $result[1] || $result[0] == $result[2] || $result[1] == $result[2]) {
-                $pair = true;
-                $p_text = "对子";
-                $result_text = $result_text . "|" . $p_text;
-                $type = $this->result_type[$p_text];
-                $card_types[$type] = $this->special_odds[$p_text];
-            }
-
-            if ($this->special_mode == 3) {
-                if ($straight || $pair || $same)
-                    $special = true;
-            }
-
-            // 杂6
-            if (false) {
-                $six = false;
-                $six_text = "";
-                if (!$straight && !$same && !$pair) {
-                    //if($result[0] < 6 && $result[1] < 6 && $result[2] < 6)
-                    {
-                        $six = true;
-                        $six_text = "杂六";
-                        $result_text = $result_text . "|" . $six_text;
-                        $type = $this->result_type[$six_text];
-                        $card_types[$type] = $this->special_odds[$six_text];
-                    }
-                }
-            }
-
-            if ($tail != 0 && $tail != 9) {
-                // 尾 单双
-                $t_double = $tail % 2 ? false : true;
-                $type = $this->result_type['尾单双'];
-                $card_types[$type] = $t_double ? 1 : 0;
-                // 尾 大小
-                $t_big = $tail > 4 ? true : false;
-                $type = $this->result_type['尾大小'];
-                $card_types[$type] = $t_big ? 1 : 0;
-
-                // 尾 组合
-                $type = $this->result_type['尾组合'];
-                // 小双
-                if ($t_double && !$t_big) {
-                    $card_types[$type] = 0;
-                }
-                //小单
-                elseif (!$t_big && !$t_double) {
-                    $card_types[$type] = 1;
-                }
-                // 大双
-                elseif ($t_big && $t_double) {
-                    $card_types[$type] = 2;
-                }
-                // 大单
-                else
-                    $card_types[$type] = 3;
-
-                // 尾 数 0/9 通杀
-                $type = $this->result_type['尾数'];
-                $card_types[$type] = $tail;
-            }
-
-            $text .= " " . "尾$tail";
-
-            // A
-            $double = $A % 2 ? false : true;
-            $type = $this->result_type['A单双'];
-            $text = "\r\n" . $text . "A" . $A . " ";
-            if ($double)
-                $text = $text . "双";
-            else
-                $text = $text . "单";
-            $card_types[$type] = $double ? 1 : 0;
-            $big = $A > 4 ? true : false;
-            if ($big)
-                $text = $text . "|大";
-            else
-                $text = $text . "|小";
-            $type = $this->result_type['A大小'];
-            $card_types[$type] = $big ? 1 : 0;
-            // 组合
-            $type = $this->result_type['A组合'];
-            // 小双
-            if ($double && !$big) {
-                $card_types[$type] = 0;
-            }
-            //小单
-            elseif (!$big && !$double) {
-                $card_types[$type] = 1;
-            }
-            // 大双
-            elseif ($big && $double) {
-                $card_types[$type] = 2;
-            }
-            // 大单
-            else
-                $card_types[$type] = 3;
-            $type = $this->result_type['A数字'];
-            $card_types[$type] = $A;
-            $text = $text . "\r\n";
-
-            // B
-            $double = $B % 2 ? false : true;
-            $type = $this->result_type['B单双'];
-            $text = $text . "B" . $B . " ";
-            $card_types[$type] = $double ? 1 : 0;
-            if ($double)
-                $text = $text . "双";
-            else
-                $text = $text . "单";
-            $big = $B > 4 ? true : false;
-            if ($big)
-                $text = $text . "|大";
-            else
-                $text = $text . "|小";
-            $type = $this->result_type['B大小'];
-            $card_types[$type] = $big ? 1 : 0;
-            // 组合
-            $type = $this->result_type['B组合'];
-            // 小双
-            if ($double && !$big) {
-                $card_types[$type] = 0;
-            }
-            //小单
-            elseif (!$big && !$double) {
-                $card_types[$type] = 1;
-            }
-            // 大双
-            elseif ($big && $double) {
-                $card_types[$type] = 2;
-            }
-            // 大单
-            else
-                $card_types[$type] = 3;
-            $type = $this->result_type['B数字'];
-            $card_types[$type] = $B;
-            $text = $text . "\r\n";
-
-            // C
-            $double = $C % 2 ? false : true;
-            $text = $text . "C" . $C . " ";
-            $type = $this->result_type['C单双'];
-            if ($double)
-                $text = $text . "双";
-            else
-                $text = $text . "单";
-            $card_types[$type] = $double ? 1 : 0;
-            $big = $C > 4 ? true : false;
-            if ($big)
-                $text = $text . "|大";
-            else
-                $text = $text . "|小";
-            $type = $this->result_type['C大小'];
-            $card_types[$type] = $big ? 1 : 0;
-            // 组合
-            $type = $this->result_type['C组合'];
-            // 小双
-            if ($double && !$big) {
-                $card_types[$type] = 0;
-            }
-            //小单
-            elseif (!$big && !$double) {
-                $card_types[$type] = 1;
-            }
-            // 大双
-            elseif ($big && $double) {
-                $card_types[$type] = 2;
-            }
-            // 大单
-            else
-                $card_types[$type] = 3;
-            $type = $this->result_type['C数字'];
-            $card_types[$type] = $C;
-            $text = $text . "\r\n";
-
-
-            //计算输赢
-            $bet_types = BetTypes::select()->toArray();
-            $win_bet_ids = [];
-            foreach ($bet_types as $i => $v) {
-                if (isset($card_types[$v['type']])) {
-                    if (
-                        $v['type'] == $this->result_type['和值']
-                        || $v['type'] == $this->result_type['尾数']
-                        || $v['type'] ==  $this->result_type['尾单双']
-                        || $v['type'] ==  $this->result_type['尾大小']
-                        || $v['type'] ==  $this->result_type['尾组合']
-                        || $v['type'] ==  $this->result_type['A大小']
-                        || $v['type'] ==  $this->result_type['A单双']
-                        || $v['type'] ==  $this->result_type['A组合']
-                        || $v['type'] ==  $this->result_type['A数字']
-                        || $v['type'] ==  $this->result_type['B大小']
-                        || $v['type'] ==  $this->result_type['B单双']
-                        || $v['type'] ==  $this->result_type['B组合']
-                        || $v['type'] ==  $this->result_type['B数字']
-                        || $v['type'] ==  $this->result_type['C大小']
-                        || $v['type'] ==  $this->result_type['C单双']
-                        || $v['type'] ==  $this->result_type['C组合']
-                        || $v['type'] ==  $this->result_type['C数字']
-                    ) {
-                        if ($v['value'] == $card_types[$v['type']]) {
-                            $win_bet_ids[$v['Id']] = 0;
-                        }
-                    } else {
-                        // 5.0 赔率
-                        if ($this->special_mode ==  2 && $special) {
-                            if (
-                                $v['type'] != $this->result_type['大单'] &&
-                                $v['type'] != $this->result_type['大双'] &&
-                                $v['type'] != $this->result_type['小单'] &&
-                                $v['type'] != $this->result_type['小双']
-                            ) {
-                                $win_bet_ids[$v['Id']] = $card_types[$v['type']];
-                            }
-                        } else{
-                            $win_bet_ids[$v['Id']] = $card_types[$v['type']];
-                        }
-                    }
-                }
-            }
-            //print_r($win_bet_ids);
-            $records = Logs::getBetRecordByLotteryNo($this->lottery_no);
-
-
-            $players = [];
-            // bet_records需要跟新字段 Payout,Status,ResultId,Rebate
-            $records_update = [];
-            // 特殊计算 需要先统计这期玩家的总下注
-            if ($special) {
-                foreach ($records as $k => $v) {
-                    $user_id = $v['UserId'];
-                    if (!isset($players[$user_id])) {
-                        $user = $this->userDb->findByUserId($user_id);
-                        $players[$user_id] = [
-                            'bet' => 0,
-                            'payout' => 0,
-                            'player' => new Player($user),
-                        ];
-                    }
-
-                    $players[$user_id]['bet'] += $v['Bet'];
-                }
-            }
-
-            foreach ($records as $k => $v) {
-                $record_id = $v['Id'];
-                $user_id = $v['UserId'];
-                $betType_id = $v['Type'];
-                if (!isset($players[$user_id])) {
-                    $user = $this->userDb->findByUserId($user_id);
-                    $players[$user_id] = [
-                        'bet' => 0,
-                        'payout' => 0,
-                        'player' => new Player($user),
-                    ];
-                }
-
-                $update = [
-                    'Id' => $record_id,
-                    'Payout' => 0,
-                    'Status' => 1,
-                    'ResultId' => $this->lottery_id,
-                    'Rebate' => 0
-                ];
-
-                // 非特殊情况,这里要累计
-                if (!$special)
-                    $players[$user_id]['bet'] += $v['Bet'];
-
-                if (isset($win_bet_ids[$betType_id])) {
-                    if (!$special || $win_bet_ids[$betType_id] == 0) {
-                        $odds = $v['Odds'];
-                        //echo $odds;
-                    } else {
-                        if ($players[$user_id]['bet'] >= $this->limit_special && $special && $win_bet_ids[$betType_id] != 0) {
-                            $odds = 1;
-                        } else
-                            $odds = $win_bet_ids[$betType_id];
-                    }
-
-                    $payout = $v['Bet'] * $odds;
-                    //echo $players[$user_id]['player']->getName() . "+" . $v['Bet'] . "x" . $odds. "</br>";
-                    // Rebate还没有计算过,暂时搁浅
-                    $players[$user_id]['payout'] += $payout;
-                    $update['Payout'] = $payout;
-                    $total_payout += $payout;
-                }
-                array_push($records_update, $update);
-            }
-
-
-            // 开奖记录更新
-            Logs::addlotteryResult($this->lottery_no, $result_text, $total_payout);
-            $text = $result_text;
-            $text  = $text . "\r\n"
-                . "=====本期中奖名单======" . "\r\n";
-
-            $temp_arr = [];
-            foreach ($players as $id => $v) {
-                $player = $v['player'];
-                $income = $v['payout'] - $v['bet'];
-                // 玩家需要更新字段,Total_Payout;
-                // 玩家的日报需要更新字段 PayoutAmount,Income;
-                // 结算之后计入玩家流水
-                $player->win($v['bet'], $v['payout'], $income);
-                array_push($temp_arr, array('player' => $player, 'income' => $income));
-            }
-
-            $helper = new Helper();
-            $helper->BubbleSort1($temp_arr, 'income');
-            foreach ($temp_arr as $v) {
-                $player = $v['player'];
-                $income = $v['income'];
-                $text = $text . $player->getName() . "【" . $player->getId() . "】" . number_format($income / 100.0, 2, ".", "") . "\r\n";
-            }
-
-            $bet_recoreds = new BetRecord();
-            $bet_recoreds->saveAll($records_update);
-
-
-            $this->result = $text;
+        //--------------------- 开奖记录更新  updt 本期中将结果总结过统计
+        // updt  LotteryLog
+        var_dump($total_payout);
+        Logs::addlotteryResult($this->lottery_no, $result_text, $total_payout);
+        ////======-------------================= 回显榜单
+        $text = $result_text;
+        $text  = $text . "\r\n"
+            . "=====本期中奖名单======" . "\r\n";
+        $helper = new Helper();
+        $helper->BubbleSort1($temp_arr, 'income');
+        foreach ($temp_arr as $v) {
+            $player = $v['player'];
+            $income = $v['income'];
+            $text = $text . $player->getName() . "【" . $player->getId() . "】" . number_format($income / 100.0, 2, ".", "") . "\r\n";
         }
 
+
+
+        $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        var_dump($lineNumStr);
+        var_dump("text:" . $text);
+        $this->result = $text;
+
+        //end   if (preg_match_all
         $this->game_state = 'next';
     }
 

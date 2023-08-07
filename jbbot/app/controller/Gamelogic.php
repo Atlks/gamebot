@@ -125,6 +125,103 @@ class Gamelogic
     }
 
 
+        /**
+     * 开始时时踩的主循环
+     *
+     * @return \think\Response
+     */
+    public function startSsc($issue = null)
+    {
+        //开奖时间
+        $show_time = Setting::find(8)->value; //10*1000;
+        $gl = new   \app\common\GameLogicSsc($issue);  //comm/gamelogc
+        //swoole_timer_tick(10000,function($timer_id) use($gl){
+        while (true) {
+            try{
+                var_dump($gl->game_state);  //"start"
+              
+            switch ($gl->game_state) {
+                case 'start':
+                    if ($gl->Start()) {
+                        // 下注时间
+                        $bet_time = Setting::find(6)->value; //1*60*1000;
+                        $bet_time = $gl->adjustTime($bet_time);
+                        $start_str = $gl->lottery_no . "期开始下注-" . $bet_time / 1000 . "秒后提醒\r\n";
+                        sendmessage($start_str);
+                        swoole_timer_after($bet_time, function () use ($gl) {
+                            $gl->game_state = 'show_waring';
+                        });
+                        $gl->send_notice('start');
+                        //     $this->game_state = 'waiting_bet';
+                    }
+                    break;
+                case 'show_waring':
+                    $gl->Waring();
+                    //封盘警告时间
+                    $waring_time = Setting::find(7)->value; //30*1000;
+                    $waring_time = $gl->adjustTime($waring_time);
+                    $waring_str = $gl->lottery_no . "期还有" . $waring_time / 1000 . "秒停止下注\r\n";
+                    sendmessage($waring_str);
+                    swoole_timer_after($waring_time, function () use ($gl) {
+                        $gl->game_state = 'stop_bet';
+                    });
+                    $gl->send_notice('waring');
+                    break;
+                case 'stop_bet':
+                    $gl->StopBet();
+                    //封盘时间
+                    $stop_bet_time = Setting::find(8)->value; //10*1000;
+                    $stop_bet_time = $gl->adjustTime($stop_bet_time);
+                    $stop_bet_str = $gl->lottery_no . "期停止下注==" . $stop_bet_time / 1000 . "秒后开奖\n";
+                    sendmessage($stop_bet_str);                    
+                    swoole_timer_after($stop_bet_time, function () use ($gl) {
+                        $gl->game_state = 'draw';
+                    });
+                    $gl->send_notice('stop');
+                    break;
+                case 'draw':
+                    $gl->game_state = 'drawing';
+                    $gl->send_notice('draw');
+                    break;
+                case 'drawing':
+                    $draw_str = $gl->lottery_no . "期开奖中";
+                    sendmessage($draw_str);
+                    $gl->DrawLottery();
+                    if ($gl->game_state == 'next') {
+                        $show_str = $gl->lottery_no . "期开奖完毕==开始下注\r\n";
+                        sendmessage($show_str);
+                        $gl->send_notice('result');
+                    }
+                    break;
+                case 'next':
+                    if($gl->Next())
+                    {
+                        $bet_time = Setting::find(6)->value; //1*60*1000;
+                        $bet_time = $gl->adjustTime($bet_time);
+                        $start_str = $gl->lottery_no . "期开始下注-" . $bet_time / 1000 . "秒后提醒\r\n";
+                        sendmessage($start_str);
+                        swoole_timer_after($bet_time, function () use ($gl) {
+                            $gl->game_state = 'show_waring';
+                        });
+                        $gl->send_notice('start');
+                    }
+                    break;
+            }
+        }
+        catch(\TelegramBot\Api\InvalidJsonException $e){
+                //return $e->getMessage();
+                
+        } catch (\TelegramBot\Api\HttpException $e) {
+            //return $e->getMessage();
+        } catch (\TypeError $e){
+            //return $e->getMessage();
+        } catch(\Error $e){
+            //return $e->getMessage();
+        }
+            sleep(1);
+        };
+    }
+
 
     public function go(Request $request)
     {

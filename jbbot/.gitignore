@@ -7,3 +7,5 @@ public/trend.jpg
 *.7z
 *.rar
 nginx.htaccess
+.env
+/.env

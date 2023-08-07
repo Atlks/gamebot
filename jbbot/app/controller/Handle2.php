@@ -7,14 +7,16 @@ namespace app\controller;
 use think\Request;
 use app\model\Setting;
 use app\model\BotWords;
- use app\common\Game2 as Game;
+use app\common\Game2 as Game;
 //use app\common\NNGame;
 use app\model\Test;
 use app\common\Logs;
 use app\common\GameLogic;
 
-function var_dumpx(){}
-
+function var_dumpx()
+{
+}
+//  Handle2.index()
 class Handle2
 {
     public $Bot_Token = "";
@@ -45,7 +47,7 @@ class Handle2
                 'text' => $e->getMessage(),
             ];
             Test::create($data);
-             throw $e;
+            throw $e;
         }
     }
 
@@ -68,49 +70,82 @@ class Handle2
         $payload = json_encode($parameters);
         //header('Content-Length:' . strlen($payload));
         //echo $payload;
-     //   var_dumpx($parameters);
-       //  var_dumpx(json($parameters));
+        //   var_dumpx($parameters);
+        //  var_dumpx(json($parameters));
         return json($parameters)->header(['Content-Length' => $payload]);
     }
     public function processMessageTest()
     {
-       //   var_dumpx(999);
-          $t=file_get_contents('C:\w\sdkprj\732.json');
-          $j=json_decode($t,true);
-          $this-> processMessage($j);
-      //    var_dumpx(111);
+        //   var_dumpx(999);
+        $t = file_get_contents('C:\w\sdkprj\732.json');
+        $j = json_decode($t, true);
+        $this->processMessage($j);
+        //    var_dumpx(111);
     }
 
 
-//  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   game2/testtype   
+    //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   game2/testtype   
 
-      //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/processMessageTest
+    //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/processMessageTest
     //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/gettypex
+    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testDraw2
+    // C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testDraw
 
-   //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testtype
+    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testtype
+
+
+    public function testDraw2_getKaijnumFromEth()
+    {
+        $obj = new \app\common\LotteryHash28();
+
+        $a['hash_no'] = 17811427;
+        $obj->setData($a);
+        // var_dump( $obj->draw());
+        // var_dump( $obj->drawV2());
+    }
+
+    public function testDraw()
+    {
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" . PHP_EOL;
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@." . PHP_EOL;
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@." . PHP_EOL;
+        $data['hash_no'] = 17811427;
+        $gmLgcSSc = new    \app\common\GameLogicSsc();
+        $gmLgcSSc->lottery->setData($data);
+        $gmLgcSSc->hash_no = $data['hash_no'];
+        $gmLgcSSc->lottery_no = $data['hash_no'];
+
+
+
+        $gmLgcSSc->DrawLottery();
+        //   $rows =  \think\Facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
+        // $rows  = \app\model\BetTypes::where('玩法', "龙虎和玩法")->find()->toArray();
+        $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        //   \think\facade\Log::info($lineNumStr . " cnt row:" . count($rows));
+    }
 
     public function testtype()
     {
-     //   $rows =  \think\Facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
+        //   $rows =  \think\Facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
         $rows  = \app\model\BetTypes::where('玩法', "龙虎和玩法")->find()->toArray();
-        $lineNumStr=__FILE__.":".__LINE__." f:".__FUNCTION__." m:".__METHOD__."  ";
-        \think\facade\Log::info($lineNumStr." cnt row:". count($rows)); 
+        $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        \think\facade\Log::info($lineNumStr . " cnt row:" . count($rows));
     }
 
     function gettypex()
     {
 
-        file_put_contents("kkkk.log",111,FILE_APPEND);
-      //  var_dumpx(111);
+        file_put_contents("kkkk.log", 111, FILE_APPEND);
+        //  var_dumpx(111);
 
-    $rows=  \think\Facade\Db::name('bet_types00') ->whereRaw("玩法='龙虎和玩法'")->select();
-     // $rows=  \think\Db::query('select * from bet_typeds where 1=1');
-     //$rows=  \think\Facade\Db::name('bet_types')->select();
-     $rows=  \think\Facade\Db::name('bet_types') ->whereRaw("玩法='龙虎和玩法'")->select();
+        $rows =  \think\Facade\Db::name('bet_types00')->whereRaw("玩法='龙虎和玩法'")->select();
+        // $rows=  \think\Db::query('select * from bet_typeds where 1=1');
+        //$rows=  \think\Facade\Db::name('bet_types')->select();
+        $rows =  \think\Facade\Db::name('bet_types')->whereRaw("玩法='龙虎和玩法'")->select();
 
-     file_put_contents("351.json",json_encode($rows));
-    //  var_dumpx($rows);
-   //   var_dumpx($rows[0]['玩法']);
+        file_put_contents("351.json", json_encode($rows));
+        //  var_dumpx($rows);
+        //   var_dumpx($rows[0]['玩法']);
     }
 
     public function processMessage($message)
@@ -121,10 +156,9 @@ class Handle2
         $chat_id = $message['chat']['id'];
         $user_id = $message['from']['id'];
         $data = Test::where('chat_id', $message_id)
-        ->where('name','小飞机漏发信息')
-        ->find();
-        if($data)
-        {
+            ->where('name', '小飞机漏发信息')
+            ->find();
+        if ($data) {
             return;
         }
         $data = [
@@ -176,12 +210,12 @@ class Handle2
         if (isset($message['text'])) {
             // incoming text message
             $text = $message['text'];
-          //  $cmd= ' return new '. parse_ini_file(__DIR__."/../../.env")['handle_game'].'();';
-          //  var_dumpx($cmd);
-          //  $game=  eval($cmd);
-          $game=new \app\common\Game2();
+            //  $cmd= ' return new '. parse_ini_file(__DIR__."/../../.env")['handle_game'].'();';
+            //  var_dumpx($cmd);
+            //  $game=  eval($cmd);
+            $game = new \app\common\Game2();
 
-          //  $game   new app\common\GameSsc();
+            //  $game   new app\common\GameSsc();
             var_dumpx($game);
 
             if (empty($game->getPlayer($user_id))) {
@@ -191,7 +225,7 @@ class Handle2
             $game->receive($message_id);
             //start bet
             $reply_text =  $game->player_exec($text, Setting::find(3)->value == 1);
-            var_dumpx( $reply_text);   //"下注命令错误"
+            var_dumpx($reply_text);   //"下注命令错误"
 
             if (!empty($reply_text)) {
 
@@ -210,13 +244,11 @@ class Handle2
                     if ($game->action()) {
                         $keyboard_array = json_decode(BotWords::where('Id', 1)->find()->Button_Text);
                         $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($keyboard_array);
-                    }
-                    else if($game->keyboard)
-                    {
+                    } else if ($game->keyboard) {
                         $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($game->keyboard);
                     }
                     //keyboard just menu list
-                //    var_dumpx( $keyboard); //null
+                    //    var_dumpx( $keyboard); //null
                     $params =
                         [
                             'chat_id' => $chat_id,
@@ -241,10 +273,9 @@ class Handle2
         $from = $callback_query['from']['id'];
         $func = $callback_query['data'];
         $data = Test::where('chat_id', $callback_query['id'])
-        ->where('name','小飞机漏发信息')
-        ->find();
-        if($data)
-        {
+            ->where('name', '小飞机漏发信息')
+            ->find();
+        if ($data) {
             return;
         }
         $data = [

@@ -45,6 +45,7 @@ class ExceptionHandle extends Handle
         \think\facade\Log::info($exception->getMessage());
         file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt", $exception->getMessage() .PHP_EOL, FILE_APPEND);
         file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt",  $j.PHP_EOL, FILE_APPEND);
+        var_dump($exception->getMessage().$exception->getFile().":".$exception->getLine());
         throw  $exception;
     }
 

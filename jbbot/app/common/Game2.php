@@ -13,10 +13,12 @@ use app\common\Logs;
 use app\model\Setting;
 use app\common\helper;
 use app\model\GameString;
+use Exception;
 use think\log;
 
-function var_dumpx($o){
-  //  echo  json_decode($o);
+function var_dumpx($o)
+{
+    //  echo  json_decode($o);
 }
 class Game2
 {
@@ -63,13 +65,17 @@ class Game2
         $config = Config::find(1);
         $this->setup($config);
         $this->bet_types = BetTypes::select()->toArray();
+
+
         $this->lottery_no = Logs::get_last_lottery_log()['No'];
+
+
         if (!empty($from)) {
             $this->getPlayer($from);
         }
         $bot_words = BotWords::where('Id', 1)->find();
 
-    
+
 
         $this->bot_words =
             [
@@ -209,13 +215,13 @@ class Game2
         return $this->player;
     }
 
- 
+
 
     //  bet v2222
     public function regex_betV2($content)
     {
-     //   define('NO_CACHE_RUNTIME',True);
-        var_dumpx("218L betnums:".$content);
+        //   define('NO_CACHE_RUNTIME',True);
+        var_dumpx("218L betnums:" . $content);
         \think\facade\Log::info("215L");
         \think\facade\Log::info($content);
         if (!$this->player) return;
@@ -232,16 +238,18 @@ class Game2
         $bet_types = [];
         var_dumpx($this->bet_types); //   bet RX FROM DB
         // select betrx from db
-//echo  var_export($content,true) ;
+        //echo  var_export($content,true) ;
 
-        $bet_str=[];
+        $bet_str = [];
         array_push($bet_str, $content);
+
+
 
         $before_bet = $this->player->getBetRecord($this->lottery_no);
         $bets = array();
         $text = "";
         $bet_str = array_filter($bet_str);
-        var_dumpx( var_export($bet_str,true) );
+        var_dumpx(var_export($bet_str, true));
         foreach ($bet_str as $str) {
 
             $match = false;
@@ -262,16 +270,16 @@ class Game2
 
 
             $wanfa = getWefa($bet_nums);
-            var_dump("265L wanfa:".$wanfa);
+            //   var_dump("265L wanfa:".$wanfa);
             $rows =  \think\facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
-            \think\facade\Log::info("262L rows count:". count($rows)); 
+            \think\facade\Log::info("262L rows count:" . count($rows));
             if (count($rows) == 0)
                 continue;
             $type = $rows[0];
             //  file_put_contents("351.json",json_encode($rows));
 
             $bet_text = $type['Display'];
-            $bet_text = $bet_text . " " . $amount / 100;
+            $bet_text = $bet_nums;
             $bet = [
                 'bet_type' => $type,
                 'text' => $bet_text,
@@ -307,7 +315,7 @@ class Game2
             array_push($bets, $bet);
         }
 
-        \think\facade\Log::info("305L  "); 
+        \think\facade\Log::info("305L  ");
         if ($total_bet_amount > $this->player->getBalance(false)) {
             return $this->getWords('下注余额不足');
         }
@@ -325,12 +333,15 @@ class Game2
             }
         };
 
+
         $current_bets = $this->player->getBetRecord($this->lottery_no);
         $text = "";
         foreach ($current_bets as $k => $v) {
             $res = BetTypes::where('Id', $k)->find();
             $text .= $res->Display . "-" . $v / 100 . "(" . $res->Odds . "赔率)\r\n";
         }
+
+
 
         $betNums105 = $content;
         $text =
@@ -340,11 +351,11 @@ class Game2
             . "\r\n"
             . "余额:" . $this->player->getBalance();
 
-         //   var_dump($text);
-            file_put_contents( "exGlb304_55808.txt",   $text, FILE_APPEND);
-            file_put_contents( "exGlb304_55808.txt",   var_export( $text, true), FILE_APPEND);
-            \think\facade\Log::info("340L");
-            \think\facade\Log::info($text);
+        //   var_dump($text);
+        file_put_contents("exGlb304_55808.txt",   $text, FILE_APPEND);
+        file_put_contents("exGlb304_55808.txt",   var_export($text, true), FILE_APPEND);
+        \think\facade\Log::info("340L");
+        \think\facade\Log::info($text);
         return $text;
 
 
@@ -598,7 +609,7 @@ class Game2
 
         $res = $this->regex_betV2($text);
 
-        \think\facade\Log::info("596L betRzt: ". $res ); 
+        \think\facade\Log::info("596L betRzt: " . $res);
 
         return $res;
     }
