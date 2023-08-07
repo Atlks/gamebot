@@ -249,7 +249,8 @@ class Game2
         $bets = array();
         $text = "";
         $bet_str = array_filter($bet_str);
-        var_dumpx(var_export($bet_str, true));
+        // var_dumpx(var_export($bet_str, true));
+        //---------------------下注前检查
         foreach ($bet_str as $str) {
 
             $match = false;
@@ -312,6 +313,10 @@ class Game2
             $text = $text . $bet_text . "(" . $type['Odds'] . "赔率)\r\n";
             $total_bet_amount += $bet['amount'];
 
+          //  $bet['bet_type']=[];
+        //  var_dump(  $bet['bet_type']);  ==rows..
+            $bet['bet_type']['Odds']=$type['Odds'];
+            $bet['odds']=$type['Odds'];
             array_push($bets, $bet);
         }
 
@@ -324,8 +329,10 @@ class Game2
 
         $this->action = true;
         $text = $text . "\r\n";
-
+        //-------------------------------------开始下注
         foreach ($bets as $key => $value) {
+            $bet=$value;
+         //   var_dump( $value);   //  need ['id n   odds]
             if (!$this->player->Bet($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'])) {
                 $text = "下注失败:" . $this->player->get_last_error();
                 $this->action = false;
@@ -342,7 +349,7 @@ class Game2
         }
 
 
-
+        //----------------------------- 回显
         $betNums105 = $content;
         $text =
             "【" . $this->player->getName() . '-' . $this->player->getId() . '】' . "\r\n"
@@ -353,7 +360,7 @@ class Game2
 
         //   var_dump($text);
         file_put_contents("exGlb304_55808.txt",   $text, FILE_APPEND);
-        file_put_contents("exGlb304_55808.txt",   var_export($text, true), FILE_APPEND);
+        //    file_put_contents("exGlb304_55808.txt",   var_export($text, true), FILE_APPEND);
         \think\facade\Log::info("340L");
         \think\facade\Log::info($text);
         return $text;
@@ -608,7 +615,7 @@ class Game2
         if ($stop_bet) return "封盘时请不要下注!";
 
         $res = $this->regex_betV2($text);
-
+        //  var_dump( $res );
         \think\facade\Log::info("596L betRzt: " . $res);
 
         return $res;

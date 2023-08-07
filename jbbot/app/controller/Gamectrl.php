@@ -14,12 +14,13 @@ use app\common\helper;
 
 function sendmessage($text)
 {
+    //C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   gamectrl/startssc 
     //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   gamelogic/start2
     // must start2 ..bcs indx inm router,so cant acc
     //echo $text;
 }
 
-class Gamelogic
+class Gamectrl
 {
 
     public function start2($issue = null)
@@ -126,13 +127,13 @@ class Gamelogic
 
 
         /**
-         *  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\modyfing\jbbot\public\index2.php   gamelogic/startSsc
+         * 
          *    /index.php?s=gamelogic/startSsc
      * 开始时时踩的主循环
      *
      * @return \think\Response
      */
-    public function startSsc($issue=null)
+    public function startssc($issue=null)
     {
         var_dump(137);
       //  ;
@@ -190,7 +191,7 @@ class Gamelogic
                 case 'drawing':
                     $draw_str = $gl->lottery_no . "期开奖中";
                     sendmessage($draw_str);
-                    $gl->DrawLottery();    // if finish chg stat to next..
+                    $gl->DrawLottery();
                     if ($gl->game_state == 'next') {
                         $show_str = $gl->lottery_no . "期开奖完毕==开始下注\r\n";
                         sendmessage($show_str);

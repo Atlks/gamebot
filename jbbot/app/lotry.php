@@ -3,6 +3,9 @@
 //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe app/lotry.php
 //   特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d+[大|小|单|双]\d+,和值大小单双玩法=和[大|小|单|双]\d+,龙虎和玩法=[龙|虎|和]\d+,前后三玩法=[前|后][豹|顺|对|半|杂]\d+
 //1/1/1
+
+//var_dump(join(" ",getKaijNumArr_hezDasyods("41278") ));
+
 function var_dumpx($o)
 {
     //var_dump($o);
@@ -227,6 +230,17 @@ function dwijyo($betNum,   $bonusNum)
     }
 }
 
+function getKaijNumFly_longhuHaeWefa($bonusNum)
+{
+    if (str_split($bonusNum)[0] > str_split($bonusNum)[4])
+    $kaij_num_fnly = "龙";
+else if (str_split($bonusNum)[0] < str_split($bonusNum)[4])
+    $kaij_num_fnly = "虎";
+else if (str_split($bonusNum)[0] = str_split($bonusNum)[4])
+    $kaij_num_fnly = "和";
+    return  $kaij_num_fnly;
+}
+
 function cyehose_bet_fullname($betnum)
 {
     $betnum = str_replace("前", "前三", $betnum);
@@ -239,13 +253,16 @@ function cyehose_bet_fullname($betnum)
     $betnum = str_replace("杂", "杂六", $betnum);
     return $betnum;
 }
+//function getKaijNumArr_hezDasyods($bonusNum)
+
+
 
 //获取开奖序列  --和值大小单双
 function getKaijNumArr_hezDasyods($bonusNum)
 {
     $a2 = str_split($bonusNum);
 
-
+ 
     $val = array_sum($a2);
     if ($val % 2 == 0)
         $a[] = "双";

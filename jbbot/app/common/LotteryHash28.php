@@ -48,6 +48,7 @@ class LotteryHash28 extends Lottery
     // 获取当前彩期
     public function get_current_no()
     {
+        //if this data ,ret true
         if (!$this->data) return false;
 
         $now = time();

@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
+//    app\common\Player
 namespace app\common;
 
 use app\model\User;
@@ -162,6 +162,7 @@ class Player
         }
         $user = User::where('Tg_Id', $this->id)->find();
         $this->balance = $user->Balance;
+        //xxxxx   .... bettype,,betodds
         $res = Logs::addRecord($user, $lottery_no, $content, $amount, $bet_type['Id'], $bet_type['Odds']);
         if (!empty($res)) {
             Logs::addMoneyLog($user, "下注", -$amount, "系统自动记录", $content, time());

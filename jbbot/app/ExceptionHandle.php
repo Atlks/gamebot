@@ -40,12 +40,18 @@ class ExceptionHandle extends Handle
         parent::report($exception);
         $errdir="";
         $j=json_encode($exception,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        \think\facade\Log::error("----------------errrrr---------------------------");
+        \think\facade\Log::error("file_linenum:".$exception->getFile().":".$exception->getLine());
+        \think\facade\Log::error("errmsg:".$exception->getMessage());
+     //   \think\facade\Log::error("errtrace:".$exception->getTrace());
+        \think\facade\Log::error("errtraceStr:".$exception->getTraceAsString());
+        \think\facade\Log::error("----------------errrrr finish---------------------------");
 
-        \think\facade\Log::info($exception->getFile().":".$exception->getLine());
-        \think\facade\Log::info($exception->getMessage());
         file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt", $exception->getMessage() .PHP_EOL, FILE_APPEND);
         file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt",  $j.PHP_EOL, FILE_APPEND);
         var_dump($exception->getMessage().$exception->getFile().":".$exception->getLine());
+        var_dump($exception->getTraceAsString());
+        
         throw  $exception;
     }
 

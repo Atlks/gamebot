@@ -36,7 +36,13 @@ class Handle2
             $this->Bot_Token = Setting::find(1)->s_value;
 
             if (isset($update["message"])) {
-                return $this->processMessage($update["message"]);
+                $ret = $this->processMessage($update["message"]);
+                $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+                \think\facade\Log::info($lineNumStr);
+                \think\facade\Log::info($ret);
+                //   var_dump($ret);
+
+                return;
             } elseif (isset($update["callback_query"])) {
                 return $this->processCallbackQuery($update["callback_query"]);
             }
@@ -47,6 +53,10 @@ class Handle2
                 'text' => $e->getMessage(),
             ];
             Test::create($data);
+            $exception = $e;
+            \think\facade\Log::warning($exception->getFile() . ":" . $exception->getLine());
+            \think\facade\Log::warning($exception->getMessage());
+            \think\facade\Log::warning(json_encode($e));
             throw $e;
         }
     }
@@ -79,7 +89,14 @@ class Handle2
         //   var_dumpx(999);
         $t = file_get_contents('C:\w\sdkprj\732.json');
         $j = json_decode($t, true);
-        $this->processMessage($j);
+        $ret =   $this->processMessage($j);
+        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        var_dump( $lineNumStr);
+      var_dump($ret);
+      
+        \think\facade\Log::info($lineNumStr);
+        //     \think\facade\Log::info(  $ret );
+       var_dump("97L");
         //    var_dumpx(111);
     }
 
@@ -89,10 +106,19 @@ class Handle2
     //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/processMessageTest
     //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/gettypex
     //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testDraw2
-    // C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testDraw
+ //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\modyfing\jbbot\public\index2.php   handle2/testGenePic
+    
+    // C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\modyfing\jbbot\public\index2.php   handle2/testDraw
 
     //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testtype
-
+    public function testGenePic()
+    {
+        $gmLgcSSc = new    \app\common\GameLogicSsc();
+        $gmLgcSSc ->SendTrendImage(5);
+        // var_dump( $obj->draw());
+        // var_dump( $obj->drawV2());
+        echo  "public/trend.jpg";
+    }
 
     public function testDraw2_getKaijnumFromEth()
     {
@@ -109,7 +135,7 @@ class Handle2
         echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" . PHP_EOL;
         echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@." . PHP_EOL;
         echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@." . PHP_EOL;
-        $data['hash_no'] = 17811427;
+        $data['hash_no'] = 17861938;
         $gmLgcSSc = new    \app\common\GameLogicSsc();
         $gmLgcSSc->lottery->setData($data);
         $gmLgcSSc->hash_no = $data['hash_no'];
@@ -261,6 +287,9 @@ class Handle2
                             'disable_notification' => false,
                         ];
 
+                    $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+                    \think\facade\Log::info($lineNumStr);
+                    \think\facade\Log::info( json_encode($params) );
                     //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
                     return $this->apiRequestWebhook("sendMessage", $params);
                 }

@@ -18,6 +18,7 @@ Route::get('hello/:name', 'index/hello');
 
 Route::get('go','index/gogo');
 Route::get('start','Gamelogic/start');
+//Route::get('startSsc','Gamelogic/startSsc');
 Route::get('stop','Gamelogic/stop');
 Route::get('push','Gamelogic/push');
 Route::get('test','Gamelogic/test');

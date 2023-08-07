@@ -141,7 +141,7 @@ class GameLogicSsc
         //    $this->lottery = new PC28();
         //    $this->game_type = 0;
 
-        $this->lottery = new LotteryHash28();
+        $this->lottery = new LotteryHashSsc();
         $this->game_type = 1;
 
 
@@ -315,33 +315,17 @@ class GameLogicSsc
                     $data['result'] = substr($result[0], 0, -2);
                 }
             }
-
-            $arr = preg_split('/\|/', $result[1]);
-            if ($arr) {
-                if ($arr[0])
-                    $data['zuhe'] = $arr[0];
-
-                if (!empty($arr[1])) {
-                    if ($arr[1] === "极大" || $arr[1] === "极小") {
-                        if (!empty($arr[2]))
-                            $data['kind'] = $arr[2];
-                        else
-                            $data['kind'] = "无";
-                        $data['limit'] = $arr[1];
-                    } else {
-                        $data['limit'] = "无";
-                        $data['kind'] = $arr[1];
-                    }
-                } else {
-                    $data['limit'] = "无";
-                    $data['kind'] = "无";
-                }
-            }
-
+            
+            $data['result'] = $log->Result;
+            require_once  __DIR__ . "/../lotry.php";
+            $data['sum'] ="".   array_sum (str_split($log->Result));
+            $data['zuhe'] = join(" ",getKaijNumArr_hezDasyods($log->Result) );  //和值大小单双;
+            $data['limit'] = getKaijNumFly_longhuHaeWefa ($log->Result);  //龙湖
             array_push($records, $data);
         }
 
         //print_r($records);
+        var_dump($records);
         $this->createTrendImage($records);
     }
 
@@ -349,10 +333,12 @@ class GameLogicSsc
     private function createTrendImage($records)
     {
         // 数据
-        $data = ["turn" => '期数', "result" => "结果", "sum" => "和", "zuhe" => "组合", 'limit' => "极值", "kind" => "形态"];
-        $row_x = ["turn" => '12345678', "result" => "a+b+c=", "sum" => "bb", "zuhe" => "组合", 'limit' => "极值", "kind" => "形态"];
+        $data = ["turn" => '期数', "result" => "结果", "sum" => "和", "zuhe" => "总和俩面", 'limit' => "龙虎", "kind" => ""];
+        $row_x = ["turn" => '12345678', "result" => "a+b+c=", "sum" => "bb", "zuhe" => "组合组合", 'limit' => "极值", "kind" => ""];
         // TODO::字体路径
         $font = app()->getRootPath() . "public/msyhbd.ttc";
+        $font_path=  $font ;
+        var_dump( $font_path);
 
         //echo $font;
         $font_title_size = 16;
@@ -1107,7 +1093,7 @@ class GameLogicSsc
         if (is_bool($data)) return false;
         $this->lottery_no = $data['lottery_no'];
         $this->hash_no = $data['hash_no'];
-        $this->elapsed_time = time() - $data['opentime'];
+        $this->elapsed_time = time() ;// - $data['opentime'];
         $this->elapsed_time *= 1000;
         $today = date("Y-m-d", time());
         $log = Logs::addLotteryLog($today, $this->lottery_no, $this->hash_no);
