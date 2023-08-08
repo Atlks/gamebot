@@ -16,7 +16,8 @@ use app\common\GameLogic;
 function var_dumpx()
 {
 }
-//  Handle2.index()
+//    \app\controller\Handle2
+//  app\controller\Handle2.index()
 class Handle2
 {
     public $Bot_Token = "";
@@ -130,6 +131,28 @@ class Handle2
         // var_dump( $obj->drawV2());
     }
 
+    public function testDrawV2()
+    {
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" . PHP_EOL;
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@." . PHP_EOL;
+        echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@." . PHP_EOL;
+       
+        $gmLgcSSc = new    \app\common\GameLogicSsc();
+
+        $data['hash_no'] = 17870027;
+        $gmLgcSSc->lottery->setData($data);
+        $gmLgcSSc->hash_no =   $data['hash_no'];
+        $gmLgcSSc->lottery_no = $data['hash_no'];
+
+
+
+        $gmLgcSSc->DrawLotteryV2("0xajfdklsjfl01690");
+        //   $rows =  \think\Facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
+        // $rows  = \app\model\BetTypes::where('玩法', "龙虎和玩法")->find()->toArray();
+        $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        //   \think\facade\Log::info($lineNumStr . " cnt row:" . count($rows));
+    }
+
     public function testDraw()
     {
         echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" . PHP_EOL;
@@ -202,6 +225,11 @@ class Handle2
         if (isset($message['from']['last_name']))
             $full_name = $full_name . $message['from']['last_name'];
 
+
+            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+            \think\facade\Log::info($lineNumStr);
+            \think\facade\Log::info( $message['text']);
+           
         if (isset($message['text'])) {
             $text = $message['text'];
             if ($text === "获取我的群信息") {
@@ -217,6 +245,10 @@ class Handle2
         }
 
         if ($chat_id != Setting::find(2)->value) {
+
+            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+            \think\facade\Log::info($lineNumStr);
+            \think\facade\Log::info(" chat_id:".$chat_id. " dbchtid:". Setting::find(2)->value);
             /*
             $token = Setting::find(11)->s_value;
             $bot = new \TelegramBot\Api\BotApi($token);
@@ -250,7 +282,15 @@ class Handle2
 
             $game->receive($message_id);
             //start bet
+
+            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+            \think\facade\Log::info($lineNumStr);
+            \think\facade\Log::info(" game->player_exec()");
             $reply_text =  $game->player_exec($text, Setting::find(3)->value == 1);
+
+            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+            \think\facade\Log::info($lineNumStr);
+            \think\facade\Log::info(" reply_text ::". $reply_text );
             var_dumpx($reply_text);   //"下注命令错误"
 
             if (!empty($reply_text)) {
@@ -290,6 +330,7 @@ class Handle2
                     $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
                     \think\facade\Log::info($lineNumStr);
                     \think\facade\Log::info( json_encode($params) );
+                    $GLOBALS['bet_ret_prm']=$params;
                     //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
                     return $this->apiRequestWebhook("sendMessage", $params);
                 }

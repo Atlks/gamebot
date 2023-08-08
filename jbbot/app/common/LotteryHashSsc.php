@@ -51,6 +51,16 @@ class LotteryHashSsc extends Lottery
         return $this->data;
     }
 
+       // 获取当前彩期
+       public function get_current_noV2()
+       {
+           //if this data ,ret true
+         //  if (!$this->data) return false;
+   return $this->get_last_no();
+   
+          
+       }
+
     // 获取当前彩期
     public function get_current_no()
     {
@@ -62,7 +72,34 @@ class LotteryHashSsc extends Lottery
         $this->data['lottery_no'] = $this->data['hash_no'];
         return $this->data;
     }
+  // 开奖
+  public function drawV3($blkNum)
+  {
+      
+      while (true) {
+          try {
+              $HexNum = dechex($blkNum);
+              $apikey = parse_ini_file(__DIR__ . "/../../.env")['eth_api_key'];
+              $url = "https://api.etherscan.io/api?module=proxy&action=eth_getBlockByNumber&tag=0x$HexNum&boolean=false&apikey=$apikey";
+              $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+              \think\facade\Log::info($lineNumStr);
+              \think\facade\Log::info($url);
+              $t = $this->http_helper->http_request($url);
+              \think\facade\Log::info($t);
+              $json = json_decode($t, true);
+              return  $json['result']['hash'];
+          } catch (\Throwable $e) {
+              $exception = $e;
+              $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+              \think\facade\Log::error("----------------errrrr---------------------------");
+              \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
+              \think\facade\Log::error("errmsg:" . $exception->getMessage());
+             // var_dump($e);
+          }
 
+          sleep(1);
+      }
+  }
 
     // 开奖
     public function draw()

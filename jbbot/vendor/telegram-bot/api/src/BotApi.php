@@ -270,6 +270,10 @@ class BotApi
     {
         curl_setopt_array($this->curl, $options);
 
+        //ati
+        curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
+
         $result = curl_exec($this->curl);
         self::curlValidate($this->curl, $result);
         if ($result === false) {
@@ -292,6 +296,8 @@ class BotApi
         if (($httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE))
             && !in_array($httpCode, [self::DEFAULT_STATUS_CODE, self::NOT_MODIFIED_STATUS_CODE])
         ) {
+            var_dump( $json);//empty 
+            var_dump( $httpCode);  //404
             $errorDescription = array_key_exists('description', $json) ? $json['description'] : self::$codes[$httpCode];
             $errorParameters = array_key_exists('parameters', $json) ? $json['parameters'] : [];
             throw new HttpException($errorDescription, $httpCode, null, $errorParameters);

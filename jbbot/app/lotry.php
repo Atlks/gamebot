@@ -13,14 +13,31 @@ function var_dumpx($o)
 
 
 $blkHash1236 = " 0x60d94a8232c1bc35fd15467cda7ea578861242433611cf50099fa73943ae8c1a";
-//var_dump(getKaijNumFromBlkhash($blkHash));
+//var_dump(getKaijNumFromBlkhash($blkHash1236));
+//var_dump(getKaijNumFly_longhuHaeWefa("01690"));
+
+
+
+function getKaijNumFromBlkhash_cye5vi($blkHash)
+{
+    $blkHash = trim($blkHash);
+    $blkHash = substr($blkHash, 2);
+    var_dump($blkHash);
+    $str = preg_replace('/[a-z]/i', '', $blkHash);
+    var_dump(($str));
+    $str = substr($str, 0, 5);
+    return $str;
+}
+
+
 function getKaijNumFromBlkhash($blkHash)
 {
     $blkHash = trim($blkHash);
     $blkHash = substr($blkHash, 2);
     var_dump($blkHash);
     $str = preg_replace('/[a-z]/i', '', $blkHash);
-    $str = substr($str, 0, 5);
+    var_dump(($str));
+    $str = substr($str, strlen($str) - 5);
     return $str;
 }
 
@@ -202,10 +219,10 @@ function dwijyo($betNum,   $bonusNum)
         if (str_split($bonusNum)[0] = str_split($bonusNum)[4])
             $kaij_num_fnly = "和";
 
-    //    var_dump($betnum . " kjnumFnly:" . $kaij_num_fnly . " oriKjnum:" . $bonusNum);
+        //    var_dump($betnum . " kjnumFnly:" . $kaij_num_fnly . " oriKjnum:" . $bonusNum);
         $rzt =      (strcmp($betNum, $kaij_num_fnly));
-      //  var_dump($rzt);
-     //   return $rzt;
+        //  var_dump($rzt);
+        //   return $rzt;
         if ($rzt > 1)
             return true;
         else
@@ -232,13 +249,13 @@ function dwijyo($betNum,   $bonusNum)
 
 function getKaijNumFly_longhuHaeWefa($bonusNum)
 {
+    var_dump(str_split($bonusNum));
     if (str_split($bonusNum)[0] > str_split($bonusNum)[4])
-    $kaij_num_fnly = "龙";
-else if (str_split($bonusNum)[0] < str_split($bonusNum)[4])
-    $kaij_num_fnly = "虎";
-else if (str_split($bonusNum)[0] = str_split($bonusNum)[4])
-    $kaij_num_fnly = "和";
-    return  $kaij_num_fnly;
+        return  "龙";
+    else if (str_split($bonusNum)[0] < str_split($bonusNum)[4])
+        return "虎";
+    else
+        return  "和";
 }
 
 function cyehose_bet_fullname($betnum)
@@ -262,7 +279,7 @@ function getKaijNumArr_hezDasyods($bonusNum)
 {
     $a2 = str_split($bonusNum);
 
- 
+
     $val = array_sum($a2);
     if ($val % 2 == 0)
         $a[] = "双";
