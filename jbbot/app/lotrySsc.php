@@ -110,6 +110,9 @@ function getAmt_frmBetStr($str)
     return  $number;
 }
 
+//var_dump(getWefa("1/1/100"));
+
+//C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe app/lotrySsc.php
 // 获取玩法
 function getWefa($bet_nums)
 {
@@ -119,7 +122,7 @@ function getWefa($bet_nums)
     $wefa_rex = '特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d\/[大小单双]\/\d+';
     $wefa_rex = $wefa_rex . ",和值大小单双玩法=和[大小单双]\d+,龙虎和玩法=[龙虎和]\d+,,前后三玩法=[前中后][豹顺对半杂]\d+";
     // 和值单独判断.bcs rex cant ok... in php 
-    var_dumpx($numb);
+   // var_dump($numb);
     // 和值单独判断.bcs rex cant ok... in php 
 
     if (startsWith($numb, "前") || startsWith($numb, "中") || startsWith($numb, "后"))
@@ -129,11 +132,11 @@ function getWefa($bet_nums)
     else if (str_delNum($bet_nums) == "和")
         return  "龙虎和玩法";
 
-    global $wefa_rex;
+   // global $wefa_rex;
     $a = explode(",", $wefa_rex);
 
     $arr = $a;
-
+//var_dump( $arr);
 
 
     foreach ($arr as $key => $value) {
@@ -154,10 +157,10 @@ function getWefa($bet_nums)
         print_rx($p);
 
         if (preg_match($p, $numb)) {
-            print_rx("     match..");
+            print_rx("     match..".$p." ". $numb);
             return   $wefa;
         } else
-            print_rx("   not match..");
+            print_rx("   not match..".$p." ". $numb);
     }
 
     $arr = array_map(function ($item) {

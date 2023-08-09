@@ -31,7 +31,9 @@ class NNGame
 
     private $command = [];
     private $exec_pattern = null;
-public $keyword;
+
+    public $keyboard;
+    public $keyword;
     public $bot_words;
     private $replace_keyword = [
         "【用户】" => 'playerName',
@@ -96,7 +98,7 @@ public $keyword;
     private function playerId()
     {
         if ($this->player)
-            return $this->player->getId();
+            return $this->player->getId()."";
         return "";
     }
 
@@ -114,6 +116,7 @@ public $keyword;
 
     private function w_amount()
     {
+        return "调用这个";
     }
 
     public function setup($config)
@@ -128,12 +131,12 @@ public $keyword;
         $this->addCommand($config['Rollover'], 'callRollover');
         $this->addCommand($config['CancelAll'], 'callCancelAll');
         $this->addCommand($config['Cancel'], 'callCancel');
-        $this->addCommand($config['Withdraw'], 'callWithdraw', "[1-9]\d+$");
+        $this->addCommand($config['Withdraw'], 'callWithdraw', "\d+$");
         $this->addCommand($config['LastRecord'], 'callLastRecord');
         $this->addCommand($config['Results'], 'callResults');
         $this->addCommand($config['Address'], 'callAddress');
         $this->addCommand($config['Rebate'], 'callRebate');
-        $this->addCommand($config['Recharge'], 'callRecharge', "[1-9]\d+$");
+        $this->addCommand($config['Recharge'], 'callRecharge', "\d+$");
         $this->addCommand($config['Trend'], 'callResults');
         //$this->addCommand($config['Trend'], 'callTrend', "\d+$");
 
@@ -228,7 +231,7 @@ public $keyword;
             $this->bet_types = BetTypes::select()->toArray();
             foreach ($bet_string_list as $v) {
                 foreach ($this->bet_types as $type) {
-                    if (preg_match('/^' . $type['Regex'] . '/u', $v, $out)) {
+                    if (preg_match('/^' . $type['Regex'] . '/iu', $v, $out)) {
                         $amount = intval($out[1]);
                         $bet_text = $type['Display'] . "-" . $amount;
                         // type的扩展值来表示开始的倍数
@@ -299,8 +302,7 @@ public $keyword;
 
             // 冻结余额
             $frozen_amount -= $total_bet_amount;
-            if (!$this->player->frozen($frozen_amount, $this->lottery_no, "下注冻结"))
-            {
+            if (!$this->player->frozen($frozen_amount, $this->lottery_no, "下注冻结")) {
                 $text = "下注失败:" . $this->player->get_last_error();
                 $this->action = false;
                 return $text;
@@ -311,7 +313,7 @@ public $keyword;
                 . '下注内容：' . "\r\n"
                 . $text
                 . "\r\n"
-                . "冻结金额:" . number_format($frozen_amount/100, 2, ".", "") . "\n"
+                . "冻结金额:" . number_format($frozen_amount / 100, 2, ".", "") . "\n"
                 . "余额:" . $this->player->getBalance();
             return $text;
         }
@@ -325,7 +327,7 @@ public $keyword;
         // 先判断是否是执行一般指令
         if (preg_match($this->exec_pattern, $text, $cmd)) {
             if (preg_match('/\d+$/u', $cmd[0], $test)) {
-                $cmd[0] = substr($cmd[0], 0, -strlen($test[0])) . "[1-9]\d+$";
+                $cmd[0] = substr($cmd[0], 0, -strlen($test[0])) . "\d+$";
             }
             $func = $this->command[$cmd[0]];
             if (!empty($func)) {
@@ -396,7 +398,7 @@ public $keyword;
         if ($this->player) {
             if (preg_match('/\d+/', $text, $out)) {
                 $amount = $out[0] * 100;
-                if($amount > 9000000000) return "";
+                if ($amount > 9000000000) return "";
                 if ($this->player->Withdraw($amount, $this->message_id, ""))
                     $text = $this->getWords('下分申请成功');
                 else {
@@ -463,7 +465,7 @@ public $keyword;
         if ($this->player) {
             if (preg_match('/\d+/', $text, $out)) {
                 $amount = $out[0] * 100;
-                if($amount > 9000000000) return "";
+                if ($amount > 9000000000) return "";
                 $this->player->Recharge($amount, $this->message_id, "");
                 $text = $this->getWords('上分申请成功');
                 return $text;

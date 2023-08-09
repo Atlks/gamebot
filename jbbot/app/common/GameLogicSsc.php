@@ -397,6 +397,9 @@ class GameLogicSsc
         // 内容字体颜色（灰色）
         $text_color = imagecolorallocate($img, 0, 0, 0);
 
+        $text_color_black = imagecolorallocate($img, 0, 0, 0);
+        $green_color = imagecolorallocate($img, 100, 149, 237);
+
         // 大双为红色
         $big_2_color = imagecolorallocate($img, 255, 0, 0);
         // 小单为青色
@@ -442,13 +445,13 @@ class GameLogicSsc
                 if ($k == 'zuhe') {
                     $strarr =  preg_split('/(?<!^)(?!$)/u', $value);
                     $color1 = $color2 = 0;
-                    if ($strarr[0] == "小") {
+                    if ($strarr[0] == "单") {
                         $color1 = $small_1_color;
                     } else {
                         $color1 = $big_2_color;
                     }
 
-                    if ($strarr[1] == "单") {
+                    if ($strarr[1] == "小") {
                         $color2 = $small_1_color;
                     } else {
                         $color2 = $big_2_color;
@@ -456,10 +459,13 @@ class GameLogicSsc
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $color1, $font, $strarr[0]);
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $big_small_with, $temp_height - $font_size / 2, $color2, $font, $strarr[1]);
                 } elseif ($k == 'limit') {
-                    if ($value == "极小") {
-                        $color = $big_2_color;
-                    } elseif ($value == "极大") {
-                        $color = $text_color;
+                    $green_color = imagecolorallocate($img, 100, 149, 237);
+                    if ($value == "龙") {
+                        $text_color_black = imagecolorallocate($img, 0, 0, 0);
+                       
+                        $color =$text_color_black;
+                    } elseif ($value == "虎") {
+                        $color =  $green_color;
                     } else
                         $color = $null_color;
 

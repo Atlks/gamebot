@@ -191,23 +191,19 @@ class NNGameLogic
                     $sum += $v['Bet'];
                 }
                 Logs::addLotteryBet($this->lottery_no, $sum);
-                $str_len = mb_strlen($text,'UTF-8');
-                if($str_len>4096)
-                {
+                $str_len = mb_strlen($text, 'UTF-8');
+                if ($str_len > 4096) {
                     $offset = 0;
                     $sub_str = $text;
                     $break = false;
-                    while(true)
-                    {
-                        $sub_str = mb_substr($text,$offset,4096,'UTF-8');
-                        $offset += mb_strlen($sub_str,'UTF-8');
+                    while (true) {
+                        $sub_str = mb_substr($text, $offset, 4096, 'UTF-8');
+                        $offset += mb_strlen($sub_str, 'UTF-8');
                         $bot->sendmessage($chat_id, $sub_str);
-                        if($offset>=$str_len)
+                        if ($offset >= $str_len)
                             break;
                     }
-                    
-                }
-                else
+                } else
                     $bot->sendmessage($chat_id, $text);
                 break;
             case 'draw':
@@ -255,10 +251,14 @@ class NNGameLogic
                 'turn' => "" . $log->No,
             ];
 
+            $arr = preg_split('/\|/', $log->Result);
+            if (!is_bool($arr))
+                $data['result'] = $arr[0];
+
             if (preg_match_all('/(?<=a|b|c)牛(\d|牛)/u', $log->Result, $mc)) {
-              $data['a'] = $mc[0][0];
-              $data['b'] = $mc[0][1];
-              $data['c'] = $mc[0][2];
+                $data['a'] = $mc[0][0];
+                $data['b'] = $mc[0][1];
+                $data['c'] = $mc[0][2];
             }
 
             array_push($records, $data);
@@ -272,8 +272,8 @@ class NNGameLogic
     private function createTrendImage($records)
     {
         // 数据
-        $data = ["turn" => '期数', "a" => "a(闲)", "b" => "b(闲)", "c" => "c(庄)"];
-        $row_x = ["turn" => '1234567', "a" => "牛几", "b" => "牛几", "c" => "牛几"];
+        $data = ["turn" => '期数', "result" => "结果", "a" => "a(闲)", "b" => "b(闲)", "c" => "c(庄)"];
+        $row_x = ["turn" => '1234567', "result" => "1 2 3", "a" => "牛几", "b" => "牛几", "c" => "牛几"];
         // TODO::字体路径
         $font = app()->getRootPath() . "public/msyhbd.ttc";
 
@@ -351,6 +351,13 @@ class NNGameLogic
 
         $x = 0;
         $title_x = 0;
+
+        $small_nn = array("牛1", "牛2", "牛3", "牛4", "牛5");
+        $big_nn = array("牛6", "牛7", "牛8", "牛9");
+        $big_nn_color = imagecolorallocate($img, 65, 105, 225);
+        $small_nn_color = imagecolorallocate($img, 0, 205, 205);
+        $text_nn_color = imagecolorallocate($img, 255, 255, 255);
+
         foreach ($pre_col_w as $k => $col_x) {
             $x += $x_padding * 2;
             $x += $col_x;
@@ -362,15 +369,19 @@ class NNGameLogic
         }
 
         // 写入表格
+        $room_in = 4;
         $temp_height = $title_height;
-
         foreach ($records as $key => $record) {
             # code...
             $next_x = 0;
             $temp_height += $row_hight + $y_padding;
             // 画线
+            $x = 0;
             imageline($img, 0, $temp_height, $img_width, $temp_height, $bg_color);
             foreach ($record as $k => $value) {
+                $col_x = $pre_col_w[$k];
+                $x += $x_padding * 2;
+                $x += $col_x;
                 if ($k == 'zuhe') {
                     $strarr =  preg_split('/(?<!^)(?!$)/u', $value);
                     $color1 = $color2 = 0;
@@ -407,6 +418,15 @@ class NNGameLogic
                         $color = $null_color;
 
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $color, $font, $value);
+                } else if ($k === "a") {
+                    imagefilledrectangle($img, $x - $col_x - $x_padding * 2 + $room_in, $temp_height - $row_hight - $y_padding + 1 + $room_in, $x - $room_in, $temp_height - $room_in, $big_nn_color);
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $text_nn_color, $font, $value);
+                } else if ($k === "b") {
+                    imagefilledrectangle($img, $x - $col_x - $x_padding * 2 + $room_in, $temp_height - $row_hight - $y_padding + 1 + $room_in, $x - $room_in, $temp_height - $room_in, $big_nn_color);
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $text_nn_color, $font, $value);
+                } else if ($k === "c") {
+                    imagefilledrectangle($img, $x - $col_x - $x_padding * 2 + $room_in, $temp_height - $row_hight - $y_padding + 1 + $room_in, $x - $room_in, $temp_height - $room_in, $big_2_color);
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $text_nn_color, $font, $value);
                 } else {
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $text_color, $font, $value);
                 }
@@ -478,7 +498,8 @@ class NNGameLogic
                 $result['a'] = $result['a'] == 0 ? 10 : $result['a'];
                 $result['b'] = $result['b'] == 0 ? 10 : $result['b'];
                 $result['c'] = $result['c'] == 0 ? 10 : $result['c'];
-                $text = "a牛" . $type_a . " b牛" . $type_b . " c牛" . $type_c;
+                $text = $result['a'] . " " . $result['b'] . " " . $result['c'] . "\r\n" .
+                    "a牛" . $type_a . " b牛" . $type_b . " c牛" . $type_c;
                 if ($result['a'] === $result['b'] && $result['a'] === $result['c']) {
                     $odds_a = $odds_b = -$result['c'];
                 } else {
@@ -613,6 +634,7 @@ class NNGameLogic
             $odds_a = $odds_b = $odds_c = $odds_d = $odds_e = 0;
             if ($this->game_type == 0) {
                 $result = ['a' => intval($arr[$count - 3]), 'b' => intval($arr[$count - 2]), 'c' => intval($arr[$count - 1])];
+                $number_text = $result['a'] . " " . $result['b'] . " " . $result['c'] . "|";
                 $type_a = $result['a'] == 0 ? "牛" : $result['a'] . "";
                 $type_b = $result['b'] == 0 ? "牛" : $result['b'] . "";
                 $type_c = $result['c'] == 0 ? "牛" : $result['c'] . "";
@@ -659,7 +681,9 @@ class NNGameLogic
                     'bet' => 0,
                     'payout' => 0,
                     'lose' => 0,            // 比pc28多一个字段,因为pc28玩家不赔付,而牛牛玩家需要赔付
-                    'back' => 0,            // 需要退还的本金
+                    'back' => 0,            // 赔付时需要退还的本金
+                    'lose_bet' => 0,        // 输掉时已经扣除的本金
+                    'return' => 0,          // 回本时需要退还的本金
                     'player' => new Player($user),
                 ];
             }
@@ -700,19 +724,22 @@ class NNGameLogic
             if ($odds > 0) {
                 $payout = $v['Bet'] * ($odds + $bet_types[$betType_id]['value']) * (1 - $commission / 100);
                 $players[$user_id]['payout'] += $payout;
-                $players[$user_id]['back'] += $v['bet'];
+                $players[$user_id]['back'] += $v['Bet'];
                 $update['Payout'] = $payout;
                 $total_payout += $payout;
-            } else {
+            } else if ($odds < 0) {
                 $lose = $v['Bet'] * ($odds - $bet_types[$betType_id]['value']);
                 $players[$user_id]['lose'] += $lose;
+                $players[$user_id]['lose_bet'] += $v['Bet'];
+            } else {
+                $players[$user_id]['return'] += $v['Bet'];
             }
 
             array_push($records_update, $update);
         }
 
         // 开奖记录更新
-        Logs::addlotteryResult($this->lottery_no, $text, $total_payout);
+        Logs::addlotteryResult($this->lottery_no, $number_text . $text, $total_payout);
 
         $text  = $text . "\r\n"
             . "=====本期中奖名单======" . "\r\n";
@@ -723,11 +750,13 @@ class NNGameLogic
             $income = $v['payout'] + $v['lose'];
             $lose = $v['lose'];
             $back = $v['back'];
+            $lose_bet = $v['lose_bet'];
+            $return = $v['return'];
             // 玩家需要更新字段,Total_Payout;
             // 玩家的日报需要更新字段 PayoutAmount,Income;
             // 结算之后计入玩家流水
-            $player->win($v['bet'], $v['payout'], $income, $lose, $back);
-            array_push($temp_arr, array('player' => $player, 'income' => $income));
+            $player->win($v['bet'], $v['payout'], $income, $lose + $lose_bet, $back + $return);
+            array_push($temp_arr, array('player' => $player, 'income' => $income + $back));
         }
 
         $helper = new Helper();

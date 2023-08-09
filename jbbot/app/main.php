@@ -279,6 +279,7 @@ function kaij_draw_evt()
     // $gl->lottery_no = $lottery_no;
 
     $data['hash_no'] =  $lottery_no;
+    $data['lottery_no'] =  $lottery_no;
     $gmLgcSSc->lottery->setData($data);
     $gmLgcSSc->hash_no =  $lottery_no;
     $gmLgcSSc->lottery_no = $lottery_no;

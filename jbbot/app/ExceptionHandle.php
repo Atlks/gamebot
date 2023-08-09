@@ -47,8 +47,8 @@ class ExceptionHandle extends Handle
         \think\facade\Log::error("errtraceStr:".$exception->getTraceAsString());
         \think\facade\Log::error("----------------errrrr finish---------------------------");
 
-        file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt", $exception->getMessage() .PHP_EOL, FILE_APPEND);
-        file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt",  $j.PHP_EOL, FILE_APPEND);
+       // file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt", $exception->getMessage() .PHP_EOL, FILE_APPEND);
+      //  file_put_contents( $errdir.date('Y-m-d H')."ex648_exhdlRpt.txt",  $j.PHP_EOL, FILE_APPEND);
         var_dump($exception->getMessage().$exception->getFile().":".$exception->getLine());
         var_dump($exception->getTraceAsString());
         

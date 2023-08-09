@@ -18,7 +18,7 @@ use app\model\GameString;
 use app\common\LotteryHash28 as Hash28;
 use app\common\LotteryPC28 as PC28;
 
-//   app\common\GameLogic
+
 class GameLogic
 {
     public $lottery_no = 2;

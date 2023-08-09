@@ -12,11 +12,20 @@ $tasksList = [];
 
 //-----test 
 $f = function () {
-    echo 1111111111111111111111111;
+   // sleep(10);
+    echo 55555555555555;
     echo date("Y-m-d G:H:s");
-    echo 55; echo PHP_EOL;
+     echo PHP_EOL;
 };
 timer_add("tsk11", 5, $f);
+
+$f2 = function () {
+    echo 222222222222222222;
+    echo date("Y-m-d G:H:s");
+    echo PHP_EOL;
+};
+timer_add("tsk11", 2, $f2);
+
 
 Worker_runAll();
 
@@ -62,7 +71,9 @@ function Worker_runAll()
         }
 
       //  var_dump($tasksList);die();
-        sleep(1);
+      usleep(100*1000);  //100ms
+    
+
 
      //   var_dump($tasksList);
     }

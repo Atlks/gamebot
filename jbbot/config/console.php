@@ -6,7 +6,7 @@ return [
     // 指令定义
     'commands' => [
         'runx' => 'app\main', 'swoole2' => 'app\main',
-        'keywdReqHdlr' => 'app\keywdReqHdlr',
+        'keywdReqHdlr' => 'app\keywdReqHdlr', 'testx' => 'app\testCls',
         
     ],
 ];
