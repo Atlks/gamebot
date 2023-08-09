@@ -317,13 +317,14 @@ class GameLogicSsc
             }
 
             $data['result'] = $log->Result;
-            require_once  __DIR__ . "/../lotry.php";
+            require_once  __DIR__ . "/../lotrySsc.php";
             $data['sum'] = "" .   array_sum(str_split($log->Result));
-            $data['zuhe'] = join(" ", getKaijNumArr_hezDasyods($log->Result));  //和值大小单双;
+            $data['zuhe'] = join("", getKaijNumArr_hezDasyods($log->Result));  //和值大小单双;
 
+            \think\facade\Log::info("zuhe大小单双:" . $data['zuhe']);
             $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-           \think\facade\Log::info($lineNumStr);
-            \think\facade\Log::info("kaijnum:".$log->Result);
+            \think\facade\Log::info($lineNumStr);
+            \think\facade\Log::info("kaijnum:" . $log->Result);
             $data['limit'] = getKaijNumFly_longhuHaeWefa($log->Result);  //龙湖
             array_push($records, $data);
         }
@@ -967,7 +968,7 @@ class GameLogicSsc
     public function DrawLotteryV2($hash)
     {
         $total_payout = 0;
-        require_once  __DIR__ . "/../lotry.php";
+        require_once  __DIR__ . "/../lotrySsc.php";
         $kaij_num = getKaijNumFromBlkhash($hash);
         $result_text = $kaij_num;
 
@@ -1005,13 +1006,17 @@ class GameLogicSsc
             $wanfa = getWefa($betContext);
 
             $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-            var_dump(" dwijyo() betnumL:" . $betContext . "  kaijnum:" . $kaij_num  . $lineNumStr);
+            $logtxt = " dwijyo() betnumL:" . $betContext . "  kaijnum:" . $kaij_num  . $lineNumStr;
+            var_dump($logtxt);
+            \think\facade\Log::info($lineNumStr);
+            \think\facade\Log::info($logtxt);
             if (!dwijyo($betContext, $kaij_num)) {
-
+                \think\facade\Log::info("dwijyuo rzt false");
                 var_dump("dwijyuo rzt false");
                 continue;
             }
             var_dump("dwijyuo rzt true");
+            \think\facade\Log::info("dwijyuo rzt true");
             $odds = $v['Odds'];
             var_dump($odds);
             $payout = $v['Bet'] * $odds;
@@ -1020,17 +1025,21 @@ class GameLogicSsc
 
 
             $player = $v['player'];
-            $income = $payout - $v['bet'];
+            $income = $payout - $v['Bet'];
             var_dump($income);
             // 玩家需要更新字段,Total_Payout;
             // 玩家的日报需要更新字段 PayoutAmount,Income;
             // 结算之后计入玩家流水
             $user = $this->userDb->findByUserId($user_id);
             //  var_dump(  $user);
-
+            // $user['']
+            var_dump($user);
+            \think\facade\Db::name('bet_record')
+                ->where('userid', $user_id)->where('id', $record_id)
+                ->update(['Payout' => $payout]);
             $player = new \app\common\Player($user);
             //  win （betAmt,PaybackAmt,IncomeAmt
-            $player->win($v['bet'], $payout, $income);
+            $player->win($v['Bet'], $payout, $income);
 
 
 
@@ -1067,8 +1076,9 @@ class GameLogicSsc
         // Attempt to assign property "Payouts" on null     result_text jsut kaijnum
         Logs::addlotteryResult($this->lottery_no, $result_text, $total_payout);
         ////======-------------================= 回显榜单
-        $text = $result_text;
-        $text  = $text . "\r\n"
+
+        $text = "第" . $this->lottery_no . "期开奖结果" .  $result_text . "\r\n";
+        $text  = $text
             . "=====本期中奖名单======" . "\r\n";
         $helper = new Helper();
         $helper->BubbleSort1($temp_arr, 'income');
@@ -1100,7 +1110,7 @@ class GameLogicSsc
         if (is_bool($hash)) return;
         $this->hash = substr($hash, 0, 15) . "..." . substr($hash, -10);
         $total_payout = 0;
-        require_once  __DIR__ . "/../lotry.php";
+        require_once  __DIR__ . "/../lotrySsc.php";
         $kaij_num = getKaijNumFromBlkhash($hash);
         $result_text = $kaij_num;
 

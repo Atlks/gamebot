@@ -20,7 +20,7 @@ $text = "=====本期中奖名单======";
 //$text = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm 
 //$text = str_replace("-", "\=", $text);
 var_dump($text);
-require_once(__DIR__."/../lib/tlgrmV2.php");
+require_once(__DIR__ . "/../lib/tlgrmV2.php");
 //bot_sendMsgTxtMode($text, BOT_TOKEN, chat_id);
 //die();
 function sendmessage($text)
@@ -57,7 +57,7 @@ class main extends Command
                 \think\facade\Log::error("errmsg:" . $exception->getMessage());
                 var_dump($exception);
 
-               // throw $exception; // for test
+                // throw $exception; // for test
             }
             sleep(1);
         }
@@ -86,138 +86,72 @@ function    main_process()
     global $lottery_no;
 
     // $lottery_no = 1133;
-    // 下注时间 1分40s
-    $bet_time = Setting::find(6)->value; //1*60*1000;
-    $bet_time_sec = $bet_time / 1000;
-    //  $bet_time_sec = 10;
-    var_dump(' $bet_time_sec:' . $bet_time_sec);   // $bet_time:105000     105s   1分40s
+
     startBet();
-    sleep($bet_time_sec);
 
-
-
-
-
-    //  $gl->game_state = 'show_waring';
     //-----------封盘警告时间
+    ($delay_waittime_Start_warngingEvt14 = function () {
+        // 下注时间 1分40s
+        $bet_time = Setting::find(6)->value; //1*60*1000;
+        $bet_time_sec = $bet_time / 1000;
+        //  $bet_time_sec = 10;
+        var_dump(' $bet_time_sec:' . $bet_time_sec);   // $bet_time:105000     105s   1分40s
+        sleep($bet_time_sec);
 
-    $waring_time = Setting::find(7)->value; //30*1000;
-    $waring_time_sec = $waring_time / 1000;
-    fenpan_wanrning($waring_time_sec);
-    sleep($waring_time_sec);
+        $waring_time = Setting::find(7)->value; //30*1000;
+        $waring_time_sec = $waring_time / 1000;
+        fenpan_wanrning_event($waring_time_sec);
+    })();
+    //  $warngingEvt14();
 
-
-    //-------------封盘时间
-    $stop_bet_time = Setting::find(8)->value; //10*1000;
-    $stop_bet_time_sec = $stop_bet_time / 1000;    //  20s
-    //  $stop_bet_time_sec = 3;
-    // 1133期停止下注==20秒后开奖
-    $stop_bet_str = "console:" . $lottery_no . "期停止下注==" . $stop_bet_time / 1000 . "秒后开奖\n";
-    sendmessage($stop_bet_str);
-    var_dump(' $stop_bet_time_sec:' . $stop_bet_time_sec);
-    fenpan_stop();
-
-
-    sleep($stop_bet_time_sec);
+    ($delay_waittime_evt = function () {
+    })();
 
 
-    //---------------------开奖流程
-    $draw_str = "console:" .  $lottery_no . "期开奖中..console";
-    sendmessage($draw_str);
-
-    kaij_draw_prcs();
-
-    $show_str = "console:" . $lottery_no . "期开奖完毕==开始下注 \r\n";
-    sendmessage($show_str);
-    // $gl->DrawLottery();
-
-}
-
-function  fenpan_wanrning($waring_time_sec)
-{
-
-    $bot_words = \app\model\BotWords::where('Id', 1)->find();
-    // $waring_time_sec = 5;
-    // 1133期还有50秒停止下注
-    global $lottery_no;
-    $waring_str = "console:" . $lottery_no . "期还有" . $waring_time_sec . "秒停止下注\r\n";
-    sendmessage($waring_str);
-    var_dump(' $waring_time_sec:' . $waring_time_sec);  ///   $waring_time_sec:50
-    $words = $bot_words->StopBet_Waring;
-    $text = $words;
-
-    echo   $text . PHP_EOL;
-    bot_sendMsgTxtMode($text, BOT_TOKEN, chat_id);
-    //  $bot->sendmessage($chat_id, $text);
-}
-
-function kaij_draw_prcs()
-{
-
-    global $lottery_no;
-    $ltr =   new \app\common\LotteryHashSsc();
-    $blkHash = $ltr->drawV3($lottery_no);
-    $text = "第" . $lottery_no . "期开奖结果" . "\r\n";
-
-    $text = $text . "本期区块号码:" . $lottery_no . "\r\n"
-        . "本期哈希值:\r\n" . $blkHash . "\r\n";
-    sendmessage($text);
-    //  $text .= $this->result . "\r\n";
-    sendmessageBotNConsole($text);
-
-    $gmLgcSSc = new   \app\common\GameLogicSsc();  //comm/gamelogc
-   // $gl->lottery_no = $lottery_no;
-
-    $data['hash_no'] =  $lottery_no;
-    $gmLgcSSc->lottery->setData($data);
-    $gmLgcSSc->hash_no =  $lottery_no;
-    $gmLgcSSc->lottery_no = $lottery_no;
-
-    $echoTxt = $gmLgcSSc->DrawLotteryV2($blkHash);    // if finish chg stat to next..
-    bot_sendMsgTxtMode($echoTxt, BOT_TOKEN, chat_id);
 
 
-    $gmLgcSSc ->SendTrendImage(20);// 生成图片
-    $cfile = new \CURLFile(app()->getRootPath() . "public/trend.jpg");
-    $bot = new \TelegramBot\Api\BotApi(BOT_TOKEN);
-    $bot->sendPhoto(chat_id, $cfile);
-  
-    \think\facade\Db::close();
+    //-------------封盘时间   
+    ($delay_waittime_toStart_stop_evt = function () {
+        $waring_time = Setting::find(7)->value; //30*1000;
+        $waring_time_sec = $waring_time / 1000;
+
+        sleep($waring_time_sec);
+
+        global $lottery_no;
+
+        $stop_bet_time = Setting::find(8)->value; //10*1000;
+        $stop_bet_time_sec = $stop_bet_time / 1000;    //  20s
+        //  $stop_bet_time_sec = 3;
+        // 1133期停止下注==20秒后开奖
+        $stop_bet_str = "console:" . $lottery_no . "期停止下注==" . $stop_bet_time / 1000 . "秒后开奖\n";
+        sendmessage($stop_bet_str);
+        var_dump(' $stop_bet_time_sec:' . $stop_bet_time_sec);
+        fenpan_stop_event();
+    })();
+
+
+ //-------------开始开奖流程  
+    ($delay_waittime_start_Kaijyo_evt = function () {
+        global $lottery_no;
+        $stop_bet_time = Setting::find(8)->value; //10*1000;
+        $stop_bet_time_sec = $stop_bet_time / 1000;    //  20s
+        $delay_to_statrt_Kaijyo_sec=  $stop_bet_time_sec;
+        sleep($delay_to_statrt_Kaijyo_sec);
+        //---------------------开奖流程
+        $draw_str = "console:" .  $lottery_no . "期开奖中..console";
+        sendmessage($draw_str);
+
+        kaij_draw_evt();
+
+        $show_str = "console:" . $lottery_no . "期开奖完毕==开始下注 \r\n";
+        sendmessage($show_str);
+        // $gl->DrawLottery();
+    })();
 }
 
 
 
-function fenpan_stop()
-{
 
-    $bot_words = \app\model\BotWords::where('Id', 1)->find();
-    $words = $bot_words->StopBet_Notice;
-    $text = $words;
-    echo   $text . PHP_EOL;
-    sendmessageBotNConsole($text);
-    global $lottery_no;
-    $records = \app\common\Logs::getBetRecordByLotteryNo($lottery_no);
-    $text = "--------本期下注玩家---------" . "\r\n";
-    $sum = 0;
-    foreach ($records as $k => $v) {
-        $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $v['BetContent'] . "\r\n";
-        $sum += $v['Bet'];
-    }
-    echo   $text . PHP_EOL;
-    $msg = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm  BCS is markdown mode
-    bot_sendMsg($msg, BOT_TOKEN, chat_id);
-    // sendmessageBotNConsole($text);
-
-    $text = "第" . $lottery_no . "期 [点击官方开奖](https://etherscan.io/block/" . $lottery_no . ")";
-    sendmessageBotNConsole($text);
-
-  // public function StopBet()
-    
-        $set = Setting::find(3);
-        $set->value = 1;
-        $set->save();
-    \think\facade\Db::close();
-}
 
 function startBet()
 {
@@ -265,14 +199,100 @@ function startBet()
     \think\facade\Log::info($lineNumStr);
     \think\facade\Log::info($text);
     //sendmessageBotNConsole($text);
-   
-    $bot = new \TelegramBot\Api\BotApi(BOT_TOKEN);
-      $bot->sendPhoto(chat_id, $cfile, $text, null, null, null, false, "MarkdownV2");
 
-     //// 更新状态开放投注
-      $set = Setting::find(3);
-      $set->value = 0;
-      $set->save();
+    $bot = new \TelegramBot\Api\BotApi(BOT_TOKEN);
+    $bot->sendPhoto(chat_id, $cfile, $text, null, null, null, false, "MarkdownV2");
+
+    //// 更新状态开放投注
+    $set = Setting::find(3);
+    $set->value = 0;
+    $set->save();
+    \think\facade\Db::close();
+}
+function  fenpan_wanrning_event($waring_time_sec)
+{
+
+    $bot_words = \app\model\BotWords::where('Id', 1)->find();
+    // $waring_time_sec = 5;
+    // 1133期还有50秒停止下注
+    global $lottery_no;
+    $waring_str = "console:" . $lottery_no . "期还有" . $waring_time_sec . "秒停止下注\r\n";
+    sendmessage($waring_str);
+    var_dump(' $waring_time_sec:' . $waring_time_sec);  ///   $waring_time_sec:50
+    $words = $bot_words->StopBet_Waring;
+    $text = $words;
+
+    echo   $text . PHP_EOL;
+    bot_sendMsgTxtMode($text, BOT_TOKEN, chat_id);
+    //  $bot->sendmessage($chat_id, $text);
+}
+
+
+
+function fenpan_stop_event()
+{
+
+    $bot_words = \app\model\BotWords::where('Id', 1)->find();
+    $words = $bot_words->StopBet_Notice;
+    $text = $words;
+    echo   $text . PHP_EOL;
+    sendmessageBotNConsole($text);
+    global $lottery_no;
+    $records = \app\common\Logs::getBetRecordByLotteryNo($lottery_no);
+    $text = "--------本期下注玩家---------" . "\r\n";
+    $sum = 0;
+    foreach ($records as $k => $v) {
+        $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $v['BetContent'] . "\r\n";
+        $sum += $v['Bet'];
+    }
+    echo   $text . PHP_EOL;
+    $msg = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm  BCS is markdown mode
+    bot_sendMsg($msg, BOT_TOKEN, chat_id);
+    // sendmessageBotNConsole($text);
+
+    $text = "第" . $lottery_no . "期 [点击官方开奖](https://etherscan.io/block/" . $lottery_no . ")";
+    sendmessageBotNConsole($text);
+
+    // public function StopBet()
+
+    $set = Setting::find(3);
+    $set->value = 1;
+    $set->save();
     \think\facade\Db::close();
 }
 
+function kaij_draw_evt()
+{
+
+    global $lottery_no;
+    $ltr =   new \app\common\LotteryHashSsc();
+    $blkHash = $ltr->drawV3($lottery_no);
+    $text = "第" . $lottery_no . "期开奖结果" . "\r\n";
+
+    $text = $text . "本期区块号码:" . $lottery_no . "\r\n"
+        . "本期哈希值:\r\n" . $blkHash . "\r\n";
+    sendmessage($text);
+    //  $text .= $this->result . "\r\n";
+    sendmessageBotNConsole($text);
+
+    $gmLgcSSc = new   \app\common\GameLogicSsc();  //comm/gamelogc
+    // $gl->lottery_no = $lottery_no;
+
+    $data['hash_no'] =  $lottery_no;
+    $gmLgcSSc->lottery->setData($data);
+    $gmLgcSSc->hash_no =  $lottery_no;
+    $gmLgcSSc->lottery_no = $lottery_no;
+
+
+
+    $echoTxt = $gmLgcSSc->DrawLotteryV2($blkHash);    // if finish chg stat to next..
+    bot_sendMsgTxtMode($echoTxt, BOT_TOKEN, chat_id);
+
+
+    $gmLgcSSc->SendTrendImage(20); // 生成图片
+    $cfile = new \CURLFile(app()->getRootPath() . "public/trend.jpg");
+    $bot = new \TelegramBot\Api\BotApi(BOT_TOKEN);
+    $bot->sendPhoto(chat_id, $cfile);
+
+    \think\facade\Db::close();
+}

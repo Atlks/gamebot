@@ -216,6 +216,13 @@ class Player
 
     public function win($bet, $payout, $income, $lose = null, $back = null)
     {
+ // [10000,20000,10000]
+        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        \think\facade\Log::info($lineNumStr);
+        \think\facade\Log::info(json_encode(   func_get_args() ));
+        //  [null,20000,20000]
+     
+          $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
         $user = User::where('Tg_Id', $this->id)->find();
         $dirty = false;
         if ($payout > 0) {

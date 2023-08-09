@@ -7,7 +7,7 @@ namespace app\controller;
 use think\Request;
 use app\model\Setting;
 use app\model\BotWords;
-use app\common\Game2 as Game;
+use app\common\Game2handlrLogic as Game;
 //use app\common\NNGame;
 use app\model\Test;
 use app\common\Logs;
@@ -102,11 +102,11 @@ class Handle2
     }
 
 
-    //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   game2/testtype   
+    //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   Game2handlrLogic/testtype   
 
     //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/processMessageTest
     //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/gettypex
-    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testDraw2
+    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testDrawV2
  //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\modyfing\jbbot\public\index2.php   handle2/testGenePic
     
     // C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\modyfing\jbbot\public\index2.php   handle2/testDraw
@@ -130,7 +130,7 @@ class Handle2
         // var_dump( $obj->draw());
         // var_dump( $obj->drawV2());
     }
-
+ //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\modyfing\jbbot\public\index2.php   handle2/testDrawV2
     public function testDrawV2()
     {
         echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" . PHP_EOL;
@@ -139,7 +139,8 @@ class Handle2
        
         $gmLgcSSc = new    \app\common\GameLogicSsc();
 
-        $data['hash_no'] = 17870027;
+        $data['hash_no'] = 17811427;
+        $data['lottery_no'] = 17811427;
         $gmLgcSSc->lottery->setData($data);
         $gmLgcSSc->hash_no =   $data['hash_no'];
         $gmLgcSSc->lottery_no = $data['hash_no'];
@@ -152,7 +153,7 @@ class Handle2
         $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
         //   \think\facade\Log::info($lineNumStr . " cnt row:" . count($rows));
     }
-
+   //dep
     public function testDraw()
     {
         echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" . PHP_EOL;
@@ -271,7 +272,7 @@ class Handle2
             //  $cmd= ' return new '. parse_ini_file(__DIR__."/../../.env")['handle_game'].'();';
             //  var_dumpx($cmd);
             //  $game=  eval($cmd);
-            $game = new \app\common\Game2();
+            $game = new \app\common\Game2handlrLogic();
 
             //  $game   new app\common\GameSsc();
             var_dumpx($game);
