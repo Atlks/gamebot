@@ -334,8 +334,10 @@ class Game2handlrLogic
         $this->action = true;
         $text = $text . "\r\n";
         //-------------------------------------开始下注
+        $bet_amt_total_arr=[];
         foreach ($bets as $key => $value) {
             $bet=$value;
+            $bet_amt_total_arr[]=$value['amount']/100;
          //   var_dump( $value);   //  need ['id n   odds]
             if (!$this->player->Bet($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'])) {
                 $text = "下注失败:" . $this->player->get_last_error();
@@ -355,11 +357,13 @@ class Game2handlrLogic
 
         //----------------------------- 回显
         $betNums105 = $content;
+        $bet_amt_total=array_sum($bet_amt_total_arr);
         $text =
             "【" . $this->player->getName() . '-' . $this->player->getId() . '】' . "\r\n"
-            . '下注内容：' . $content . "\r\n"
-            //   . $text
-            . "\r\n"
+            . '下注内容：' . getBetContxEcHo($content) . "\r\n"
+            .'下注:'. $bet_amt_total.PHP_EOL
+            .'已押:'. $bet_amt_total.PHP_EOL
+            //   . $text            
             . "余额:" . $this->player->getBalance();
 
         //   var_dump($text);

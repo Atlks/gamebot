@@ -3,7 +3,7 @@
 //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe app/lotrySsc.php
 //   特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d+[大|小|单|双]\d+,和值大小单双玩法=和[大|小|单|双]\d+,龙虎和玩法=[龙|虎|和]\d+,前后三玩法=[前|后][豹|顺|对|半|杂]\d+
 //1/1/1
-
+var_dump(dwijyo("小100", "38244"));
 //var_dump(join(" ",getKaijNumArr_hezDasyods("41278") ));
 
 function var_dumpx($o)
@@ -69,7 +69,7 @@ $glb = [];
 //var_dumpx(dwijyo("4/4/33", "12745"));
 //var_dumpx(dwijyo("后顺33", "32765"));
 //
-//
+
 
 //var_dump(dwijyo("和100", "15031"));
 //var_dumpx(dwijyo("前顺33", "90175"));
@@ -77,7 +77,27 @@ $glb = [];
 
 //var_dumpx(isShunzi("029"));
 //var_dumpx(isBanShunzi("029"));
+//var_dump(kaij_echo(12345));
+function kaij_echo($kaijNum)
+{
+    $a = str_split($kaijNum);
+    $sum = array_sum($a);
 
+    $kaij_num_dasyaodeshwo_fnly = join("", getKaijNumArr_hezDasyods($kaijNum));
+    //  $kaij_num_dasyaodeshwo_fnly =join("",getKaijNumArr_($kaijNum)) ;
+    $s = join("+", $a) . "=$sum $kaij_num_dasyaodeshwo_fnly " . getKaijNumFly_longhuHaeWefa($kaijNum);
+    return $s;
+}
+
+
+function getBetContxEcHo($bet_str)
+{
+    $wanfa = getWefa($bet_str);
+    if ($wanfa == "特码球玩法" || $wanfa == "特码球大小单双玩法") {
+        return getBetContxEcHo_temacyo($bet_str);
+    } else
+        return  $bet_str;
+}
 
 function getBetContxEcHo_temacyo($bet_str)
 {
@@ -97,6 +117,7 @@ function getBetContxEcHo_temacyo($bet_str)
     $cyo_num_rply = "数字" . $cyo_num;
     if (!is_numeric($cyo_num))
         $cyo_num_rply = $cyo_num;   //大小单双
+
     return     $cyoName . "球" . $cyo_num_rply . "  " . $cyo_arr[2] . ".00";
 }
 
@@ -110,33 +131,36 @@ function getAmt_frmBetStr($str)
     return  $number;
 }
 
-//var_dump(getWefa("1/1/100"));
-
+ //var_dump(getWefa("1/1/100"));
+ var_dump(getWefa("前豹100"));
 //C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe app/lotrySsc.php
 // 获取玩法
 function getWefa($bet_nums)
 {
     $numb = $bet_nums;
     // echo "betnum:" . $numb;
-    $wefa_rex = '特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d[大|小|单|双]\d+,和值大小单双玩法=和[大|小|单|双]\d+,龙虎和玩法=[龙|虎|和]\d+,前后三玩法=[前|后][豹|顺|对|半|杂]\d+';
+    //  $wefa_rex = '特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d[大|小|单|双]\d+,和值大小单双玩法=和[大|小|单|双]\d+,龙虎和玩法=[龙|虎|和]\d+,前后三玩法=[前|后][豹|顺|对|半|杂]\d+';
     $wefa_rex = '特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d\/[大小单双]\/\d+';
-    $wefa_rex = $wefa_rex . ",和值大小单双玩法=和[大小单双]\d+,龙虎和玩法=[龙虎和]\d+,,前后三玩法=[前中后][豹顺对半杂]\d+";
+    $wefa_rex = $wefa_rex . ",和值大小单双玩法=[大小单双]\d+";
+    $wefa_rex = $wefa_rex . ",龙虎和玩法龙虎=[龙虎]\d+,龙虎和玩法和=和\d+";
+
+    $wefa_rex = $wefa_rex . ",前后三玩法豹子=[前中后]豹\d+,前后三玩法顺子=[前中后]顺\d+,前后三玩法对子=[前中后]对\d+,前后三玩法半顺=[前中后]半\d+,前后三玩法杂六=[前中后]杂\d+";
     // 和值单独判断.bcs rex cant ok... in php 
-   // var_dump($numb);
+    // var_dump($numb);
     // 和值单独判断.bcs rex cant ok... in php 
 
-    if (startsWith($numb, "前") || startsWith($numb, "中") || startsWith($numb, "后"))
-        return  "前后三玩法";
-    else if (startsWith($numb, "龙") || startsWith($numb, "虎"))
-        return  "龙虎和玩法";
+  // if (startsWith($numb, "前") || startsWith($numb, "中") || startsWith($numb, "后"))
+   //     return  "前后三玩法";
+   if (startsWith($numb, "龙") || startsWith($numb, "虎"))
+        return  "龙虎和玩法龙虎";
     else if (str_delNum($bet_nums) == "和")
-        return  "龙虎和玩法";
+        return  "龙虎和玩法和";
 
-   // global $wefa_rex;
+    // global $wefa_rex;
     $a = explode(",", $wefa_rex);
 
     $arr = $a;
-//var_dump( $arr);
+    //var_dump( $arr);
 
 
     foreach ($arr as $key => $value) {
@@ -157,10 +181,10 @@ function getWefa($bet_nums)
         print_rx($p);
 
         if (preg_match($p, $numb)) {
-            print_rx("     match..".$p." ". $numb);
+            print_rx("     match.." . $p . " " . $numb);
             return   $wefa;
         } else
-            print_rx("   not match..".$p." ". $numb);
+            print_rx("   not match.." . $p . " " . $numb);
     }
 
     $arr = array_map(function ($item) {
@@ -203,21 +227,21 @@ function dwijyo($betNum,   $bonusNum)
         print_rx($kaij_num);
         return  in_array($dasyaodeshwo, $kaij_num);
     } else if ($wefa == "和值大小单双玩法") {
-        $betnum = str_splitX($betNum)[1];
-
+        $betnum = str_splitX($betNum)[0];
+        var_dump($betnum);
         $kaij_num = getKaijNumArr_hezDasyods($bonusNum);
         print_rx(" kaij num::");
-        print_rx($kaij_num);
+        var_dump($kaij_num);
 
 
         return  in_array($betnum, $kaij_num);
     } else if ($wefa == "龙虎和玩法") {
         $betnum = str_splitX($betNum)[0];   //"和"
-      //  var_dump($betnum);
+        //  var_dump($betnum);
         //开奖号码
         //  $kaij_num=
-      //  var_dump(str_split($bonusNum)[0]);
-      //  var_dump(str_split($bonusNum)[4]);
+        //  var_dump(str_split($bonusNum)[0]);
+        //  var_dump(str_split($bonusNum)[4]);
         if (str_split($bonusNum)[0] > str_split($bonusNum)[4])
             $kaij_num_fnly = "龙";
         else if (str_split($bonusNum)[0] < str_split($bonusNum)[4])
@@ -225,7 +249,7 @@ function dwijyo($betNum,   $bonusNum)
         else if (str_split($bonusNum)[0] == str_split($bonusNum)[4])
             $kaij_num_fnly = "和";
 
-      //  var_dump($betnum . " kjnumFnly:" . $kaij_num_fnly . " oriKjnum:" . $bonusNum);
+        //  var_dump($betnum . " kjnumFnly:" . $kaij_num_fnly . " oriKjnum:" . $bonusNum);
         $rzt =      (strcmp($betNum, $kaij_num_fnly));
         //  var_dump($rzt);
         //   return $rzt;
@@ -255,7 +279,7 @@ function dwijyo($betNum,   $bonusNum)
 
 function getKaijNumFly_longhuHaeWefa($bonusNum)
 {
-    var_dump(str_split($bonusNum));
+    // var_dump(str_split($bonusNum));
     if (str_split($bonusNum)[0] > str_split($bonusNum)[4])
         return  "龙";
     else if (str_split($bonusNum)[0] < str_split($bonusNum)[4])

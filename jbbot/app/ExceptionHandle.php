@@ -40,7 +40,9 @@ class ExceptionHandle extends Handle
         parent::report($exception);
         $errdir="";
         $j=json_encode($exception,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
-        \think\facade\Log::error("----------------errrrr---------------------------");
+      //  $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+      //  \think\facade\Log::error(  $lineNumStr);
+        \think\facade\Log::error("----------------errrrrx_tp_ex_cathr---------------------------");
         \think\facade\Log::error("file_linenum:".$exception->getFile().":".$exception->getLine());
         \think\facade\Log::error("errmsg:".$exception->getMessage());
      //   \think\facade\Log::error("errtrace:".$exception->getTrace());

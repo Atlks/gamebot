@@ -330,7 +330,7 @@ class GameLogicSsc
         }
 
         //print_r($records);
-        var_dump($records);
+       // var_dump($records);
         $this->createTrendImage($records);
     }
 
@@ -462,8 +462,8 @@ class GameLogicSsc
                     $green_color = imagecolorallocate($img, 100, 149, 237);
                     if ($value == "龙") {
                         $text_color_black = imagecolorallocate($img, 0, 0, 0);
-                       
-                        $color =$text_color_black;
+
+                        $color = $text_color_black;
                     } elseif ($value == "虎") {
                         $color =  $green_color;
                     } else
@@ -973,19 +973,25 @@ class GameLogicSsc
     //  对讲计算
     public function DrawLotteryV2($hash)
     {
+
+        $log_txt=__METHOD__. json_encode( func_get_args());
+      
+        \think\facade\Log::debug (  $log_txt);
+
+    //    \think\facade\Log::debug ( debug_backtrace());
+        
+        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        \think\facade\Log::debug (  $lineNumStr);
         $total_payout = 0;
+        \think\facade\Log::debug ( "bef getKaijNumFromBlkhash:" .$hash);
         require_once  __DIR__ . "/../lotrySsc.php";
+      
         $kaij_num = getKaijNumFromBlkhash($hash);
         $result_text = $kaij_num;
-
+        \think\facade\Log::debug ( "aft getKaijNumFromBlkhash:" .$hash);
         //if not inc number exit prcs
         if (!preg_match('/\d{1}+/', $hash))
             return;
-
-
-
-
-
         //计算输赢
         $bet_types = BetTypes::select()->toArray();
         $win_bet_ids = [];
@@ -1000,14 +1006,14 @@ class GameLogicSsc
         // bet_records需要跟新字段 Payout,Status,ResultId,Rebate
         $records_update = [];  //中奖记录
         $temp_arr = [];  //榜单显示临时变量
-        //---------------------开始计算输赢   得到中奖玩家名单 get bingo user lst
+        //---------------------#开始计算输赢   得到中奖玩家名单 get bingo user lst
         foreach ($records as $k => $v) {
             $record_id = $v['Id'];
             $user_id = $v['UserId'];  //tg id
             $betType_id = $v['Type'];
 
 
-
+            //-------------###判断输赢
             $betContext = $v['BetContent'];
             $wanfa = getWefa($betContext);
 
@@ -1025,9 +1031,10 @@ class GameLogicSsc
             \think\facade\Log::info("dwijyuo rzt true");
             $odds = $v['Odds'];
             var_dump($odds);
+            var_dump($v);
             $payout = $v['Bet'] * $odds;
             var_dump($payout);
-            //--------------------- 结算之后计入玩家流水----------------------
+            //---------------------### 赢家 结算之后计入玩家流水----------------------
 
 
             $player = $v['player'];
@@ -1053,46 +1060,28 @@ class GameLogicSsc
             // Rebate还没有计算过,暂时搁浅
             //   $user_id=12;
             array_push($temp_arr, array('player' => $player, 'income' => $income));
-            var_dump($players);
-            var_dump($user_id); // uid just tgid
-            if (!isset($players)) {
-
-
-                $players = [];
-            }
-            if (!isset($players[$user_id])) {
-                //  var_dump("ini arrkey")
-
-                $players[$user_id] = [];
-            }
-            var_dump($players[$user_id]);
-            if (!isset($players[$user_id]['payout']))
-                $players[$user_id]['payout'] = 0;
-
-            $players[$user_id]['payout'] += $payout;
             $update['Payout'] = $payout;
             $total_payout += $payout;
         }
         //  结束对讲
 
 
-        //--------------------- 开奖记录更新  updt 本期中将结果总结过统计
+        //--------------------- #开奖记录更新  updt 本期中将结果总结过统计
         // updt  LotteryLog
         var_dump($total_payout);
         // Attempt to assign property "Payouts" on null     result_text jsut kaijnum
         Logs::addlotteryResult($this->lottery_no, $result_text, $total_payout);
-        ////======-------------================= 回显榜单
+        ////======-------------=================#回显榜单
 
         $text = "第" . $this->lottery_no . "期开奖结果" .  $result_text . "\r\n";
         $text  = $text
+            .kaij_echo($result_text ).PHP_EOL
             . "=====本期中奖名单======" . "\r\n";
         $helper = new Helper();
         $helper->BubbleSort1($temp_arr, 'income');
-        foreach ($temp_arr as $v) {
-            $player = $v['player'];
-            $income = $v['income'];
-            $text = $text . $player->getName() . "【" . $player->getId() . "】" . number_format($income / 100.0, 2, ".", "") . "\r\n";
-        }
+
+        $text = $text . $this->calcIncome($this->lottery_no);
+
 
 
 
@@ -1108,133 +1097,40 @@ class GameLogicSsc
         return  $text;
     }
 
-    //  对讲计算
-    public function DrawLottery()
+    public function calcIncome($lotteryno)
     {
-        //  lotry=LotteryHash28()
-        $hash = $this->lottery->drawV2();    //   use for LotteryHash28 from eth block hash
-        if (is_bool($hash)) return;
-        $this->hash = substr($hash, 0, 15) . "..." . substr($hash, -10);
-        $total_payout = 0;
-        require_once  __DIR__ . "/../lotrySsc.php";
-        $kaij_num = getKaijNumFromBlkhash($hash);
-        $result_text = $kaij_num;
-
-        //if not inc number exit prcs
-        if (!preg_match('/\d{1}+/', $hash))
-            return;
-
-
-
-
-
-        //计算输赢
-        $bet_types = BetTypes::select()->toArray();
-        $win_bet_ids = [];
-
-        //print_r($win_bet_ids); 
-        var_dump($this->lottery_no);
-        //select from  BetRecord
-        $records = Logs::getBetRecordByLotteryNo($this->lottery_no);
-        //var_dump( $records);
-        var_dump(count($records));
-        $players = [];    //zhonjyo wanja
-        // bet_records需要跟新字段 Payout,Status,ResultId,Rebate
-        $records_update = [];  //中奖记录
-        $temp_arr = [];  //榜单显示临时变量
-        //---------------------开始计算输赢   得到中奖玩家名单 get bingo user lst
-        foreach ($records as $k => $v) {
-            $record_id = $v['Id'];
-            $user_id = $v['UserId'];  //tg id
-            $betType_id = $v['Type'];
-
-
-
-            $betContext = $v['BetContent'];
-            $wanfa = getWefa($betContext);
-
-            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-            var_dump(" dwijyo() betnumL:" . $betContext . "  kaijnum:" . $kaij_num  . $lineNumStr);
-            if (!dwijyo($betContext, $kaij_num)) {
-
-                var_dump("dwijyuo rzt false");
-                continue;
+        try{
+            $a=[];
+            $rows =  \think\facade\Db::name('bet_record')->where('lotteryno', '=', $lotteryno)->select();
+            //  var_dump( $rows);
+            //  var_dump( $rows[0]['UserName']);
+            foreach ($rows as $row) {
+                $betamt = $row['Bet'] / 100;
+    
+                var_dump($row['Payout'] / 100);
+                var_dump($betamt);
+                $payout = $row['Payout'];
+                var_dump($row['Payout'] / 100 - $betamt);
+                $income = $row['Payout'] / 100 -  $betamt;
+                $uid = $row['UserId'];
+                $uname = $row['UserName'];
+                $bettx=$row['BetContent'];
+                $txt = "$uname [$uid] $bettx 下注金额:$betamt 盈亏: $income \r\n";
+                var_dump($txt);
+                $a[] = $txt;
             }
-            var_dump("dwijyuo rzt true");
-            $odds = $v['Odds'];
-            var_dump($odds);
-            $payout = $v['Bet'] * $odds;
-            var_dump($payout);
-            //--------------------- 结算之后计入玩家流水----------------------
-
-
-            $player = $v['player'];
-            $income = $payout - $v['bet'];
-            var_dump($income);
-            // 玩家需要更新字段,Total_Payout;
-            // 玩家的日报需要更新字段 PayoutAmount,Income;
-            // 结算之后计入玩家流水
-            $user = $this->userDb->findByUserId($user_id);
-            //  var_dump(  $user);
-
-            $player = new \app\common\Player($user);
-            //  win （betAmt,PaybackAmt,IncomeAmt
-            $player->win($v['bet'], $payout, $income);
-
-
-
-            ////======-------------================= 回显榜单 zhun背
-            // Rebate还没有计算过,暂时搁浅
-            //   $user_id=12;
-            array_push($temp_arr, array('player' => $player, 'income' => $income));
-            var_dump($players);
-            var_dump($user_id); // uid just tgid
-            if (!isset($players)) {
-
-
-                $players = [];
-            }
-            if (!isset($players[$user_id])) {
-                //  var_dump("ini arrkey")
-
-                $players[$user_id] = [];
-            }
-            var_dump($players[$user_id]);
-            if (!isset($players[$user_id]['payout']))
-                $players[$user_id]['payout'] = 0;
-
-            $players[$user_id]['payout'] += $payout;
-            $update['Payout'] = $payout;
-            $total_payout += $payout;
+            return join("", $a);
+        }  catch (\Throwable $exception) {
+            $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+            \think\facade\Log::error("----------------errrrr5---------------------------");
+            \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
+            \think\facade\Log::error("errmsg:" . $exception->getMessage());
+            \think\facade\Log::error("errtraceStr:".$exception->getTraceAsString());
+            var_dump($exception);
+            return "";
+            // throw $exception; // for test
         }
-        //  结束对讲
-
-
-        //--------------------- 开奖记录更新  updt 本期中将结果总结过统计
-        // updt  LotteryLog
-        var_dump($total_payout);
-        Logs::addlotteryResult($this->lottery_no, $result_text, $total_payout);
-        ////======-------------================= 回显榜单
-        $text = $result_text;
-        $text  = $text . "\r\n"
-            . "=====本期中奖名单======" . "\r\n";
-        $helper = new Helper();
-        $helper->BubbleSort1($temp_arr, 'income');
-        foreach ($temp_arr as $v) {
-            $player = $v['player'];
-            $income = $v['income'];
-            $text = $text . $player->getName() . "【" . $player->getId() . "】" . number_format($income / 100.0, 2, ".", "") . "\r\n";
-        }
-
-
-
-        $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-        var_dump($lineNumStr);
-        var_dump("text:" . $text);
-        $this->result = $text;
-
-        //end   if (preg_match_all
-        $this->game_state = 'next';
+      
     }
 
     public function Next()

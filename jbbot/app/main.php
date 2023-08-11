@@ -15,6 +15,8 @@ define('chat_id', '-1001903259578');
 //$bot_token = "6426986117:AAFb3woph_1zOWFS5cO98XIFUPcj6GqvmXc";  //sscNohk
 //$chat_id = -1001903259578;
 
+require_once(__DIR__."/../lib/ex.php" );
+var_dump(test752());
 //$text = "--------本期下注玩家---------" . "\r\n";
 $text = "=====本期中奖名单======";
 //$text = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm 
@@ -52,9 +54,10 @@ class main extends Command
             } catch (\Throwable $exception) {
                 $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
                 //   \think\facade\Log::info($lineNumStr);
-                \think\facade\Log::error("----------------errrrr---------------------------");
+                \think\facade\Log::error("----------------errrrr2---------------------------");
                 \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
                 \think\facade\Log::error("errmsg:" . $exception->getMessage());
+                \think\facade\Log::error("errtraceStr:".$exception->getTraceAsString());
                 var_dump($exception);
 
                 // throw $exception; // for test
@@ -263,12 +266,14 @@ function fenpan_stop_event()
 
 function kaij_draw_evt()
 {
-
+    require_once  __DIR__ . "/lotrySsc.php";
     global $lottery_no;
     $ltr =   new \app\common\LotteryHashSsc();
     $blkHash = $ltr->drawV3($lottery_no);
+    var_dump( $blkHash);
     $text = "第" . $lottery_no . "期开奖结果" . "\r\n";
-
+    $kaij_num = getKaijNumFromBlkhash($blkHash);
+    $text = $text  .kaij_echo($kaij_num );
     $text = $text . "本期区块号码:" . $lottery_no . "\r\n"
         . "本期哈希值:\r\n" . $blkHash . "\r\n";
     sendmessage($text);
