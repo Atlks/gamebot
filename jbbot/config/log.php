@@ -18,6 +18,7 @@ return [
     // 日志通道列表
     'channels'     => [
         'file' => [
+            
             // 日志记录方式
             'type'           => 'File',
             // 日志保存目录

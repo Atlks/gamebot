@@ -227,6 +227,10 @@ class Logs
         $amount,
         $type
     ) {
+
+        $log_txt=__METHOD__. json_encode( func_get_args());
+      
+        \think\facade\Log::debug (  $log_txt);
         if (is_array($type)) {
             $check = true;
             foreach ($type as $k => $t) {

@@ -220,6 +220,9 @@ class Game2handlrLogic
     //  bet v2222
     public function regex_betV2($content)
     {
+        var_dump(__METHOD__. json_encode( func_get_args()));
+        $lineNumStr = __METHOD__. json_encode( func_get_args()).__FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        \think\facade\Log::info($lineNumStr);
         //   define('NO_CACHE_RUNTIME',True);
         var_dumpx("218L betnums:" . $content);
         \think\facade\Log::info("215L");
@@ -239,19 +242,18 @@ class Game2handlrLogic
         var_dumpx($this->bet_types); //   bet RX FROM DB
         // select betrx from db
         //echo  var_export($content,true) ;
-
-        $bet_str = [];
-        array_push($bet_str, $content);
-
+        $content=str_replace(" ", " ", $content);
+        $bet_str_arr = explode(" ", $content);
+        $bet_str_arr = array_filter($bet_str_arr);
 
 
         $before_bet = $this->player->getBetRecord($this->lottery_no);
         $bets = array();
         $text = "";
-        $bet_str = array_filter($bet_str);
+     
         // var_dumpx(var_export($bet_str, true));
         //---------------------下注前检查
-        foreach ($bet_str as $str) {
+        foreach ($bet_str_arr as $str) {
 
             $match = false;
 
@@ -290,7 +292,8 @@ class Game2handlrLogic
                 'text' => $bet_text,
                 'amount' => $amount,
             ];
-
+             
+            //---------------------------------bet bef chk
             if ($bet['amount'] == 0)
                 break;
 
@@ -322,7 +325,11 @@ class Game2handlrLogic
             $bet['bet_type']['Odds']=$type['Odds'];
             $bet['odds']=$type['Odds'];
             array_push($bets, $bet);
+
+
+
         }
+        // ----------bef bet chk finish
 
         \think\facade\Log::info("305L  ");
         if ($total_bet_amount > $this->player->getBalance(false)) {
@@ -333,7 +340,7 @@ class Game2handlrLogic
 
         $this->action = true;
         $text = $text . "\r\n";
-        //-------------------------------------开始下注
+        //-------------------------------------开始下注--------
         $bet_amt_total_arr=[];
         foreach ($bets as $key => $value) {
             $bet=$value;
@@ -360,7 +367,7 @@ class Game2handlrLogic
         $bet_amt_total=array_sum($bet_amt_total_arr);
         $text =
             "【" . $this->player->getName() . '-' . $this->player->getId() . '】' . "\r\n"
-            . '下注内容：' . getBetContxEcHo($content) . "\r\n"
+            . '下注内容：' . getBetContxEcHo($content) . "\r\n".PHP_EOL
             .'下注:'. $bet_amt_total.PHP_EOL
             .'已押:'. $bet_amt_total.PHP_EOL
             //   . $text            

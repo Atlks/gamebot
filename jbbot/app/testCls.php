@@ -26,11 +26,19 @@ function testKaij()
     $gmLgcSSc->lottery_no = $data['hash_no'];
 
     global $lottery_no;
-    $lottery_no=17811427;
+    $lottery_no=17890257;
     kaij_draw_evt();
     echo 999;
 
  // var_dump($gmLgcSSc->DrawLotteryV2("0xajfdklsjfl91690"))  ;
+}
+
+
+function painTest()
+{
+  $gmLgcSSc = new   \app\common\GameLogicSsc(); 
+  $gmLgcSSc ->SendTrendImage(3);
+  //  imagepng($img, app()->getRootPath() . "public/trend.jpg");
 }
 class testCls extends Command
 {
@@ -43,7 +51,8 @@ class testCls extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
+      painTest();
+      die();
 
       testKaij();
       die();

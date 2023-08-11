@@ -330,16 +330,19 @@ class GameLogicSsc
         }
 
         //print_r($records);
-       // var_dump($records);
+        // var_dump($records);
         $this->createTrendImage($records);
     }
 
 
     private function createTrendImage($records)
     {
+        $log_txt = __METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        \think\facade\Log::debug($log_txt);
         // 数据
         $data = ["turn" => '期数', "result" => "结果", "sum" => "和", "zuhe" => "总和俩面", 'limit' => "龙虎", "kind" => ""];
-        $row_x = ["turn" => '12345678', "result" => "a+b+c=", "sum" => "bb", "zuhe" => "组合组合", 'limit' => "极值", "kind" => ""];
+        $row_x = ["turn" => '12345678', "result" => "a+b+c=102", "sum" => "bb", "zuhe" => "组合组合", 'limit' => "极值", "kind" => ""];
         // TODO::字体路径
         $font = app()->getRootPath() . "public/msyhbd.ttc";
         $font_path =  $font;
@@ -422,42 +425,83 @@ class GameLogicSsc
 
         $x = 0;
         $title_x = 0;
+        $intN = 0;
         foreach ($pre_col_w as $k => $col_x) {
             $x += $x_padding * 2;
             $x += $col_x;
-            imageline($img, $x, $title_height, $x, $img_height, $bg_color);
+
+            $intN++;
+            if ($intN < 5)
+            {
+              //  break;
+                imageline($img, $x, $title_height, $x, $img_height, $bg_color);
+            }
+              
             $pre_col_x[$k] = $x;
             //写入首行 
             imagettftext($img, $font_title_size, 0, $title_x + intval(($col_x + $x_padding * 2 - $pre_title_w[$k]) / 2), intval($title_height - $font_title_size / 2), $title_color, $font, $data[$k]);
             $title_x += $col_x + $x_padding * 2;
+
+         
         }
 
         // 写入表格
         $temp_height = $title_height;
 
+
+        //这里已经打印了title n 竖线。。没有横线
         foreach ($records as $key => $record) {
+            //  continue;
             # code...
             $next_x = 0;
             $temp_height += $row_hight + $y_padding;
-            // 画线
+            // 画线 hengsye
             imageline($img, 0, $temp_height, $img_width, $temp_height, $bg_color);
-            foreach ($record as $k => $value) {
-                if ($k == 'zuhe') {
+            foreach ($record as $k => &$value) {
+                if ($k == "result") {
+                    require_once(__DIR__ . "/../../lib/paint.php");
+                    $temp_x = 13;
+                    $px_thick = 50;
+                    $red_color = imagecolorallocate($img, 255, 0, 0);
+                    $elipse_width = $elipse_height = 30;
+
+                    $pos_x =  intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + 7;
+                    $pos_y =  $temp_height - 20;
+                    var_dump($pos_x . "  " . $pos_y);
+                    $leftpad = 33;
+                    draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $red_color, $px_thick);
+                    $pos_x = $pos_x + $leftpad;
+                    draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $red_color, $px_thick);
+                    $pos_x = $pos_x + $leftpad;
+                    draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $red_color, $px_thick);
+                    $pos_x = $pos_x + $leftpad;
+                    draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $red_color, $px_thick);
+                    $pos_x = $pos_x + $leftpad;
+                    draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $red_color, $px_thick);
+
+
+                    $a = str_split($value);
+                    $str = join("  ", $a);
+                    $white_color = imagecolorallocate($img, 255, 255, 255);
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $white_color, $font, $str);
+                } else if ($k == 'zuhe') {
                     $strarr =  preg_split('/(?<!^)(?!$)/u', $value);
                     $color1 = $color2 = 0;
-                    if ($strarr[0] == "单") {
+
+                    if ($strarr[0] == "小") {
+                        $color2 = $small_1_color;
+                    } else {
+                        $color2 = $big_2_color;
+                    }
+                    if ($strarr[1] == "单") {
                         $color1 = $small_1_color;
                     } else {
                         $color1 = $big_2_color;
                     }
 
-                    if ($strarr[1] == "小") {
-                        $color2 = $small_1_color;
-                    } else {
-                        $color2 = $big_2_color;
-                    }
-                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $color1, $font, $strarr[0]);
-                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $big_small_with, $temp_height - $font_size / 2, $color2, $font, $strarr[1]);
+
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $color1, $font, "  " . $strarr[0]);
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $big_small_with + 20, $temp_height - $font_size / 2, $color2, $font, $strarr[1]);
                 } elseif ($k == 'limit') {
                     $green_color = imagecolorallocate($img, 100, 149, 237);
                     if ($value == "龙") {
@@ -482,6 +526,7 @@ class GameLogicSsc
 
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $color, $font, $value);
                 } else {
+                    //qihao result sum
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $text_color, $font, $value);
                 }
             }
@@ -974,21 +1019,21 @@ class GameLogicSsc
     public function DrawLotteryV2($hash)
     {
 
-        $log_txt=__METHOD__. json_encode( func_get_args());
-      
-        \think\facade\Log::debug (  $log_txt);
+        $log_txt = __METHOD__ . json_encode(func_get_args());
 
-    //    \think\facade\Log::debug ( debug_backtrace());
-        
+        \think\facade\Log::debug($log_txt);
+
+        //    \think\facade\Log::debug ( debug_backtrace());
+
         $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-        \think\facade\Log::debug (  $lineNumStr);
+        \think\facade\Log::debug($lineNumStr);
         $total_payout = 0;
-        \think\facade\Log::debug ( "bef getKaijNumFromBlkhash:" .$hash);
+        \think\facade\Log::debug("bef getKaijNumFromBlkhash:" . $hash);
         require_once  __DIR__ . "/../lotrySsc.php";
-      
+
         $kaij_num = getKaijNumFromBlkhash($hash);
         $result_text = $kaij_num;
-        \think\facade\Log::debug ( "aft getKaijNumFromBlkhash:" .$hash);
+        \think\facade\Log::debug("aft getKaijNumFromBlkhash:" . $hash);
         //if not inc number exit prcs
         if (!preg_match('/\d{1}+/', $hash))
             return;
@@ -1022,36 +1067,40 @@ class GameLogicSsc
             var_dump($logtxt);
             \think\facade\Log::info($lineNumStr);
             \think\facade\Log::info($logtxt);
-            if (!dwijyo($betContext, $kaij_num)) {
-                \think\facade\Log::info("dwijyuo rzt false");
-                var_dump("dwijyuo rzt false");
-                continue;
-            }
-            var_dump("dwijyuo rzt true");
-            \think\facade\Log::info("dwijyuo rzt true");
-            $odds = $v['Odds'];
-            var_dump($odds);
-            var_dump($v);
-            $payout = $v['Bet'] * $odds;
-            var_dump($payout);
-            //---------------------### 赢家 结算之后计入玩家流水----------------------
-
-
             $player = $v['player'];
             $income = $payout - $v['Bet'];
             var_dump($income);
-            // 玩家需要更新字段,Total_Payout;
-            // 玩家的日报需要更新字段 PayoutAmount,Income;
-            // 结算之后计入玩家流水
             $user = $this->userDb->findByUserId($user_id);
-            //  var_dump(  $user);
-            // $user['']
-            var_dump($user);
-            \think\facade\Db::name('bet_record')
-                ->where('userid', $user_id)->where('id', $record_id)
-                ->update(['Payout' => $payout]);
             $player = new \app\common\Player($user);
+            if (!dwijyo($betContext, $kaij_num)) {
+                \think\facade\Log::info("dwijyuo rzt false");
+                var_dump("dwijyuo rzt false");
+            } else {
+                var_dump("dwijyuo rzt true");
+                \think\facade\Log::info("dwijyuo rzt true");
+                $odds = $v['Odds'];
+                var_dump($odds);
+                var_dump($v);
+                $payout = $v['Bet'] * $odds;
+                var_dump($payout);
+                //---------------------### 赢家 结算之后计入玩家流水----------------------
+
+
+
+                // 玩家需要更新字段,Total_Payout;
+                // 玩家的日报需要更新字段 PayoutAmount,Income;
+                // 结算之后计入玩家流水
+
+                //  var_dump(  $user);
+                // $user['']
+                var_dump($user);
+                \think\facade\Db::name('bet_record')
+                    ->where('userid', $user_id)->where('id', $record_id)
+                    ->update(['Payout' => $payout]);
+            }
+
             //  win （betAmt,PaybackAmt,IncomeAmt
+            //不管输赢都要计算流水
             $player->win($v['Bet'], $payout, $income);
 
 
@@ -1059,8 +1108,8 @@ class GameLogicSsc
             ////======-------------================= 回显榜单 zhun背
             // Rebate还没有计算过,暂时搁浅
             //   $user_id=12;
-            array_push($temp_arr, array('player' => $player, 'income' => $income));
-            $update['Payout'] = $payout;
+            //    array_push($temp_arr, array('player' => $player, 'income' => $income));
+
             $total_payout += $payout;
         }
         //  结束对讲
@@ -1073,12 +1122,15 @@ class GameLogicSsc
         Logs::addlotteryResult($this->lottery_no, $result_text, $total_payout);
         ////======-------------=================#回显榜单
 
+        $kaij_num_fly_echo = "";
+
+
         $text = "第" . $this->lottery_no . "期开奖结果" .  $result_text . "\r\n";
         $text  = $text
-            .kaij_echo($result_text ).PHP_EOL
+            .   kaij_echo_x($result_text) . PHP_EOL
             . "=====本期中奖名单======" . "\r\n";
-        $helper = new Helper();
-        $helper->BubbleSort1($temp_arr, 'income');
+        // $helper = new Helper();
+        //  $helper->BubbleSort1($temp_arr, 'income');
 
         $text = $text . $this->calcIncome($this->lottery_no);
 
@@ -1097,16 +1149,34 @@ class GameLogicSsc
         return  $text;
     }
 
+
+    public function kaij_echo_x($result_text)
+    {
+
+        try {
+            return kaij_echo($result_text);
+        } catch (\Throwable $exception) {
+
+            $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+            \think\facade\Log::error(" kaij_echo($result_text)");
+            \think\facade\Log::error("errmsg:" . $exception->getMessage());
+            \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
+            \think\facade\Log::error("errtraceStr:" . $exception->getTraceAsString());
+            return "";
+        }
+    }
+
+
     public function calcIncome($lotteryno)
     {
-        try{
-            $a=[];
+        try {
+            $a = [];
             $rows =  \think\facade\Db::name('bet_record')->where('lotteryno', '=', $lotteryno)->select();
             //  var_dump( $rows);
             //  var_dump( $rows[0]['UserName']);
             foreach ($rows as $row) {
                 $betamt = $row['Bet'] / 100;
-    
+
                 var_dump($row['Payout'] / 100);
                 var_dump($betamt);
                 $payout = $row['Payout'];
@@ -1114,23 +1184,22 @@ class GameLogicSsc
                 $income = $row['Payout'] / 100 -  $betamt;
                 $uid = $row['UserId'];
                 $uname = $row['UserName'];
-                $bettx=$row['BetContent'];
+                $bettx = $row['BetContent'];
                 $txt = "$uname [$uid] $bettx 下注金额:$betamt 盈亏: $income \r\n";
                 var_dump($txt);
                 $a[] = $txt;
             }
             return join("", $a);
-        }  catch (\Throwable $exception) {
+        } catch (\Throwable $exception) {
             $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
             \think\facade\Log::error("----------------errrrr5---------------------------");
             \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
             \think\facade\Log::error("errmsg:" . $exception->getMessage());
-            \think\facade\Log::error("errtraceStr:".$exception->getTraceAsString());
+            \think\facade\Log::error("errtraceStr:" . $exception->getTraceAsString());
             var_dump($exception);
             return "";
             // throw $exception; // for test
         }
-      
     }
 
     public function Next()
