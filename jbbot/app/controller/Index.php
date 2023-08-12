@@ -22,6 +22,7 @@ class Index extends BaseController
     public function fff()
     {
         var_dump(7777);
+        //    /index.php?s=handle/setHookSsc
        // return 1;
     }
     public function setHook()

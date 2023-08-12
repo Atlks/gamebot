@@ -341,8 +341,8 @@ class GameLogicSsc
 
         \think\facade\Log::debug($log_txt);
         // 数据
-        $data = ["turn" => '期数', "result" => "结果", "sum" => "和", "zuhe" => "总和俩面", 'limit' => "龙虎", "kind" => ""];
-        $row_x = ["turn" => '12345678', "result" => "a+b+c=102", "sum" => "bb", "zuhe" => "组合组合", 'limit' => "极值", "kind" => ""];
+        $data = ["turn" => '期数', "result" => "结果", "sum" => "和", "zuhe" => "组合", 'limit' => "龙虎"];
+        $row_x = ["turn" => '12345678', "result" => "a+b+c=102", "sum" => "bb", "zuhe" => "组合", 'limit' => "极"];
         // TODO::字体路径
         $font = app()->getRootPath() . "public/msyhbd.ttc";
         $font_path =  $font;
@@ -375,7 +375,7 @@ class GameLogicSsc
         }
 
         // 列数
-        $column = 6;
+        $column = 5;
 
         $title_height = 40;
         // 文本左右内边距
@@ -431,11 +431,9 @@ class GameLogicSsc
             $x += $col_x;
 
             $intN++;
-            if ($intN < 5)
-            {
+
               //  break;
                 imageline($img, $x, $title_height, $x, $img_height, $bg_color);
-            }
               
             $pre_col_x[$k] = $x;
             //写入首行 
@@ -465,7 +463,7 @@ class GameLogicSsc
                     $red_color = imagecolorallocate($img, 255, 0, 0);
                     $elipse_width = $elipse_height = 30;
 
-                    $pos_x =  intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + 7;
+                    $pos_x =  intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + 12;
                     $pos_y =  $temp_height - 20;
                     var_dump($pos_x . "  " . $pos_y);
                     $leftpad = 33;
@@ -483,7 +481,7 @@ class GameLogicSsc
                     $a = str_split($value);
                     $str = join("  ", $a);
                     $white_color = imagecolorallocate($img, 255, 255, 255);
-                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $white_color, $font, $str);
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding)+4, $temp_height - $font_size / 2, $white_color, $font, $str);
                 } else if ($k == 'zuhe') {
                     $strarr =  preg_split('/(?<!^)(?!$)/u', $value);
                     $color1 = $color2 = 0;
@@ -499,9 +497,9 @@ class GameLogicSsc
                         $color1 = $big_2_color;
                     }
 
-
-                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $color1, $font, "  " . $strarr[0]);
-                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $big_small_with + 20, $temp_height - $font_size / 2, $color2, $font, $strarr[1]);
+$a=trim($strarr[0]);  $b=trim($strarr[1]);
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $color1, $font, "" . $strarr[0]);
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $big_small_with +0, $temp_height - $font_size / 2, $color2, $font, $strarr[1]);
                 } elseif ($k == 'limit') {
                     $green_color = imagecolorallocate($img, 100, 149, 237);
                     if ($value == "龙") {

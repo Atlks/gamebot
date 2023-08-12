@@ -200,10 +200,17 @@ class Handle2
 
     public function processMessage($message)
     {
+        \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
+        var_dump(__METHOD__ . json_encode(func_get_args()));
+        var_dump( $this->Bot_Token);
+       
         $bot = new \TelegramBot\Api\BotApi($this->Bot_Token);
         // process incoming message
         $message_id = $message['message_id'];
         $chat_id = $message['chat']['id'];
+        var_dump( $message );
+        var_dump( $chat_id );
+      //  die();
         $user_id = $message['from']['id'];
         $data = Test::where('chat_id', $message_id)
             ->where('name', '小飞机漏发信息')
@@ -250,6 +257,7 @@ class Handle2
             $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
             \think\facade\Log::info($lineNumStr);
             \think\facade\Log::info(" chat_id:".$chat_id. " dbchtid:". Setting::find(2)->value);
+            \think\facade\Log::error(" grp id chk fail.");
             /*
             $token = Setting::find(11)->s_value;
             $bot = new \TelegramBot\Api\BotApi($token);

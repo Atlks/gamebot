@@ -614,6 +614,8 @@ class Game2handlrLogic
     //bet acton
     public function player_exec($text, $stop_bet = false)
     {
+        \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
+        var_dump(__METHOD__ . json_encode(func_get_args()));
         // 先判断是否是执行一般指令
         //    var_dumpx($this->exec_pattern);   //"/^(余额|流水|取消全部注单|取消全部|取消下注|取消|下分\d+$|回\d+$|下\d+$|最近下注|zd|开奖|上分|地址|财务|充值|返水|反水|查\d+$|上分\d+$|上\d+$|走势|历史|汇旺)$/u"
         //  var_dumpx( $cmd);
@@ -627,6 +629,7 @@ class Game2handlrLogic
             }
         }
 
+        $stop_bet=true;
         if ($stop_bet) return "封盘时请不要下注!";
 
         $res = $this->regex_betV2($text);

@@ -731,6 +731,7 @@ class NNGameLogic
                 $lose = $v['Bet'] * ($odds - $bet_types[$betType_id]['value']);
                 $players[$user_id]['lose'] += $lose;
                 $players[$user_id]['lose_bet'] += $v['Bet'];
+                $update['Payout'] = $lose;
             } else {
                 $players[$user_id]['return'] += $v['Bet'];
             }

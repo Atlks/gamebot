@@ -11,6 +11,7 @@ use app\model\BetTypes;
 use app\model\BotWords;
 use app\common\Logs;
 use app\model\Setting;
+use app\model\GameString;
 
 class NNGame
 {
@@ -50,6 +51,8 @@ class NNGame
     private $parse_mode = null;
     private $trend = false;
 
+    private $use_paybot = false;
+
     public function __construct($from = null)
     {
         $this->userDB = new User();
@@ -69,6 +72,8 @@ class NNGame
                 '上分申请成功' => $bot_words->Recharge_Finish,
                 '上分公告' => $bot_words->Recharge_Tips,
             ];
+
+        $this->use_paybot = env('app.use_paybot', false);
     }
 
     private function addCommand($cmd_str, $call_back, $regx_str = null)
@@ -98,7 +103,7 @@ class NNGame
     private function playerId()
     {
         if ($this->player)
-            return $this->player->getId()."";
+            return $this->player->getId() . "";
         return "";
     }
 
@@ -399,10 +404,22 @@ class NNGame
             if (preg_match('/\d+/', $text, $out)) {
                 $amount = $out[0] * 100;
                 if ($amount > 9000000000) return "";
-                if ($this->player->Withdraw($amount, $this->message_id, ""))
-                    $text = $this->getWords('下分申请成功');
-                else {
-                    $text = $this->player->get_last_error();
+
+                if ($this->use_paybot) {
+                    $text = "上下分步骤：\n1️⃣入款流程：点击下方【充值提现】\n2️⃣点击菜单【充值】复制上分地址充值\n3️⃣成功到帐后自动到游戏余额 无需查分!";
+                    $this->keyboard = json_decode(GameString::where('name', '上分机器人')->find()->text);
+                    if ($this->player->isTest()) {
+                        if (!$this->player->Withdraw($amount, $this->message_id, "")) {
+                            $text = $this->player->get_last_error();
+                            $this->keyboard = null;
+                        }
+                    }
+                } else {
+                    if ($this->player->Withdraw($amount, $this->message_id, "")) {
+                        $text = $this->getWords('下分申请成功');
+                    } else {
+                        $text = $this->player->get_last_error();
+                    }
                 }
                 return $text;
             }
@@ -436,8 +453,13 @@ class NNGame
 
     public function callAddress($text = null)
     {
-        $text = $this->getWords("上分公告");
-        $this->parse_mode = "MarkdownV2";
+        if ($this->use_paybot) {
+            $text = "上下分步骤：\n1️⃣入款流程：点击下方【充值提现】\n2️⃣点击菜单【充值】复制上分地址充值\n3️⃣成功到帐后自动到游戏余额 无需查分!";
+            $this->keyboard = json_decode(GameString::where('name', '上分机器人')->find()->text);
+        } else {
+            $text = $this->getWords("上分公告");
+            $this->parse_mode = "MarkdownV2";
+        }
         return $text;
     }
 
@@ -466,8 +488,14 @@ class NNGame
             if (preg_match('/\d+/', $text, $out)) {
                 $amount = $out[0] * 100;
                 if ($amount > 9000000000) return "";
-                $this->player->Recharge($amount, $this->message_id, "");
-                $text = $this->getWords('上分申请成功');
+                if ($this->player->isTest() || !$this->use_paybot)
+                    $this->player->Recharge($amount, $this->message_id, "");
+                if ($this->use_paybot) {
+                    $text = "上下分步骤：\n1️⃣入款流程：点击下方【充值提现】\n2️⃣点击菜单【充值】复制上分地址充值\n3️⃣成功到帐后自动到游戏余额 无需查分!";
+                    $this->keyboard = json_decode(GameString::where('name', '上分机器人')->find()->text);
+                } else {
+                    $text = $this->getWords('上分申请成功');
+                }
                 return $text;
             }
 

@@ -10,7 +10,7 @@ function sendmessageBotNConsole($msg)
     // $bot_token = "6426986117:AAFb3woph_1zOWFS5cO98XIFUPcj6GqvmXc";  //sscNohk
     //  $chat_id = -1001903259578;
     //global $bot_token, $chat_id;
-    bot_sendMsg($msg, BOT_TOKEN, chat_id);
+    bot_sendMsg($msg, $GLOBALS['BOT_TOKEN'], $GLOBALS['chat_id'] );
 }
 function bot_sendMsgTxtMode($msg, $bot_token, $chat_id)
 {

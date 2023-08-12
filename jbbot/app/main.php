@@ -10,12 +10,13 @@ use think\console\Output;
 use app\model\Setting;
 use think\view\driver\Php;
 //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\modyfing\jbbot\think swoole2 
-define('BOT_TOKEN', '6426986117:AAFb3woph_1zOWFS5cO98XIFUPcj6GqvmXc');
-define('chat_id', '-1001903259578');
+global $BOT_TOKEN;
+
+global $chat_id;
 //$bot_token = "6426986117:AAFb3woph_1zOWFS5cO98XIFUPcj6GqvmXc";  //sscNohk
 //$chat_id = -1001903259578;
 
-require_once(__DIR__."/../lib/ex.php" );
+require_once(__DIR__ . "/../lib/ex.php");
 var_dump(test752());
 //$text = "--------本期下注玩家---------" . "\r\n";
 $text = "=====本期中奖名单======";
@@ -57,7 +58,7 @@ class main extends Command
                 \think\facade\Log::error("----------------errrrr2---------------------------");
                 \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
                 \think\facade\Log::error("errmsg:" . $exception->getMessage());
-                \think\facade\Log::error("errtraceStr:".$exception->getTraceAsString());
+                \think\facade\Log::error("errtraceStr:" . $exception->getTraceAsString());
                 var_dump($exception);
 
                 // throw $exception; // for test
@@ -71,14 +72,22 @@ static $lottery_no = "...";
 $lottery_no = "...";
 function    main_process()
 {
+
+
     global $lottery_no;
     $lottery_no = 111;
     // var_dump(  $lottery_no);die();
     global  $bot_token;
     var_dump($bot_token);
     var_dump($GLOBALS['bot_token']);
-    var_dump(BOT_TOKEN);
+    //var_dump(BOT_TOKEN);
+    $set = Setting::find(1);
 
+    $GLOBALS['BOT_TOKEN'] = $set->s_value;
+    $GLOBALS['chat_id'] = Setting::find(2)->value;
+
+    var_dump($GLOBALS['BOT_TOKEN']);
+    var_dump($GLOBALS['chat_id']); //die();
     //  bot_sendMsg("----",BOT_TOKEN,chat_id);die();
 
     //  die();
@@ -133,12 +142,12 @@ function    main_process()
     })();
 
 
- //-------------开始开奖流程  
+    //-------------开始开奖流程  
     ($delay_waittime_start_Kaijyo_evt = function () {
         global $lottery_no;
         $stop_bet_time = Setting::find(8)->value; //10*1000;
         $stop_bet_time_sec = $stop_bet_time / 1000;    //  20s
-        $delay_to_statrt_Kaijyo_sec=  $stop_bet_time_sec;
+        $delay_to_statrt_Kaijyo_sec =  $stop_bet_time_sec;
         sleep($delay_to_statrt_Kaijyo_sec);
         //---------------------开奖流程
         $draw_str = "console:" .  $lottery_no . "期开奖中..console";
@@ -203,8 +212,8 @@ function startBet()
     \think\facade\Log::info($text);
     //sendmessageBotNConsole($text);
 
-    $bot = new \TelegramBot\Api\BotApi(BOT_TOKEN);
-    $bot->sendPhoto(chat_id, $cfile, $text, null, null, null, false, "MarkdownV2");
+    $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
+    $bot->sendPhoto($GLOBALS['chat_id'], $cfile, $text, null, null, null, false, "MarkdownV2");
 
     //// 更新状态开放投注
     $set = Setting::find(3);
@@ -226,7 +235,7 @@ function  fenpan_wanrning_event($waring_time_sec)
     $text = $words;
 
     echo   $text . PHP_EOL;
-    bot_sendMsgTxtMode($text, BOT_TOKEN, chat_id);
+    bot_sendMsgTxtMode($text, $GLOBALS['BOT_TOKEN'], $GLOBALS['chat_id']);
     //  $bot->sendmessage($chat_id, $text);
 }
 
@@ -250,12 +259,14 @@ function fenpan_stop_event()
     }
     echo   $text . PHP_EOL;
     $msg = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm  BCS is markdown mode
-    bot_sendMsg($msg, BOT_TOKEN, chat_id);
+    bot_sendMsg($msg, $GLOBALS['BOT_TOKEN'], $GLOBALS['chat_id']);
     // sendmessageBotNConsole($text);
 
     $text = "第" . $lottery_no . "期 [点击官方开奖](https://etherscan.io/block/" . $lottery_no . ")";
-    sendmessageBotNConsole($text);
-
+    // sendmessageBotNConsole($text);
+    $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
+  //  $bot->sendmessage($GLOBALS['chat_id'], $text);
+    $bot->sendmessage($GLOBALS['chat_id'], $text, null, true);
     // public function StopBet()
 
     $set = Setting::find(3);
@@ -267,13 +278,14 @@ function fenpan_stop_event()
 function kaij_draw_evt()
 {
     require_once  __DIR__ . "/lotrySsc.php";
+
     global $lottery_no;
     $ltr =   new \app\common\LotteryHashSsc();
     $blkHash = $ltr->drawV3($lottery_no);
-    var_dump( $blkHash);
+    var_dump($blkHash);
     $text = "第" . $lottery_no . "期开奖结果" . "\r\n";
     $kaij_num = getKaijNumFromBlkhash($blkHash);
-    $text = $text  .kaij_echo($kaij_num );
+    $text = $text  . kaij_echo($kaij_num);
     $text = $text . "本期区块号码:" . $lottery_no . "\r\n"
         . "本期哈希值:\r\n" . $blkHash . "\r\n";
     sendmessage($text);
@@ -292,13 +304,13 @@ function kaij_draw_evt()
 
 
     $echoTxt = $gmLgcSSc->DrawLotteryV2($blkHash);    // if finish chg stat to next..
-    bot_sendMsgTxtMode($echoTxt, BOT_TOKEN, chat_id);
+    bot_sendMsgTxtMode($echoTxt, $GLOBALS['BOT_TOKEN'], $GLOBALS['chat_id']);
 
 
     $gmLgcSSc->SendTrendImage(20); // 生成图片
     $cfile = new \CURLFile(app()->getRootPath() . "public/trend.jpg");
-    $bot = new \TelegramBot\Api\BotApi(BOT_TOKEN);
-    $bot->sendPhoto(chat_id, $cfile);
+    $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
+    $bot->sendPhoto($GLOBALS['chat_id'], $cfile);
 
     \think\facade\Db::close();
 }
