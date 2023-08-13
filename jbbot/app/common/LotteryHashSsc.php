@@ -71,6 +71,7 @@ class LotteryHashSsc extends Lottery
     // 获取当前彩期
     public function get_current_noV2()
     {
+        \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
         //if this data ,ret true
         //  if (!$this->data) return false;
 
@@ -129,6 +130,7 @@ class LotteryHashSsc extends Lottery
     // 开奖
     public function drawV3($blkNum)
     {
+        \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
         var_dump($blkNum);
         $log_txt = __METHOD__ . json_encode(func_get_args());
 

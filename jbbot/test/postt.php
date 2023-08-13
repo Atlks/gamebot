@@ -15,7 +15,7 @@ $options = array(
 );
 
 $context  = stream_context_create($options);
-$url='http://localhost/keywordHander.php';
+$url='http://localhost/msgHander.php';
 echo file_get_contents($url, false, $context);
 
 

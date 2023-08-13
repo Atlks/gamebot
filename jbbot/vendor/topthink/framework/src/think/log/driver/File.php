@@ -123,7 +123,14 @@ class File implements LogHandlerInterface
 
         $message = implode(PHP_EOL, $info) . PHP_EOL;
 
-        return error_log($message, 3, $destination);
+
+ //file_put_contents($GLOBALS['$errdir'] . date('Y-m-d H') . "lg142_tpErrlgHdlr_.log",  json_encode($message) . PHP_EOL, FILE_APPEND);
+    //    return true;
+    try{
+         return  error_log($message, 3, $destination);
+    }catch(\Throwable $e) {
+      return true;
+    }
     }
 
     /**

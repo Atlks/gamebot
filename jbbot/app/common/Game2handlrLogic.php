@@ -220,8 +220,8 @@ class Game2handlrLogic
     //  bet v2222
     public function regex_betV2($content)
     {
-        var_dump(__METHOD__. json_encode( func_get_args()));
-        $lineNumStr = __METHOD__. json_encode( func_get_args()).__FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        // var_dump(__METHOD__. json_encode( func_get_args()));
+        $lineNumStr = __METHOD__ . json_encode(func_get_args()) . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
         \think\facade\Log::info($lineNumStr);
         //   define('NO_CACHE_RUNTIME',True);
         var_dumpx("218L betnums:" . $content);
@@ -242,18 +242,32 @@ class Game2handlrLogic
         var_dumpx($this->bet_types); //   bet RX FROM DB
         // select betrx from db
         //echo  var_export($content,true) ;
-        $content=str_replace(" ", " ", $content);
-        $bet_str_arr = explode(" ", $content);
-        $bet_str_arr = array_filter($bet_str_arr);
+        $content = str_replace(" ", " ", $content);
+        $content = str_replace(" ", " ", $content);
+        $content = str_replace(" ", " ", $content);
+        $content = str_replace('\u00a0', " ", $content);
+        $content = str_replace("\\u00a0", "", $content);
+        
+        require_once __DIR__ . "/../../lib/logx.php";
+        $content = str_replace(chr(194) . chr(160), ' ', $content);
+        \libspc\log_info("251_614", "bet_str_arr", $content);
 
+
+        $bet_str_arr = explode(" ", $content);
+        $bet_str_arr_clr = array_filter($bet_str_arr);
+
+
+        \think\facade\Log::info("250L");
+        \think\facade\Log::info(json_encode($bet_str_arr_clr));
+        \libspc\log_info("253_549", "bet_str_arr", $bet_str_arr_clr);
 
         $before_bet = $this->player->getBetRecord($this->lottery_no);
         $bets = array();
         $text = "";
-     
+
         // var_dumpx(var_export($bet_str, true));
         //---------------------下注前检查
-        foreach ($bet_str_arr as $str) {
+        foreach ($bet_str_arr_clr as $str) {
 
             $match = false;
 
@@ -267,12 +281,11 @@ class Game2handlrLogic
 
             //  var_dumpx($rows);
             //   var_dumpx($rows[0]['玩法']);
-            if (getWefa($bet_nums) == "")
-            {
-               // continue;
+            if (getWefa($bet_nums) == "") {
+                // continue;
                 return "格式错误";
             }
-              
+
             $amount = getAmt_frmBetStr($bet_nums) * 100;  //bcs money amt is base fen...so   cheni 100
 
 
@@ -292,7 +305,7 @@ class Game2handlrLogic
                 'text' => $bet_text,
                 'amount' => $amount,
             ];
-             
+
             //---------------------------------bet bef chk
             if ($bet['amount'] == 0)
                 break;
@@ -320,14 +333,11 @@ class Game2handlrLogic
             $text = $text . $bet_text . "(" . $type['Odds'] . "赔率)\r\n";
             $total_bet_amount += $bet['amount'];
 
-          //  $bet['bet_type']=[];
-        //  var_dump(  $bet['bet_type']);  ==rows..
-            $bet['bet_type']['Odds']=$type['Odds'];
-            $bet['odds']=$type['Odds'];
+            //  $bet['bet_type']=[];
+            //  var_dump(  $bet['bet_type']);  ==rows..
+            $bet['bet_type']['Odds'] = $type['Odds'];
+            $bet['odds'] = $type['Odds'];
             array_push($bets, $bet);
-
-
-
         }
         // ----------bef bet chk finish
 
@@ -341,11 +351,15 @@ class Game2handlrLogic
         $this->action = true;
         $text = $text . "\r\n";
         //-------------------------------------开始下注--------
-        $bet_amt_total_arr=[];
+        $bet_lst_echo_arr = [];
+
+        // $bet_amt_total_arr=[];
         foreach ($bets as $key => $value) {
-            $bet=$value;
-            $bet_amt_total_arr[]=$value['amount']/100;
-         //   var_dump( $value);   //  need ['id n   odds]
+            array_push($bet_lst_echo_arr, getBetContxEcHo($value['text']));
+
+            $bet = $value;
+            $bet_amt_total_arr[] = $value['amount'] / 100;
+            //   var_dump( $value);   //  need ['id n   odds]
             if (!$this->player->Bet($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'])) {
                 $text = "下注失败:" . $this->player->get_last_error();
                 $this->action = false;
@@ -364,12 +378,12 @@ class Game2handlrLogic
 
         //----------------------------- 回显
         $betNums105 = $content;
-        $bet_amt_total=array_sum($bet_amt_total_arr);
+        $bet_amt_total = array_sum($bet_amt_total_arr);
         $text =
             "【" . $this->player->getName() . '-' . $this->player->getId() . '】' . "\r\n"
-            . '下注内容：' . getBetContxEcHo($content) . "\r\n".PHP_EOL
-            .'下注:'. $bet_amt_total.PHP_EOL
-            .'已押:'. $bet_amt_total.PHP_EOL
+            . "下注内容：\r\n" .  join("\r\n", $bet_lst_echo_arr) . "\r\n" . PHP_EOL
+            . '下注:' . $bet_amt_total . PHP_EOL
+            . '已押:' . $bet_amt_total . PHP_EOL
             //   . $text            
             . "余额:" . $this->player->getBalance();
 
@@ -614,8 +628,6 @@ class Game2handlrLogic
     //bet acton
     public function player_exec($text, $stop_bet = false)
     {
-        \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
-        var_dump(__METHOD__ . json_encode(func_get_args()));
         // 先判断是否是执行一般指令
         //    var_dumpx($this->exec_pattern);   //"/^(余额|流水|取消全部注单|取消全部|取消下注|取消|下分\d+$|回\d+$|下\d+$|最近下注|zd|开奖|上分|地址|财务|充值|返水|反水|查\d+$|上分\d+$|上\d+$|走势|历史|汇旺)$/u"
         //  var_dumpx( $cmd);
@@ -629,7 +641,6 @@ class Game2handlrLogic
             }
         }
 
-        $stop_bet=true;
         if ($stop_bet) return "封盘时请不要下注!";
 
         $res = $this->regex_betV2($text);

@@ -9,7 +9,7 @@ const TelegramBot = require('node-telegram-bot-api');
 
 
 //-915647679
-token = "6452008892:AAGn01tDUFvGaq9eEp8LuSgFu5lMeHvKnqo"; //jbssc jensh 
+//token = "6452008892:AAGn01tDUFvGaq9eEp8LuSgFu5lMeHvKnqo"; //jbssc jensh 
 //6357469915: AAGyKxgsBJ4NmaazHG - 6 aiAuoodeT0gJmPA   //ssc2023 bot
 
 

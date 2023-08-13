@@ -34,6 +34,7 @@ class Logs
 
     public static function addLotteryLog($date, $lottery_no, $hash_no)
     {
+        \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
         $log = LotteryLog::where('No', $lottery_no)->find();
         if(empty($log))
         {
@@ -86,6 +87,7 @@ class Logs
 
     public static function getBetRecordByLotteryNo($lottery_no, $status = 0)
     {
+        \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
         $res = BetRecord::where('LotteryNo', $lottery_no)
             ->where('Status', $status)
             ->order('UserId', 'desc')

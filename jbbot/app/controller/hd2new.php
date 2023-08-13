@@ -22,18 +22,14 @@ class Handle2
 {
     public $Bot_Token = "";
     /**
-     * 显示资源列表
+     * ??????
      *    s=handle/processMessage
      * @return \think\Response
      */
     public function index()
     {
-        \think\facade\Log::noticexx(__METHOD__ . json_encode(func_get_args()));
         \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
         $frmNet = file_get_contents('php://input');
-        $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_"  . ".json";
-        file_put_contents($logf,  $frmNet);
-
         \think\facade\Log::warning($frmNet);
         $update = json_decode(file_get_contents('php://input'), true);
         if (!$update) {
@@ -46,7 +42,7 @@ class Handle2
             if (isset($update["message"])) {
                 $msgobj = $update["message"];
                 $msgid =  $msgobj['message_id'];
-                $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_" . $msgid . ".json";
+                $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H') . "" . $msgid . ".json";
                 if (file_exists($logf)) {
                     file_put_contents($logf, "1123");
                     \think\facade\Log::warning(" file exist:" . $logf);
@@ -103,44 +99,22 @@ class Handle2
         } catch (\Throwable $e) {
             $data = [
                 'chat_id' => $updateId,
-                'name' => "网络钩子异常",
+                'name' => "??????",
                 'text' => $e->getMessage(),
             ];
             Test::create($data);
             $exception = $e;
+            \think\facade\Log::warning($exception->getFile() . ":" . $exception->getLine());
+            \think\facade\Log::warning($exception->getMessage());
+            \think\facade\Log::warning(json_encode($e));
 
 
-            global $errdir;
-            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ .  " m:" . __METHOD__ . "  " . PHP_EOL;
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $lineNumStr, FILE_APPEND);
-
-            //   \think\facade\Log::error("errtrace:".$exception->getTrace());
-
-
-            $logtxt = "----------------errrrrx_lg142_hdr2ex__cathr---------------------------" . PHP_EOL;
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-            $logtxt = "file_linenum:" . $exception->getFile() . ":" . $exception->getLine();
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-
-            $logtxt = "errmsg:" . $exception->getMessage();
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-
-            $logtxt = "errtraceStr:" . $exception->getTraceAsString();
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-
-
-
-            \think\facade\Log::emergency($exception->getFile() . ":" . $exception->getLine());
-            \think\facade\Log::emergency($exception->getMessage());
-            \think\facade\Log::emergency("errtraceStr:" . $exception->getTraceAsString());
-            \think\facade\Log::emergency(json_encode($e));
-            // throw $e;
+            throw $e;
         }
     }
 
     public function apiRequestWebhook($method, $parameters)
     {
-        \think\facade\Log::noticexx(__METHOD__ . json_encode(func_get_args()));
         if (!is_string($method)) {
             error_log("Method name must be a string\n");
             return false;
@@ -179,16 +153,16 @@ class Handle2
     }
 
 
-    //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   Game2handlrLogic/testtype   
+    //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\????\jbbot\public\index2.php   Game2handlrLogic/testtype   
 
-    //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/processMessageTest
-    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/gettypex
-    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testDrawV2
+    //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\????\jbbot\public\index2.php   handle2/processMessageTest
+    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\????\jbbot\public\index2.php   handle2/gettypex
+    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\????\jbbot\public\index2.php   handle2/testDrawV2
     //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\modyfing\jbbot\public\index2.php   handle2/testGenePic
 
     // C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\modyfing\jbbot\public\index2.php   handle2/testDraw
 
-    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   handle2/testtype
+    //   C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\????\jbbot\public\index2.php   handle2/testtype
     public function testGenePic()
     {
         $gmLgcSSc = new    \app\common\GameLogicSsc();
@@ -225,8 +199,8 @@ class Handle2
 
 
         $gmLgcSSc->DrawLotteryV2("0xajfdklsjfl01690");
-        //   $rows =  \think\Facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
-        // $rows  = \app\model\BetTypes::where('玩法', "龙虎和玩法")->find()->toArray();
+        //   $rows =  \think\Facade\Db::name('bet_types')->whereRaw("??='" . $wanfa . "'")->select();
+        // $rows  = \app\model\BetTypes::where('??', "?????")->find()->toArray();
         $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
         //   \think\facade\Log::info($lineNumStr . " cnt row:" . count($rows));
     }
@@ -245,16 +219,16 @@ class Handle2
 
 
         $gmLgcSSc->DrawLottery();
-        //   $rows =  \think\Facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
-        // $rows  = \app\model\BetTypes::where('玩法', "龙虎和玩法")->find()->toArray();
+        //   $rows =  \think\Facade\Db::name('bet_types')->whereRaw("??='" . $wanfa . "'")->select();
+        // $rows  = \app\model\BetTypes::where('??', "?????")->find()->toArray();
         $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
         //   \think\facade\Log::info($lineNumStr . " cnt row:" . count($rows));
     }
 
     public function testtype()
     {
-        //   $rows =  \think\Facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
-        $rows  = \app\model\BetTypes::where('玩法', "龙虎和玩法")->find()->toArray();
+        //   $rows =  \think\Facade\Db::name('bet_types')->whereRaw("??='" . $wanfa . "'")->select();
+        $rows  = \app\model\BetTypes::where('??', "?????")->find()->toArray();
         $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
         \think\facade\Log::info($lineNumStr . " cnt row:" . count($rows));
     }
@@ -265,19 +239,19 @@ class Handle2
         file_put_contents("kkkk.log", 111, FILE_APPEND);
         //  var_dumpx(111);
 
-        $rows =  \think\Facade\Db::name('bet_types00')->whereRaw("玩法='龙虎和玩法'")->select();
+        $rows =  \think\Facade\Db::name('bet_types00')->whereRaw("??='?????'")->select();
         // $rows=  \think\Db::query('select * from bet_typeds where 1=1');
         //$rows=  \think\Facade\Db::name('bet_types')->select();
-        $rows =  \think\Facade\Db::name('bet_types')->whereRaw("玩法='龙虎和玩法'")->select();
+        $rows =  \think\Facade\Db::name('bet_types')->whereRaw("??='?????'")->select();
 
         file_put_contents("351.json", json_encode($rows));
         //  var_dumpx($rows);
-        //   var_dumpx($rows[0]['玩法']);
+        //   var_dumpx($rows[0]['??']);
     }
 
     public function processMessage($message)
     {
-        \think\facade\Log::noticexx(__METHOD__ . json_encode(func_get_args()));
+        trigger_error("1111");
         \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
         //  var_dump(__METHOD__ . json_encode(func_get_args()));
         //  var_dump( $this->Bot_Token);
@@ -291,14 +265,14 @@ class Handle2
         //  die();
         $user_id = $message['from']['id'];
         $data = Test::where('chat_id', $message_id)
-            ->where('name', '小飞机漏发信息')
+            ->where('name', '???????')
             ->find();
         if ($data) {
             return;
         }
         $data = [
             'chat_id' => $message_id,
-            'name' => "网络钩子接收",
+            'name' => "??????",
             'text' => file_get_contents('php://input'),
         ];
         Test::create($data);
@@ -314,12 +288,12 @@ class Handle2
 
         $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
         \think\facade\Log::info($lineNumStr);
-        //  \think\facade\Log::info( $message['text']);
+        \think\facade\Log::info($message['text']);
 
         if (isset($message['text'])) {
             $text = $message['text'];
-            if ($text === "获取我的群信息") {
-                $reply_text = "我的群 " . $message['chat']['title'] . " id: " . $chat_id;
+            if ($text === "???????") {
+                $reply_text = "??? " . $message['chat']['title'] . " id: " . $chat_id;
                 $params =
                     [
                         'chat_id' => $chat_id,
@@ -340,18 +314,18 @@ class Handle2
             $token = Setting::find(11)->s_value;
             $bot = new \TelegramBot\Api\BotApi($token);
             $ci = Setting::find(12)->value;
-            $text = "接收到搞事信息\r\n信息id : $chat_id\r\n搞事人:$full_name,$user_name\r\n";
+            $text = "???????\r\n??id : $chat_id\r\n???:$full_name,$user_name\r\n";
             if (isset($message['chat']['title']))
-                $text = $text . "群名 : " . $message['chat']['title'] . "\r\n";
+                $text = $text . "?? : " . $message['chat']['title'] . "\r\n";
             if (isset($message['text']))
-                $text = $text . "内容 : " . $message['text'];
+                $text = $text . "?? : " . $message['text'];
             $bot->leaveChat($chat_id);
             */
             //$bot->sendMessage($ci, $text);
             return;
         }
 
-        $reply_text = "默认信息";
+        $reply_text = "????";
         if (isset($message['text'])) {
             // incoming text message
             $text = $message['text'];
@@ -378,8 +352,8 @@ class Handle2
             $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
             \think\facade\Log::info($lineNumStr);
             \think\facade\Log::info(" reply_text ::" . $reply_text);
-            var_dumpx($reply_text);   //"下注命令错误"
-
+            var_dumpx($reply_text);   //"??????"
+            \think\facade\Log::info("350pm");
             if (!empty($reply_text)) {
 
                 if ($game->sendTrend()) {
@@ -401,14 +375,14 @@ class Handle2
                         \think\facade\Log::info("345pm");
                         $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
                         \think\facade\Log::info($lineNumStr);
-                        \think\facade\Log::info(json_encode($keyboard_array, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+                        \think\facade\Log::info(json_encode($keyboard_array,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
 
                         $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($keyboard_array);
                     } else if ($game->keyboard) {
                         \think\facade\Log::info("345pm2");
                         $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
                         \think\facade\Log::info($lineNumStr);
-                        \think\facade\Log::info(json_encode($game->keyboard, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+                        \think\facade\Log::info(json_encode($game->keyboard,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
                         $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($game->keyboard);
                     }
                     //keyboard just menu list
@@ -428,7 +402,6 @@ class Handle2
                     $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
                     \think\facade\Log::info($lineNumStr);
                     \think\facade\Log::info(json_encode($params));
-                    \think\facade\Log::noticexx(json_encode($params));
                     $GLOBALS['bet_ret_prm'] = $params;
                     //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
                     return $this->apiRequestWebhook("sendMessage", $params);
@@ -437,19 +410,22 @@ class Handle2
         }
     }
 
+
+
+
     private function processCallbackQuery($callback_query)
     {
         $from = $callback_query['from']['id'];
         $func = $callback_query['data'];
         $data = Test::where('chat_id', $callback_query['id'])
-            ->where('name', '小飞机漏发信息')
+            ->where('name', '???????')
             ->find();
         if ($data) {
             return;
         }
         $data = [
             'chat_id' => $callback_query['id'],
-            'name' => "网络钩子接收",
+            'name' => "??????",
             'text' => file_get_contents('php://input'),
         ];
         Test::create($data);

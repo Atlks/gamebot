@@ -65,7 +65,7 @@ function invoke_bot(token) {
         filename = __dirname + "/../think";
         cmd = $phpexe + " " + filename + "    keywdReqHdlr  " + encodeURI(JSON.stringify(msg));
         console.log(cmd)
-        exec(cmd)
+        execSync(cmd)
         console.log(999)
     });
 }

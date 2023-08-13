@@ -66,18 +66,29 @@ class keywdReqHdlr extends Command
             \think\facade\Log::info(json_encode($ret));
     
             //if here null maybe  processMessage  grp id chk fail.
+            $bet_ret_prmFmt=$GLOBALS['bet_ret_prm'];
+            var_dump( $bet_ret_prmFmt); 
+            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+            \think\facade\Log::info(" bet_ret_prmFmt::" );
+
+            \think\facade\Log::info(json_encode($bet_ret_prmFmt,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+
             $urlprm = http_build_query($GLOBALS['bet_ret_prm']);
             $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
             \think\facade\Log::info($lineNumStr);
-            \think\facade\Log::info(" urlprm:" . $urlprm);
+            \think\facade\Log::info(" retRzt urlprm:" . $urlprm);
     
             require_once(__DIR__ . "/../lib/tlgrmV2.php");
-          
+            $set = Setting::find(1);
+    
+            $GLOBALS['BOT_TOKEN']= $set->s_value ;
             $r = bot_sendmsg_reply_byQrystr(  $GLOBALS['BOT_TOKEN'], $urlprm);
             \think\facade\Log::info("  " . $r);
             \think\facade\Log::info("-------------finish------");
             //     \think\facade\Log::info(  $ret );
             var_dump("97L");
+            $output->writeln('cmd reqhdl finish '  );
+            echo "finish999";
         }  catch (\Throwable $exception) {
             $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
             //   \think\facade\Log::info($lineNumStr);

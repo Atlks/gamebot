@@ -359,6 +359,7 @@ class BotApi
         $disableNotification = false,
         $messageThreadId = null
     ) {
+        \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
         return Message::fromResponse($this->call('sendMessage', [
             'chat_id' => $chatId,
             'text' => $text,
@@ -1256,6 +1257,7 @@ class BotApi
         $parseMode = null,
         $messageThreadId = null
     ) {
+        \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
         return Message::fromResponse($this->call('sendPhoto', [
             'chat_id' => $chatId,
             'photo' => $photo,

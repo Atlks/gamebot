@@ -28,12 +28,8 @@ class Handle2
      */
     public function index()
     {
-        \think\facade\Log::noticexx(__METHOD__ . json_encode(func_get_args()));
         \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
         $frmNet = file_get_contents('php://input');
-        $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_"  . ".json";
-        file_put_contents($logf,  $frmNet);
-
         \think\facade\Log::warning($frmNet);
         $update = json_decode(file_get_contents('php://input'), true);
         if (!$update) {
@@ -46,7 +42,7 @@ class Handle2
             if (isset($update["message"])) {
                 $msgobj = $update["message"];
                 $msgid =  $msgobj['message_id'];
-                $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_" . $msgid . ".json";
+               $logf=__DIR__."/../../zmsglg/".date('Y-m-d H-i-s')."_".$msgid.".json";
                 if (file_exists($logf)) {
                     file_put_contents($logf, "1123");
                     \think\facade\Log::warning(" file exist:" . $logf);
@@ -108,39 +104,39 @@ class Handle2
             ];
             Test::create($data);
             $exception = $e;
-
-
+            
+            
             global $errdir;
-            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ .  " m:" . __METHOD__ . "  " . PHP_EOL;
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $lineNumStr, FILE_APPEND);
-
-            //   \think\facade\Log::error("errtrace:".$exception->getTrace());
-
-
-            $logtxt = "----------------errrrrx_lg142_hdr2ex__cathr---------------------------" . PHP_EOL;
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-            $logtxt = "file_linenum:" . $exception->getFile() . ":" . $exception->getLine();
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-
-            $logtxt = "errmsg:" . $exception->getMessage();
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-
-            $logtxt = "errtraceStr:" . $exception->getTraceAsString();
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-
-
-
-            \think\facade\Log::emergency($exception->getFile() . ":" . $exception->getLine());
-            \think\facade\Log::emergency($exception->getMessage());
-            \think\facade\Log::emergency("errtraceStr:" . $exception->getTraceAsString());
-            \think\facade\Log::emergency(json_encode($e));
-            // throw $e;
+                $lineNumStr = "  " . __FILE__ . ":" . __LINE__ .  " m:" . __METHOD__ . "  ".PHP_EOL;
+                  file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $lineNumStr , FILE_APPEND);
+     
+     //   \think\facade\Log::error("errtrace:".$exception->getTrace());
+       
+     
+          $logtxt="----------------errrrrx_lg142_hdr2ex__cathr---------------------------".PHP_EOL;
+                       file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt , FILE_APPEND);
+                         $logtxt="file_linenum:".$exception->getFile().":".$exception->getLine();
+                         file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt , FILE_APPEND);
+                   
+                      $logtxt="errmsg:".$exception->getMessage();
+                        file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt , FILE_APPEND);
+           
+                  $logtxt="errtraceStr:".$exception->getTraceAsString();
+                    file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt , FILE_APPEND);
+                
+                
+                
+            \think\facade\Log::warning($exception->getFile() . ":" . $exception->getLine());
+            \think\facade\Log::warning($exception->getMessage());
+          
+             \think\facade\Log::error("errtraceStr:".$exception->getTraceAsString());
+               \think\facade\Log::warning(json_encode($e));
+           // throw $e;
         }
     }
 
     public function apiRequestWebhook($method, $parameters)
     {
-        \think\facade\Log::noticexx(__METHOD__ . json_encode(func_get_args()));
         if (!is_string($method)) {
             error_log("Method name must be a string\n");
             return false;
@@ -277,7 +273,6 @@ class Handle2
 
     public function processMessage($message)
     {
-        \think\facade\Log::noticexx(__METHOD__ . json_encode(func_get_args()));
         \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
         //  var_dump(__METHOD__ . json_encode(func_get_args()));
         //  var_dump( $this->Bot_Token);
@@ -312,10 +307,10 @@ class Handle2
             $full_name = $full_name . $message['from']['last_name'];
 
 
-        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-        \think\facade\Log::info($lineNumStr);
-        //  \think\facade\Log::info( $message['text']);
-
+            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+            \think\facade\Log::info($lineNumStr);
+          //  \think\facade\Log::info( $message['text']);
+           
         if (isset($message['text'])) {
             $text = $message['text'];
             if ($text === "获取我的群信息") {
@@ -401,14 +396,14 @@ class Handle2
                         \think\facade\Log::info("345pm");
                         $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
                         \think\facade\Log::info($lineNumStr);
-                        \think\facade\Log::info(json_encode($keyboard_array, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+                        \think\facade\Log::info(json_encode($keyboard_array,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
 
                         $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($keyboard_array);
                     } else if ($game->keyboard) {
                         \think\facade\Log::info("345pm2");
                         $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
                         \think\facade\Log::info($lineNumStr);
-                        \think\facade\Log::info(json_encode($game->keyboard, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+                        \think\facade\Log::info(json_encode($game->keyboard,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
                         $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($game->keyboard);
                     }
                     //keyboard just menu list
@@ -428,7 +423,6 @@ class Handle2
                     $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
                     \think\facade\Log::info($lineNumStr);
                     \think\facade\Log::info(json_encode($params));
-                    \think\facade\Log::noticexx(json_encode($params));
                     $GLOBALS['bet_ret_prm'] = $params;
                     //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
                     return $this->apiRequestWebhook("sendMessage", $params);

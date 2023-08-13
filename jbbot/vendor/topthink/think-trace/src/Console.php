@@ -144,10 +144,25 @@ JS;
                     $line[] = "console.log(\"%c{$msg}\", \"{$style}\");";
                     break;
                 default:
-                    $m      = is_string($key) ? $key . ' ' . $m : $key + 1 . ' ' . $m;
-                    $msg    = json_encode($m);
-                    $line[] = "console.log({$msg});";
-                    break;
+                    try{
+                           $m      = is_string($key) ? $key . ' ' . $m : $key + 1 . ' ' . $m;
+                             $msg    = json_encode($m);
+                             $line[] = "console.log({$msg});";
+                  
+                    }catch (\Throwable $exception) 
+                    {
+                        $logf=$GLOBALS['$errdir']  . date('Y-m-d H') . "lg142_shtdwnHdlr_.log";
+                          
+                           file_put_contents( $logf,  "----------------err from console.ph---------------------------" . PHP_EOL, FILE_APPEND);
+                       $logtxt="file_linenum:" . $exception->getFile() . ":" . $exception->getLine();
+                          file_put_contents( $logf,  $logtxt . PHP_EOL, FILE_APPEND);
+                        $logtxt="errmsg:" . $exception->getMessage();
+                         file_put_contents( $logf,  $logtxt . PHP_EOL, FILE_APPEND);
+                         $logtxt=("errtraceStr:" . $exception->getTraceAsString());
+                          file_put_contents( $logf,  $logtxt . PHP_EOL, FILE_APPEND);
+                      
+                    }
+                   break;
             }
         }
         $line[] = "console.groupEnd();";

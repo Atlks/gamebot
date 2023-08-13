@@ -6,7 +6,8 @@ namespace app\controller;
 
 use app\model\Setting;
 use app\model\Test;
-use app\common\Game;
+use app\common\Game2handlrLogic as Game;
+
 use app\model\BotWords;
 
 class HandleUpdates

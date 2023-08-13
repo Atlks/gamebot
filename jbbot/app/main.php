@@ -28,6 +28,7 @@ require_once(__DIR__ . "/../lib/tlgrmV2.php");
 //die();
 function sendmessage($text)
 {
+    \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\项目最新\jbbot\public\index2.php   gamelogic/start2
     // must start2 ..bcs indx inm router,so cant acc
     echo   $text . PHP_EOL;
@@ -44,11 +45,13 @@ class main extends Command
 
     protected function execute(Input $input, Output $output)
     {
+        \think\facade\Log::info('这是一个自定义日志类型');
+        die();
         // 指令输出
         $output->writeln('cmd2');
         while (true) {
             try {
-
+                \think\facade\Log::noticexx('这是一个自定义日志类型');
 
                 // echo   iconv("gbk","utf-8","php中文待转字符");//把中文gbk编码转为utf8
                 main_process();
@@ -64,6 +67,7 @@ class main extends Command
                 // throw $exception; // for test
             }
             sleep(1);
+            break;
         }
     }
 }
@@ -73,7 +77,7 @@ $lottery_no = "...";
 function    main_process()
 {
 
-
+    \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     global $lottery_no;
     $lottery_no = 111;
     // var_dump(  $lottery_no);die();
@@ -167,6 +171,7 @@ function    main_process()
 
 function startBet()
 {
+    \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     //-------------------- start bet
     $cfile = new \CURLFile(app()->getRootPath() . "public/static/start.jpg");
     global $lottery_no;
@@ -223,7 +228,7 @@ function startBet()
 }
 function  fenpan_wanrning_event($waring_time_sec)
 {
-
+    \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     $bot_words = \app\model\BotWords::where('Id', 1)->find();
     // $waring_time_sec = 5;
     // 1133期还有50秒停止下注
@@ -243,7 +248,7 @@ function  fenpan_wanrning_event($waring_time_sec)
 
 function fenpan_stop_event()
 {
-
+    \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     $bot_words = \app\model\BotWords::where('Id', 1)->find();
     $words = $bot_words->StopBet_Notice;
     $text = $words;
@@ -252,21 +257,27 @@ function fenpan_stop_event()
     global $lottery_no;
     $records = \app\common\Logs::getBetRecordByLotteryNo($lottery_no);
     $text = "--------本期下注玩家---------" . "\r\n";
+    \think\facade\Log::info( $text);
     $sum = 0;
     foreach ($records as $k => $v) {
         $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $v['BetContent'] . "\r\n";
         $sum += $v['Bet'];
     }
     echo   $text . PHP_EOL;
-    $msg = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm  BCS is markdown mode
-    bot_sendMsg($msg, $GLOBALS['BOT_TOKEN'], $GLOBALS['chat_id']);
+    $msg = $text;
+
+    \think\facade\Log::info( $msg);
+  //  $msg = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm  BCS is markdown mode
+  $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
+  $bot->sendmessage($GLOBALS['chat_id'], $msg);
+   // bot_sendMsg($msg, $GLOBALS['BOT_TOKEN'], $GLOBALS['chat_id']);
     // sendmessageBotNConsole($text);
 
     $text = "第" . $lottery_no . "期 [点击官方开奖](https://etherscan.io/block/" . $lottery_no . ")";
     // sendmessageBotNConsole($text);
-    $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
+ 
   //  $bot->sendmessage($GLOBALS['chat_id'], $text);
-    $bot->sendmessage($GLOBALS['chat_id'], $text, null, true);
+    $bot->sendmessage($GLOBALS['chat_id'], $text, "MarkdownV2", true);
     // public function StopBet()
 
     $set = Setting::find(3);
@@ -277,6 +288,7 @@ function fenpan_stop_event()
 
 function kaij_draw_evt()
 {
+    \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     require_once  __DIR__ . "/lotrySsc.php";
 
     global $lottery_no;
@@ -286,11 +298,13 @@ function kaij_draw_evt()
     $text = "第" . $lottery_no . "期开奖结果" . "\r\n";
     $kaij_num = getKaijNumFromBlkhash($blkHash);
     $text = $text  . kaij_echo($kaij_num);
-    $text = $text . "本期区块号码:" . $lottery_no . "\r\n"
+    $text = $text .PHP_EOL. "本期区块号码:" . $lottery_no . "\r\n"
         . "本期哈希值:\r\n" . $blkHash . "\r\n";
     sendmessage($text);
     //  $text .= $this->result . "\r\n";
-    sendmessageBotNConsole($text);
+ 
+    $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
+    $bot->sendmessage($GLOBALS['chat_id'], $text);
 
     $gmLgcSSc = new   \app\common\GameLogicSsc();  //comm/gamelogc
     // $gl->lottery_no = $lottery_no;

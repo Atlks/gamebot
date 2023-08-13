@@ -1,7 +1,7 @@
 <?php
 
 
-var_dump(kaij_echo(15973));
+//var_dump(kaij_echo(15973));
 //   6599269003:AAHW6kAh3Cy28vT4NuzQIkU4sISM3iFi-OA      ssc2024_bot  test ssc bot
 //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe app/lotrySsc.php
 //   特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d+[大|小|单|双]\d+,和值大小单双玩法=和[大|小|单|双]\d+,龙虎和玩法=[龙|虎|和]\d+,前后三玩法=[前|后][豹|顺|对|半|杂]\d+
@@ -38,6 +38,7 @@ function getKaijNumFromBlkhash_cye5vi($blkHash)
 
 function getKaijNumFromBlkhash($blkHash)
 {
+    \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     $blkHash = trim($blkHash);
     $blkHash = substr($blkHash, 2);
     var_dump($blkHash);
@@ -163,7 +164,7 @@ function getAmt_frmBetStr($str)
 function getWefa($bet_nums)
 {
     $log_txt = __METHOD__ . json_encode(func_get_args());
-    var_dump(__METHOD__ . json_encode(func_get_args()));
+  //  var_dump(__METHOD__ . json_encode(func_get_args()));
     $numb = $bet_nums;
     // echo "betnum:" . $numb;
     //  $wefa_rex = '特码球玩法=\d\/\d\/\d+,特码球大小单双玩法=\d[大|小|单|双]\d+,和值大小单双玩法=和[大|小|单|双]\d+,龙虎和玩法=[龙|虎|和]\d+,前后三玩法=[前|后][豹|顺|对|半|杂]\d+';

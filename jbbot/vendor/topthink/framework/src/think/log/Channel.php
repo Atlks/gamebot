@@ -101,6 +101,7 @@ class Channel implements LoggerInterface
         }
 
         if (!$this->lazy || !$lazy) {
+            var_dump($this);
             $this->save();
         }
 
@@ -135,13 +136,17 @@ class Channel implements LoggerInterface
      */
     public function save(): bool
     {
-        $log = $this->log;
+        $log = $this->log;//type array log is
+       // var_dump($this->event);die();
         if ($this->event) {
             $event = new LogWrite($this->name, $log);
             $this->event->trigger($event);
             $log = $event->log;
         }
+     //   $this->
 
+     //this logger is   think\log\driver\File
+      //     var_dump($this->logger);die();
         if ($this->logger->save($log)) {
             $this->clear();
             return true;

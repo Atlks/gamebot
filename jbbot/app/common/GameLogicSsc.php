@@ -298,6 +298,7 @@ class GameLogicSsc
 
     public function SendTrendImage($count = 10)
     {
+        \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
         $lotterys = Logs::get_lottery_log($count);
         $records = [];
         foreach ($lotterys as $log) {
@@ -1016,7 +1017,7 @@ $a=trim($strarr[0]);  $b=trim($strarr[1]);
     //  对讲计算
     public function DrawLotteryV2($hash)
     {
-
+        \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
         $log_txt = __METHOD__ . json_encode(func_get_args());
 
         \think\facade\Log::debug($log_txt);
