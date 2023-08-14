@@ -6,7 +6,7 @@
 
 
 //C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe test/wefaUniTest.php 
-require_once  __DIR__ . "/../app/lotrySsc.php";
+require_once  __DIR__ . "/../app/common/lotrySsc.php";
 
 echo  "------------1/单/100  " . "11690" .  tostrFrmbool(dwijyo("1/单/100",   "11690"));
 //die();

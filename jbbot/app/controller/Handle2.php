@@ -28,7 +28,7 @@ class Handle2
      */
     public function index()
     {
-        \think\facade\Log::noticexx(__METHOD__ . json_encode(func_get_args()));
+        \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args()));
         \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
         $frmNet = file_get_contents('php://input');
         $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_"  . ".json";
@@ -277,7 +277,7 @@ class Handle2
 
     public function processMessage($message)
     {
-        \think\facade\Log::noticexx(__METHOD__ . json_encode(func_get_args()));
+        \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args()));
         \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
         //  var_dump(__METHOD__ . json_encode(func_get_args()));
         //  var_dump( $this->Bot_Token);
@@ -428,7 +428,11 @@ class Handle2
                     $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
                     \think\facade\Log::info($lineNumStr);
                     \think\facade\Log::info(json_encode($params));
-                    \think\facade\Log::noticexx(json_encode($params));
+
+                    $curMethod=__CLASS__.":".__FUNCTION__. json_encode(func_get_args()). " sa ".__FILE__ . ":" . __LINE__;
+                    \think\facade\Log::betnotice ("at file:". __FILE__ . ":" . __LINE__ );
+                    \think\facade\Log::betnotice ( "at method:".__CLASS__.":".__FUNCTION__. json_encode(func_get_args(), JSON_UNESCAPED_UNICODE) );
+                    \think\facade\Log::betnotice("ret params:" .json_encode($params));
                     $GLOBALS['bet_ret_prm'] = $params;
                     //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
                     return $this->apiRequestWebhook("sendMessage", $params);
