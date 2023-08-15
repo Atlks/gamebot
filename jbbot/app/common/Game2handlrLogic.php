@@ -366,10 +366,11 @@ class Game2handlrLogic
         //-------------------------------------开始下注--------
         $bet_lst_echo_arr = [];
 
+        require_once __DIR__."/lotryEcho.php";
         // $bet_amt_total_arr=[];
         foreach ($bets as $key => $value) {
 
-            array_push($bet_lst_echo_arr, getBetContxEcHo($value['text']));
+            array_push($bet_lst_echo_arr,  \echox\getBetContxEcHo($value['text']));
 
             $bet = $value;
             $bet_amt_total_arr[] = $value['amount'] / 100;

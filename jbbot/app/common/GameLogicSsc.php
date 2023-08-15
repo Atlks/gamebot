@@ -1186,7 +1186,10 @@ class GameLogicSsc
                 $income = $row['Payout'] / 100 -  $betamt;
                 $uid = $row['UserId'];
                 $uname = $row['UserName'];
-                $bettx = $row['BetContent'];
+                require_once __DIR__."/lotryEcho.php";
+                $bettx =  \echox\getBetContxEcHo($row['BetContent'])  ;
+               
+                
                 $txt = "$uname [$uid] $bettx 下注金额:$betamt 盈亏: $income \r\n";
                 var_dump($txt);
                 $a[] = $txt;

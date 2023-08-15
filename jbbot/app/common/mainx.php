@@ -47,7 +47,7 @@ class mainx extends Command
     protected function execute(Input $input, Output $output)
     {
         \think\facade\Log::info('这是一个自定义日志类型');
-     //   die();
+        //   die();
         // 指令输出
         $output->writeln('cmd2');
         while (true) {
@@ -258,26 +258,30 @@ function fenpan_stop_event()
     global $lottery_no;
     $records = \app\common\Logs::getBetRecordByLotteryNo($lottery_no);
     $text = "--------本期下注玩家---------" . "\r\n";
-    \think\facade\Log::info( $text);
+    \think\facade\Log::info($text);
     $sum = 0;
     foreach ($records as $k => $v) {
-        $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $v['BetContent'] . "\r\n";
+
+        // array_push($bet_lst_echo_arr,  \echox\getBetContxEcHo($value['text']));
+        require_once __DIR__ . "/lotryEcho.php";
+        $echo = \echox\getBetContxEcHo($v['BetContent']);
+        $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $echo . "\r\n";
         $sum += $v['Bet'];
     }
     echo   $text . PHP_EOL;
     $msg = $text;
 
-    \think\facade\Log::info( $msg);
-  //  $msg = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm  BCS is markdown mode
-  $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
-  $bot->sendmessage($GLOBALS['chat_id'], $msg);
-   // bot_sendMsg($msg, $GLOBALS['BOT_TOKEN'], $GLOBALS['chat_id']);
+    \think\facade\Log::info($msg);
+    //  $msg = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm  BCS is markdown mode
+    $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
+    $bot->sendmessage($GLOBALS['chat_id'], $msg);
+    // bot_sendMsg($msg, $GLOBALS['BOT_TOKEN'], $GLOBALS['chat_id']);
     // sendmessageBotNConsole($text);
 
     $text = "第" . $lottery_no . "期 [点击官方开奖](https://etherscan.io/block/" . $lottery_no . ")";
     // sendmessageBotNConsole($text);
- 
-  //  $bot->sendmessage($GLOBALS['chat_id'], $text);
+
+    //  $bot->sendmessage($GLOBALS['chat_id'], $text);
     $bot->sendmessage($GLOBALS['chat_id'], $text, "MarkdownV2", true);
     // public function StopBet()
 
@@ -299,11 +303,11 @@ function kaij_draw_evt()
     $text = "第" . $lottery_no . "期开奖结果" . "\r\n";
     $kaij_num = getKaijNumFromBlkhash($blkHash);
     $text = $text  . kaij_echo($kaij_num);
-    $text = $text .PHP_EOL. "本期区块号码:" . $lottery_no . "\r\n"
+    $text = $text . PHP_EOL . "本期区块号码:" . $lottery_no . "\r\n"
         . "本期哈希值:\r\n" . $blkHash . "\r\n";
     sendmessage($text);
     //  $text .= $this->result . "\r\n";
- 
+
     $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
     $bot->sendmessage($GLOBALS['chat_id'], $text);
 

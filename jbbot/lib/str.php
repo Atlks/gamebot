@@ -40,6 +40,7 @@ function str_splitX($str)
 //echo " str ddl:".str_delNum("后顺333");
 function str_delNum($str)
 {
+    \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
     return preg_replace('/[\d]/', '', $str);
 }
 
