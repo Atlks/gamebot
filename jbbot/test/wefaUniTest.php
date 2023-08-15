@@ -6,22 +6,23 @@
 
 
 //C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe test/wefaUniTest.php 
-require_once  __DIR__ . "/../app/common/lotrySsc.php";
+require  __DIR__ . "/../app/common/lotrySscV2.php";
+require  __DIR__ . "/../lib/logx.php";
 
-echo  "------------1/单/100  " . "11690" .  tostrFrmbool(dwijyo("1/单/100",   "11690"));
+$lev="untest530";
+
+$rzt=dwijyo("a/单/100",   "11690");
+\libspc\log_info_php("unitest","********************",$rzt,$lev,__DIR__."/../runtime/");
+echo  "------------a/单/100  " . "11690" .  tostrFrmbool(dwijyo("a/单/100",   "11690"));
 //die();
+\libspc\log_info_php("unitest","********************",dwijyo("a/1/100",   "11690"),$lev,__DIR__."/../runtime/");
+echo  "------------a/1/100  " . "11690" . tostrFrmbool(dwijyo("a/1/100",   "11690"));
 
-echo  "------------1/1/100  " . "11690" . tostrFrmbool(dwijyo("1/1/100",   "11690"));
-
-echo  "------------1/单/100  " . "11690" .  tostrFrmbool(dwijyo("1/单/100",   "11690"));
+//echo  "------------1/单/100  " . "11690" .  tostrFrmbool(dwijyo("1/单/100",   "11690"));
 
 echo  "--------------小100  " . "11690"  . tostrFrmbool(dwijyo("小100",   "11690"));
 
-var_dump(dwijyo("大100",   "11690"));
-var_dump(dwijyo("单100",   "11690"));
-var_dump(dwijyo("双100",   "11690"));
-var_dump(dwijyo("龙100",   "01690"));
-var_dump(dwijyo("虎100",   "01690"));
+
 
 echo  "--------------和100  " . "01690"  . tostrFrmbool(dwijyo("和100",   "01690"));
 echo  "--------------前豹100  " . "00090"  . tostrFrmbool(dwijyo("前豹100",   "00090"));
@@ -33,7 +34,11 @@ echo  "--------------前对100  " . "00190"  . tostrFrmbool(dwijyo("前对100", 
 die();
 //var_dump(join(" ",getKaijNumArr_hezDasyods("41278") ));
 
-
+var_dump(dwijyo("大100",   "11690"));
+var_dump(dwijyo("单100",   "11690"));
+var_dump(dwijyo("双100",   "11690"));
+var_dump(dwijyo("龙100",   "01690"));
+var_dump(dwijyo("虎100",   "01690"));
 
 //
 

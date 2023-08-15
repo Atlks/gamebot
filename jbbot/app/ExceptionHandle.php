@@ -42,6 +42,11 @@ class ExceptionHandle extends Handle
         $j=json_encode($exception,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
       //  $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
       //  \think\facade\Log::error(  $lineNumStr);
+
+
+      $lineNumStr = " m:" . __METHOD__ . "  " . __FILE__ . ":" . __LINE__    . PHP_EOL;
+
+      \think\facade\Log::error("------------- $lineNumStr -------------------------");
         \think\facade\Log::error("----------------errrrrx_tp_ex_cathr---------------------------");
         \think\facade\Log::error("file_linenum:".$exception->getFile().":".$exception->getLine());
         \think\facade\Log::error("errmsg:".$exception->getMessage());

@@ -28,19 +28,31 @@ class Handle2
      */
     public function index()
     {
-        \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args()));
-        \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
-        $frmNet = file_get_contents('php://input');
-        $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_"  . ".json";
-        file_put_contents($logf,  $frmNet);
+        require_once __DIR__ . "/../../lib/logx.php";
+        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  " . PHP_EOL;
 
-        \think\facade\Log::warning($frmNet);
-        $update = json_decode(file_get_contents('php://input'), true);
-        if (!$update) {
-            return false;
-        }
-        $updateId = $update['update_id'];
+        \libspc\log_info_tp("ttt", "noobj", $lineNumStr, "info");
+        $updateId = 0;
         try {
+
+            //    var_dump(999);die();
+            \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args()));
+
+            //   throw new \Exception("Value must be 1 or below");
+
+            //-----------------------------------store  onece 
+            \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
+            $frmNet = file_get_contents('php://input');
+            $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_rcv"  . ".json";
+            file_put_contents($logf,  $frmNet);
+
+            \think\facade\Log::betnotice($frmNet);
+            $update = json_decode(file_get_contents('php://input'), true);
+            if (!$update) {
+                return false;
+            }
+            $updateId = $update['update_id'];
+
             $this->Bot_Token = Setting::find(1)->s_value;
 
             if (isset($update["message"])) {
@@ -72,14 +84,42 @@ class Handle2
                 echo $payload;
                 global $errdir;
 
+                require_once __DIR__ . "/../../lib/logx.php";
                 $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  " . PHP_EOL;
-                file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2_.log",   $lineNumStr, FILE_APPEND);
-                file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2_.log",  "..bet ret prm ::" . PHP_EOL, FILE_APPEND);
-                file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2_.log",  json_encode($GLOBALS['bet_ret_prm']) . PHP_EOL, FILE_APPEND);
+
+                \libspc\log_info_tp("bet_ret_prm", $parameters, $lineNumStr, "hdlrRevPayload");
                 die();
                 return;
+            } elseif (isset($update["callback_query"])) {
+                return $this->processCallbackQuery($update["callback_query"]);
+            }
+        } catch (\Throwable $e) {
+
+            //    var_dump(999);die();
+            $data = [
+                'chat_id' => $updateId,
+                'name' => "网络钩子异常",
+                'text' => $e->getMessage(),
+            ];
+            Test::create($data);
+            $exception = $e;
 
 
+            global $errdir;
+
+
+            //   \think\facade\Log::error("errtrace:".$exception->getTrace());
+
+            require_once __DIR__ . "/../../lib/logx.php";
+            $lineNumStr = " m:" . __METHOD__ . "  " . __FILE__ . ":" . __LINE__    . PHP_EOL;
+            \libspc\log_err($exception, $lineNumStr, $errdir, "emgc");
+            \libspc\log_err_tp($exception, $lineNumStr, "emergency");
+        }
+    }
+
+    /**
+     * 
+     * 
 
                 //----------------------send msg
                 require_once(__DIR__ . "/../../lib/tlgrmV2.php");
@@ -97,46 +137,7 @@ class Handle2
                 \think\facade\Log::info("-------------finish------");
                 //  die();
                 return;
-            } elseif (isset($update["callback_query"])) {
-                return $this->processCallbackQuery($update["callback_query"]);
-            }
-        } catch (\Throwable $e) {
-            $data = [
-                'chat_id' => $updateId,
-                'name' => "网络钩子异常",
-                'text' => $e->getMessage(),
-            ];
-            Test::create($data);
-            $exception = $e;
-
-
-            global $errdir;
-            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ .  " m:" . __METHOD__ . "  " . PHP_EOL;
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $lineNumStr, FILE_APPEND);
-
-            //   \think\facade\Log::error("errtrace:".$exception->getTrace());
-
-
-            $logtxt = "----------------errrrrx_lg142_hdr2ex__cathr---------------------------" . PHP_EOL;
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-            $logtxt = "file_linenum:" . $exception->getFile() . ":" . $exception->getLine();
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-
-            $logtxt = "errmsg:" . $exception->getMessage();
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-
-            $logtxt = "errtraceStr:" . $exception->getTraceAsString();
-            file_put_contents($errdir . date('Y-m-d H') . "lg142_hdr2ex_.log",   $logtxt, FILE_APPEND);
-
-
-
-            \think\facade\Log::emergency($exception->getFile() . ":" . $exception->getLine());
-            \think\facade\Log::emergency($exception->getMessage());
-            \think\facade\Log::emergency("errtraceStr:" . $exception->getTraceAsString());
-            \think\facade\Log::emergency(json_encode($e));
-            // throw $e;
-        }
-    }
+     */
 
     public function apiRequestWebhook($method, $parameters)
     {
@@ -429,10 +430,10 @@ class Handle2
                     \think\facade\Log::info($lineNumStr);
                     \think\facade\Log::info(json_encode($params));
 
-                    $curMethod=__CLASS__.":".__FUNCTION__. json_encode(func_get_args()). " sa ".__FILE__ . ":" . __LINE__;
-                    \think\facade\Log::betnotice ("at file:". __FILE__ . ":" . __LINE__ );
-                    \think\facade\Log::betnotice ( "at method:".__CLASS__.":".__FUNCTION__. json_encode(func_get_args(), JSON_UNESCAPED_UNICODE) );
-                    \think\facade\Log::betnotice("ret params:" .json_encode($params));
+                    $curMethod = __CLASS__ . ":" . __FUNCTION__ . json_encode(func_get_args()) . " sa " . __FILE__ . ":" . __LINE__;
+                    \think\facade\Log::betnotice("at file:" . __FILE__ . ":" . __LINE__);
+                    \think\facade\Log::betnotice("at method:" . __CLASS__ . ":" . __FUNCTION__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
+                    \think\facade\Log::betnotice("ret params:" . json_encode($params));
                     $GLOBALS['bet_ret_prm'] = $params;
                     //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
                     return $this->apiRequestWebhook("sendMessage", $params);

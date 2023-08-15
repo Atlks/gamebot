@@ -9,4 +9,4 @@ public/trend.jpg
 nginx.htaccess
 .env
 /.env
-/tlgrm/node_modules
+/tlgrm/vendor

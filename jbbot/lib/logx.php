@@ -1,13 +1,61 @@
 <?php
 
 namespace libspc;
-
-function log_info($linenum, $msg, $obj)
+function log_php($method_linenum, $msg, $obj, $lev = "info")
 {
-    \think\facade\Log::info("f:$linenum");
+    $logdir=__DIR__."/../runtime/";
+    $datamsg = $obj;
+    if (is_object($obj) || is_array($obj)) {
+        $datamsg = json_encode($obj, JSON_UNESCAPED_UNICODE);
+    } else   if (is_bool($obj)) {
+        if ($obj)
+            $datamsg = "TRUE";
+        else
+            $datamsg = "FALSE";
+        //  var_dump( $datamsg);DIE();
+    }
+  //  var_dump( $datamsg);
+    $logf = $logdir . date('Y-m-d') . "_lg142_$lev.log";
+    $logtxt = $method_linenum;
+
+    file_put_contents($logf,   $logtxt . PHP_EOL, FILE_APPEND);
+    //   file_put_contents($logf,   $linenum_magicNum . PHP_EOL, FILE_APPEND);
+   //  varname is xxx
+    $logtxt = $msg." is:" . $datamsg;
+    file_put_contents($logf,   $logtxt . PHP_EOL, FILE_APPEND);
+}
+
+function log_info_php($method_linenum, $msg, $obj, $lev = "info")
+{
+    $logdir=__DIR__."/../runtime/";
+    $datamsg = $obj;
+    if (is_object($obj) || is_array($obj)) {
+        $datamsg = json_encode($obj, JSON_UNESCAPED_UNICODE);
+    } else   if (is_bool($obj)) {
+        if ($obj)
+            $datamsg = "TRUE";
+        else
+            $datamsg = "FALSE";
+        //  var_dump( $datamsg);DIE();
+    }
+    var_dump( $datamsg);
+    $logf = $logdir . date('Y-m-d') . "_lg142_$lev.log";
+    $logtxt = $method_linenum;
+
+    file_put_contents($logf,   $logtxt . PHP_EOL, FILE_APPEND);
+    //   file_put_contents($logf,   $linenum_magicNum . PHP_EOL, FILE_APPEND);
+   //  varname is xxx
+    $logtxt = $msg." is:" . $datamsg;
+    file_put_contents($logf,   $logtxt . PHP_EOL, FILE_APPEND);
+}
+
+
+function log_info_tp($msg, $obj, $linenum, $lev = "info")
+{
+    \think\facade\Log::$lev($linenum);
     \think\facade\Log::info($msg . " is : " . json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 }
-function log_err($exception, $hdrName_method_linenum, $logdir,$lev="err")
+function log_err($exception, $hdrName_method_linenum, $logdir, $lev = "err")
 {
 
     $logf = $logdir . date('Y-m-d H') . "_lg142_$lev.log";
@@ -24,7 +72,7 @@ function log_err($exception, $hdrName_method_linenum, $logdir,$lev="err")
     file_put_contents($logf,   $logtxt . PHP_EOL, FILE_APPEND);
     // file_put_contents($logdir . date('Y-m-d H') . "_lg142_$hdrName catch.log",  json_encode($GLOBALS['bet_ret_prm']) . PHP_EOL, FILE_APPEND);
 }
-function log_err_tp($exception, $hdrName_method_linenum,$lev="err")
+function log_err_tp($exception, $hdrName_method_linenum, $lev = "err")
 {
     \think\facade\Log::$lev("----------------errInMethod:$hdrName_method_linenum ex_cathr---------------------------");
     \think\facade\Log::$lev("errmsg:" . $exception->getMessage());
@@ -33,7 +81,7 @@ function log_err_tp($exception, $hdrName_method_linenum,$lev="err")
     \think\facade\Log::$lev("errtraceStr:" . $exception->getTraceAsString());
     \think\facade\Log::$lev("----------------errrrr finish---------------------------");
 }
-function log_errImpt_tp($exception, $hdrName_method_linenum,$lev="err")
+function log_errImpt_tp($exception, $hdrName_method_linenum, $lev = "err")
 {
     \think\facade\Log::critical("----------------Hdrname:$hdrName_method_linenum ex_cathr---------------------------");
     \think\facade\Log::emergency("errmsg:" . $exception->getMessage());
@@ -42,5 +90,3 @@ function log_errImpt_tp($exception, $hdrName_method_linenum,$lev="err")
     \think\facade\Log::emergency("errtraceStr:" . $exception->getTraceAsString());
     \think\facade\Log::emergency("----------------errrrr finish---------------------------");
 }
-
-

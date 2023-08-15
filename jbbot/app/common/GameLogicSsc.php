@@ -14,6 +14,8 @@ use app\model\User;
 use app\model\Setting;
 use app\common\Helper;
 use app\model\GameString;
+use \imagettfbbox as imagettfbbox;
+ 
 
 use app\common\LotteryHash28 as Hash28;
 use app\common\LotteryPC28 as PC28;
@@ -318,7 +320,7 @@ class GameLogicSsc
             }
 
             $data['result'] = $log->Result;
-            require_once  __DIR__ . "/../lotrySsc.php";
+            require_once  __DIR__ . "/lotrySscV2.php";
             $data['sum'] = "" .   array_sum(str_split($log->Result));
             $data['zuhe'] = join("", getKaijNumArr_hezDasyods($log->Result));  //和值大小单双;
 
@@ -341,8 +343,9 @@ class GameLogicSsc
         $log_txt = __METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         \think\facade\Log::debug($log_txt);
+
         // 数据
-        $data = ["turn" => '期数', "result" => "结果", "sum" => "和", "zuhe" => "组合", 'limit' => "龙虎"];
+        $data = ["turn" => '期数', "result" => "         A   B    C   D   E", "sum" => "和", "zuhe" => "组合", 'limit' => "龙虎"];
         $row_x = ["turn" => '12345678', "result" => "a+b+c=102", "sum" => "bb", "zuhe" => "组合", 'limit' => "极"];
         // TODO::字体路径
         $font = app()->getRootPath() . "public/msyhbd.ttc";
@@ -361,7 +364,7 @@ class GameLogicSsc
         $row_hight = $title_height - 10;
         $pre_title_w = [];
         foreach ($data as $key => $value) {
-            $this_box = imagettfbbox($font_size, 0, $font, $value);
+            $this_box = \imagettfbbox($font_size, 0, $font, $value);
             $pre_title_w[$key] = $this_box[2] - $this_box[0];
         }
 
@@ -370,7 +373,7 @@ class GameLogicSsc
         $pre_col_w = [];
         $pre_col_x = [];
         foreach ($row_x as $key => $value) {
-            $this_box = imagettfbbox($font_size, 0, $font, $value);
+            $this_box = \imagettfbbox($font_size, 0, $font, $value);
             $pre_col_w[$key] = $this_box[2] - $this_box[0];
             $text_x_len += $pre_col_w[$key];
         }
@@ -433,15 +436,13 @@ class GameLogicSsc
 
             $intN++;
 
-              //  break;
-                imageline($img, $x, $title_height, $x, $img_height, $bg_color);
-              
+            //  break;
+            imageline($img, $x, $title_height, $x, $img_height, $bg_color);
+
             $pre_col_x[$k] = $x;
             //写入首行 
             imagettftext($img, $font_title_size, 0, $title_x + intval(($col_x + $x_padding * 2 - $pre_title_w[$k]) / 2), intval($title_height - $font_title_size / 2), $title_color, $font, $data[$k]);
             $title_x += $col_x + $x_padding * 2;
-
-         
         }
 
         // 写入表格
@@ -482,7 +483,7 @@ class GameLogicSsc
                     $a = str_split($value);
                     $str = join("  ", $a);
                     $white_color = imagecolorallocate($img, 255, 255, 255);
-                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding)+4, $temp_height - $font_size / 2, $white_color, $font, $str);
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + 4, $temp_height - $font_size / 2, $white_color, $font, $str);
                 } else if ($k == 'zuhe') {
                     $strarr =  preg_split('/(?<!^)(?!$)/u', $value);
                     $color1 = $color2 = 0;
@@ -498,9 +499,10 @@ class GameLogicSsc
                         $color1 = $big_2_color;
                     }
 
-$a=trim($strarr[0]);  $b=trim($strarr[1]);
+                    $a = trim($strarr[0]);
+                    $b = trim($strarr[1]);
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $color1, $font, "" . $strarr[0]);
-                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $big_small_with +0, $temp_height - $font_size / 2, $color2, $font, $strarr[1]);
+                    imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $big_small_with + 0, $temp_height - $font_size / 2, $color2, $font, $strarr[1]);
                 } elseif ($k == 'limit') {
                     $green_color = imagecolorallocate($img, 100, 149, 237);
                     if ($value == "龙") {
@@ -1028,7 +1030,7 @@ $a=trim($strarr[0]);  $b=trim($strarr[1]);
         \think\facade\Log::debug($lineNumStr);
         $total_payout = 0;
         \think\facade\Log::debug("bef getKaijNumFromBlkhash:" . $hash);
-        require_once  __DIR__ . "/../lotrySsc.php";
+        require_once  __DIR__ . "/lotrySscV2.php";
 
         $kaij_num = getKaijNumFromBlkhash($hash);
         $result_text = $kaij_num;
@@ -1067,6 +1069,7 @@ $a=trim($strarr[0]);  $b=trim($strarr[1]);
             \think\facade\Log::info($lineNumStr);
             \think\facade\Log::info($logtxt);
             $player = $v['player'];
+            $payout = 0;
             $income = $payout - $v['Bet'];
             var_dump($income);
             $user = $this->userDb->findByUserId($user_id);

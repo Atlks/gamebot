@@ -112,6 +112,7 @@ class File implements LogHandlerInterface
      */
     protected function write(array $message, string $destination): bool
     {
+       // var_dump($message);
         // 检测日志文件大小，超过配置大小则备份日志文件重新生成
         $this->checkLogSize($destination);
 
@@ -122,7 +123,7 @@ class File implements LogHandlerInterface
         }
 
         $message = implode(PHP_EOL, $info) . PHP_EOL;
-
+       // var_dump($message);
 
  //file_put_contents($GLOBALS['$errdir'] . date('Y-m-d H') . "lg142_tpErrlgHdlr_.log",  json_encode($message) . PHP_EOL, FILE_APPEND);
     //    return true;

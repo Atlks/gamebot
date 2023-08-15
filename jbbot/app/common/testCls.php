@@ -52,6 +52,11 @@ class testCls extends Command
 
   protected function execute(Input $input, Output $output)
   {
+
+    painTest();
+    die();
+
+    
     \think\facade\Log::betnotice("aa哇哇哇叫123");
     \think\facade\Log::info("aa哇哇哇叫123");
     die();
@@ -63,8 +68,7 @@ class testCls extends Command
     //$bet_str_arr_clr =\extend\spltBySpace("aaa bbb");
     var_dump(   $bet_str_arr_clr);
     die();
-    painTest();
-    die();
+ 
 
     testKaij();
     die();

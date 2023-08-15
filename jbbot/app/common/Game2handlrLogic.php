@@ -220,7 +220,7 @@ class Game2handlrLogic
     //  bet v2222
     public function regex_betV2($content)
     {
-
+        //   $GLOBALS['loggerFun']= \think\facade\Log::betnotice;
         \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args()));
         // var_dump(__METHOD__. json_encode( func_get_args()));
         $lineNumStr = __METHOD__ . json_encode(func_get_args()) . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
@@ -243,30 +243,31 @@ class Game2handlrLogic
         $bet_types = [];
         var_dumpx($this->bet_types); //   bet RX FROM DB
 
-       // require_once __DIR__ . "/../../lib/logx.php";
+        // require_once __DIR__ . "/../../lib/logx.php";
         // select betrx from db
         //echo  var_export($content,true) ;
         require_once __DIR__ . "/../../lib/strx.php";
-        $bet_str_arr_clr =\strspc\spltBySpace($content);
-        $lineNumStr = " mm:))" . __METHOD__ . "() sa " . __FILE__ . ":" . __LINE__  ;
-        \think\facade\Log::betnotice(  $lineNumStr);
-        \think\facade\Log::betnotice(" bet_str_arr_clr:". json_encode($bet_str_arr_clr));
-
-
-
-        require_once __DIR__."/lotrySsc.php";
-        $bet_str_arr_clr_spltMltSingle   =     spltSingleArr( $bet_str_arr_clr);
-        \think\facade\Log::betnotice( "bet_str_arr_clr_spltMltSingle is:". json_encode($bet_str_arr_clr_spltMltSingle));
-
+        $bet_str_arr_clr = \strspc\convtCnSpace($content);
+        $lineNumStr = " mm:))" . __METHOD__ . "() sa " . __FILE__ . ":" . __LINE__;
+        \think\facade\Log::betnotice($lineNumStr);
+        \think\facade\Log::betnotice(" bet_str_arr_clr:" . json_encode($bet_str_arr_clr, JSON_UNESCAPED_UNICODE));
         \think\facade\Log::info("250L");
         \think\facade\Log::info(json_encode($bet_str_arr_clr));
-    
-       // \libspc\log_info("253_549", "bet_str_arr", $bet_str_arr_clr);
 
-
-       
         //convert 
-        $bet_str_arr_spltSingleArr=spltSingleArr($bet_str_arr_clr);
+        require_once __DIR__ . "/lotrySscV2.php";
+        require_once __DIR__ . "/lotrySpltr.php";
+        $bet_str_arr_clr_spltMltSingle   =  \ltrspltr\msgHdlr($bet_str_arr_clr);
+        \think\facade\Log::betnotice("bet_str_arr_clr_spltMltSingle is:" . json_encode($bet_str_arr_clr_spltMltSingle, JSON_UNESCAPED_UNICODE));
+        \think\facade\Log::betnoticex("bet_str_arr_clr_spltMltSingle is:" . json_encode($bet_str_arr_clr_spltMltSingle, JSON_UNESCAPED_UNICODE));
+
+
+        // \libspc\log_info("253_549", "bet_str_arr", $bet_str_arr_clr);
+
+
+
+        //convert 
+        //  $bet_str_arr_spltSingleArr = spltSingleArr($bet_str_arr_clr);
 
         $before_bet = $this->player->getBetRecord($this->lottery_no);
         $bets = array();
@@ -278,22 +279,22 @@ class Game2handlrLogic
 
             $match = false;
 
-            require_once __DIR__ . "/lotrySsc.php";
+            require_once __DIR__ . "/lotrySscV2.php";
             $bet_nums = $str;
             $bet_nums = trim($bet_nums);
             var_dumpx($bet_nums);
-       //     var_dumpx(getWefa($bet_nums));
+            //     var_dumpx(getWefa($bet_nums));
 
 
-       $lineNumStr = " mm:))" . __METHOD__ . "() sa " . __FILE__ . ":" . __LINE__  ;
-       \think\facade\Log::betnotice(  $lineNumStr);
-       \think\facade\Log::betnotice(" forech per betstr :". $str);
+            $lineNumStr = " mm:))" . __METHOD__ . "() sa " . __FILE__ . ":" . __LINE__;
+            \think\facade\Log::betnotice($lineNumStr);
+            \think\facade\Log::betnotice(" forech per betstr :getWefa($bet_nums) ");
 
-       $wefa413=getWefa($bet_nums);
-       \think\facade\Log::betnotice("   wefa413:".   $wefa413);
+            $wefa413 = getWefa($bet_nums);
+            \think\facade\Log::betnotice("   wefa413 rzt :" .   $wefa413);
             //  var_dumpx($rows);
             //   var_dumpx($rows[0]['玩法']);
-            if (getWefa($bet_nums) == "") {
+            if ($wefa413 == "") {
                 // continue;
                 return "格式错误";
             }
@@ -301,7 +302,7 @@ class Game2handlrLogic
             $amount = getAmt_frmBetStr($bet_nums) * 100;  //bcs money amt is base fen...so   cheni 100
 
 
-            $wanfa = getWefa($bet_nums);
+            $wanfa = $wefa413;
             //   var_dump("265L wanfa:".$wanfa);
             $rows =  \think\facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
             \think\facade\Log::info("262L rows count:" . count($rows));
@@ -367,6 +368,7 @@ class Game2handlrLogic
 
         // $bet_amt_total_arr=[];
         foreach ($bets as $key => $value) {
+
             array_push($bet_lst_echo_arr, getBetContxEcHo($value['text']));
 
             $bet = $value;

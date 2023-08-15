@@ -101,7 +101,7 @@ class Channel implements LoggerInterface
         }
 
         if (!$this->lazy || !$lazy) {
-            var_dump($this);
+         //   var_dump($this);
             $this->save();
         }
 
