@@ -154,7 +154,7 @@ class Player
 
     // 金流相关=====================================================
     // 下注
-    public function bet($amount, $lottery_no, $content, $bet_type)
+    public function bet($amount, $lottery_no, $content, $bet_type, $from = 1)
     {
         if ($amount > $this->balance) {
             $this->error("余额不足");
@@ -163,7 +163,7 @@ class Player
         $user = User::where('Tg_Id', $this->id)->find();
         $this->balance = $user->Balance;
         //xxxxx   .... bettype,,betodds
-        $res = Logs::addRecord($user, $lottery_no, $content, $amount, $bet_type['Id'], $bet_type['Odds']);
+        $res = Logs::addRecord($user, $lottery_no, $content, $amount, $bet_type['Id'], $bet_type['Odds'], $from);
         if (!empty($res)) {
             Logs::addMoneyLog($user, "下注", -$amount, "系统自动记录", $content, time());
             $this->balance -= $amount;

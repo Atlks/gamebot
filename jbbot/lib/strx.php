@@ -72,15 +72,22 @@ function getfirstchar($s0)
     $fchar = ord($s0[0]);
     if ($fchar >= ord("A") and $fchar <= ord("z")) return strtoupper($s0[0]);
 
+    if(is_numeric($s0))
+        return $s0;
+ if($s0==".")
+     return $s0;
     $asc  = $s0;
+
+    if (mb_strstr("大单", $asc)) return "d";
+    if (mb_strstr("小", $asc)) return "x";
 
     if (mb_strstr("玩", $asc)) return "w";
     if (mb_strstr("法", $asc)) return "f";
     if (mb_strstr("码模", $asc)) return "M";
     if (mb_strstr("球", $asc)) return "q";
-    if (mb_strstr("组", $asc)) return "z";
+    if (mb_strstr("组值", $asc)) return "z";
     if (mb_strstr("和合", $asc)) return "h";
-    if (mb_strstr("式是", $asc)) return "s";
+    if (mb_strstr("式是双", $asc)) return "s";
 
     if (strlen(mb_strstr("特", $asc)) > 0) return "T";
 
@@ -113,12 +120,12 @@ function pinyin1($zh)
     return $ret;
 }
 //echo "这是中文字符串<br/>";
-echo pinyin1('这是中文字符串abc');
+//echo pinyin1('这是中文字符串abc');
 //var_dump(strlen ( mb_strstr( "特码球玩法abc组合模式","特"))) ;
 //  php  lib/strx.php
-var_dump(getfirstchar("特"));
-var_dump(pinyin1("特"));
+//var_dump(getfirstchar("特"));
+//var_dump(pinyin1("特"));
 
-var_dump(pinyin1("码"));
+//var_dump(pinyin1("码"));
 
-var_dump(pinyin1("特码球玩法abc组合模式"));
+//var_dump(pinyin1("特码球玩法abc组合模式"));

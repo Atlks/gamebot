@@ -141,9 +141,6 @@ class GameLogic
         $this->lottery = new PC28();
         $this->game_type = 0;
 
-        $this->lottery = new LotteryHash28();
-        $this->game_type = 1;
-
 
         $this->special_mode = intval(Setting::find(10)->value);
         $this->start_issue = $start_issue;
@@ -168,14 +165,11 @@ class GameLogic
 
     public function Start()
     {
+        $bot = $this->bot;
         $today = date("Y-m-d", time());
-        if (empty($this->start_issue))
-        {
+        if (empty($this->start_issue)) {
             $data = $this->lottery->get_last_no();
-            $data['opentime']= time();
-        }
-          
-        else {
+        } else {
             $data =  [
                 'lottery_no' => intval($this->start_issue) + 1,
                 'hash_no' => intval($this->start_issue) + 1,
@@ -190,9 +184,19 @@ class GameLogic
         $this->elapsed_time *= 1000;
         $log = Logs::addLotteryLog($today, $this->lottery_no, $this->hash_no);
         $this->lottery_id = $log->id;
+        $chat = $bot->getChat($this->chat_id);
+        $ChatPermissions = $chat->getPermissions();
+        if($ChatPermissions->isCanSendMessages())
+        {
+            $set = Setting::find(3);
+            $set->value = 0;
+            $set->save();
+        }
+        /*
         $set = Setting::find(3);
         $set->value = 0;
         $set->save();
+        */
         //$this->send_notice('start');
         $this->game_state = 'waiting_bet';
         return true;
@@ -237,7 +241,10 @@ class GameLogic
                 $text = "--------本期下注玩家---------" . "\r\n";
                 $sum = 0;
                 foreach ($records as $k => $v) {
-                    $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $v['BetContent'] . "\r\n";
+                    if (isset($v['From']) && $v['From'] != 1) {
+                        $text = $text . "私聊玩家【*******" . substr($v['UserId'] . "", -4) . "】" . $v['BetContent'] . "\r\n";
+                    } else
+                        $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $v['BetContent'] . "\r\n";
                     $sum += $v['Bet'];
                 }
                 Logs::addLotteryBet($this->lottery_no, $sum);
@@ -871,7 +878,7 @@ class GameLogic
                             ) {
                                 $win_bet_ids[$v['Id']] = $card_types[$v['type']];
                             }
-                        } else{
+                        } else {
                             $win_bet_ids[$v['Id']] = $card_types[$v['type']];
                         }
                     }
@@ -1298,7 +1305,7 @@ class GameLogic
                             ) {
                                 $win_bet_ids[$v['Id']] = $card_types[$v['type']];
                             }
-                        } else{
+                        } else {
                             $win_bet_ids[$v['Id']] = $card_types[$v['type']];
                         }
                     }
@@ -1321,6 +1328,7 @@ class GameLogic
                             'bet' => 0,
                             'payout' => 0,
                             'player' => new Player($user),
+                            'hide' => $v['From'] != 1
                         ];
                     }
 
@@ -1338,6 +1346,7 @@ class GameLogic
                         'bet' => 0,
                         'payout' => 0,
                         'player' => new Player($user),
+                        'hide' => $v['From'] != 1
                     ];
                 }
 
@@ -1389,7 +1398,7 @@ class GameLogic
                 // 玩家的日报需要更新字段 PayoutAmount,Income;
                 // 结算之后计入玩家流水
                 $player->win($v['bet'], $v['payout'], $income);
-                array_push($temp_arr, array('player' => $player, 'income' => $income));
+                array_push($temp_arr, array('player' => $player, 'income' => $income, 'hide' => $v['hide']));
             }
 
             $helper = new Helper();
@@ -1397,7 +1406,10 @@ class GameLogic
             foreach ($temp_arr as $v) {
                 $player = $v['player'];
                 $income = $v['income'];
-                $text = $text . $player->getName() . "【" . $player->getId() . "】" . number_format($income / 100.0, 2, ".", "") . "\r\n";
+                if ($v['hide'])
+                    $text = $text . "私聊玩家【*******" . substr($player->getId() . "", -4) . "】" . number_format($income / 100.0, 2, ".", "") . "\r\n";
+                else
+                    $text = $text . $player->getName() . "【" . $player->getId() . "】" . number_format($income / 100.0, 2, ".", "") . "\r\n";
             }
 
             $bet_recoreds = new BetRecord();
@@ -1421,9 +1433,20 @@ class GameLogic
         $today = date("Y-m-d", time());
         $log = Logs::addLotteryLog($today, $this->lottery_no, $this->hash_no);
         $this->lottery_id = $log->id;
+        $bot = $this->bot;
+        $chat = $bot->getChat($this->chat_id);
+        $ChatPermissions = $chat->getPermissions();
+        if($ChatPermissions->isCanSendMessages())
+        {
+            $set = Setting::find(3);
+            $set->value = 0;
+            $set->save();
+        }
+        /*
         $set = Setting::find(3);
         $set->value = 0;
         $set->save();
+        */
         $this->chat_id = Setting::find(2)->value;
         $this->special_mode = intval(Setting::find(10)->value);
         $this->game_state = 'waiting_bet';

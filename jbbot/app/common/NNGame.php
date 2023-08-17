@@ -51,6 +51,7 @@ class NNGame
     private $parse_mode = null;
     private $trend = false;
 
+    public $from = 1;
     private $use_paybot = false;
 
     public function __construct($from = null)
@@ -298,7 +299,7 @@ class NNGame
             // 下注扣除注单金额,记录到moneylog里
             // 这里做一次双保险,以防前面的判断出错
             foreach ($bets as $key => $value) {
-                if (!$this->player->Bet($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'])) {
+                if (!$this->player->Bet($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'], $this->from)) {
                     $text = "下注失败:" . $this->player->get_last_error();
                     $this->action = false;
                     return $text;
@@ -404,7 +405,9 @@ class NNGame
             if (preg_match('/\d+/', $text, $out)) {
                 $amount = $out[0] * 100;
                 if ($amount > 9000000000) return "";
-
+                if ($this->player->getBalance(false) < $amount) {
+                    return "您的余额不足";
+                }
                 if ($this->use_paybot) {
                     $text = "上下分步骤：\n1️⃣入款流程：点击下方【充值提现】\n2️⃣点击菜单【充值】复制上分地址充值\n3️⃣成功到帐后自动到游戏余额 无需查分!";
                     $this->keyboard = json_decode(GameString::where('name', '上分机器人')->find()->text);
@@ -423,7 +426,6 @@ class NNGame
                 }
                 return $text;
             }
-            return "";
         }
         return "";
     }
@@ -506,12 +508,15 @@ class NNGame
 
     public function callTrend($text = null)
     {
-        $count = 10;
+        $count = 0;
         if (preg_match('/\d+/', $text, $out)) {
             $count = $out[0];
             if ($count > 50)
                 $count = 50;
         }
+
+        if ($count == 0)
+            return $this->callResults($text);
 
         $lotterys = Logs::get_lottery_log($count);
         //print_r($lotterys);
@@ -537,5 +542,12 @@ class NNGame
         }
         $this->parse_mode = "MarkdownV2";
         return  $text;
+    }
+
+    public function callHuiOne($text)
+    {
+        $text = $this->getWords("上分公告");
+        $this->parse_mode = "MarkdownV2";
+        return $text;
     }
 }

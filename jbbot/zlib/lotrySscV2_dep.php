@@ -20,7 +20,22 @@ $bet_str_arr_clr441 = \strspc\spltBySpace($content454);
 
 // var_dump( spltSingleArr($bet_str_arr_clr441) );
 
+function spltSingleArr($bet_str_arr_clr)
+{
+    //   var_dump( $bet_str_arr_clr);
+    $a = [];
+    foreach ($bet_str_arr_clr as $betstr) {
 
+        $bet_wefa =    GetWefa($betstr);
+        if ($bet_wefa == '特码球玩法组合模式') {
+            $tmp =  spltSingleArrFrmTemacyoZuheMod($betstr);
+            //  var_dump( $tmp);
+            $a =   array_merge($a, $tmp);
+        } else
+            $a[] = $betstr;
+    }
+    return $a;
+}
 
 
 //  a123456押100
@@ -109,6 +124,33 @@ $glb = [];
 //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe app/lotrySsc.php
 
 
+function kaij_echo_x($kaijNum)
+{
+    try {
+        return kaij_echo($kaijNum);
+    } catch (\Throwable $e) {
+    }
+}
+
+
+function kaij_echo($kaijNum)
+{
+    $a = str_split($kaijNum);
+    $sum = array_sum($a);
+
+    $kaij_num_dasyaodeshwo_fnly = join(" ", getKaijNumArr_hezDasyods($kaijNum));
+    //  $kaij_num_dasyaodeshwo_fnly =join("",getKaijNumArr_($kaijNum)) ;
+
+    $kaij_num_cyehgouse_fnly = join("", getKaijNumArr_cyehose($kaijNum));
+
+    $kaij_num_cyehgouse_fnly = cyehose_bet_name($kaij_num_cyehgouse_fnly);
+    $kaij_num_cyehgouse_fnly = cyehose_bet_name($kaij_num_cyehgouse_fnly);
+    $kaij_num_cyehgouse_fnly = cyehose_bet_name($kaij_num_cyehgouse_fnly);
+    $kaij_num_cyehgouse_fnly = cyehose_bet_name($kaij_num_cyehgouse_fnly);
+    $s = join("+", $a) . "=$sum $kaij_num_dasyaodeshwo_fnly " . getKaijNumFly_longhuHaeWefa($kaijNum) . " $kaij_num_cyehgouse_fnly";
+    $s = substr($s, 0, strlen($s) - 1);
+    return $s;
+}
 
 
 function getBetContxEcHo($bet_str)
@@ -208,21 +250,134 @@ $arr = get_defined_functions();
 
 //print_r($arr);
 
+function msgDispchr($msg)
+{
+    // par php file ,get funchtion
+}
+
+function msgHdlrTemacyoNumMode($bet_nums)
+{
+  //  var_dump(__METHOD__ . json_encode(func_get_args(),JSON_UNESCAPED_UNICODE ));
+    $rex = '[abcde]\/\d\/\d+';
+    $wefa_rex = '/^' . $rex . '$/iu';
+    $rzt=preg_match($wefa_rex, $bet_nums);
+   // var_dump(  $rzt);
+    if  ($rzt) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "特码球玩法";
+    }
+}
+
+
+function msgHdlrTemacyoZuheMode($bet_nums)
+{
+    $rex = '[abcde][0123456789大小单双]+押\d+';
+    $wefa_rex = '/^' . $rex . '$/iu';
+    if (preg_match($wefa_rex, $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "特码球玩法组合模式";
+    }
+}
+
+
+function msgHdlrTemacyoDasyaodeshwo($bet_nums)
+{
+
+    $rex = '[abcde]\/[大小单双]\/\d+';
+    $wefa_rex = '/^' . $rex . '$/iu';
+    if (preg_match($wefa_rex, $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "特码球大小单双玩法";
+    } else if (preg_match('/^[abcde][大小单双]\d+$/iu', $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "特码球大小单双玩法";
+    }
+}
+
+
+// 和值 处理器
+function msgHdlrHezh($bet_nums)
+{
+    // $rex='[abcde]\/[大小单双]\/\d+';
+    //   $wefa_rex = '/^'.$rex.'$/iu';
+    //  和值大小单双玩法=
+    $wefa_rex = '/^[大小单双]\d+$/iu';
+    if (preg_match($wefa_rex, $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "和值大小单双玩法";
+    }
+}
+
+// 龙虎和 处理器
+function msgHdlrLonghuhe($bet_nums)
+{
+    //  和值大小单双玩法=
+    $wefa_rex = '/^[龙虎]\d+$/iu';
+    if (preg_match($wefa_rex, $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "龙虎和玩法龙虎";
+    } else if (preg_match('/^和\d+$/iu', $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "龙虎和玩法和";
+    }
+}
 
 
 
+// 前后三 处理器
+function msgHdlrQiehose($bet_nums)
+{
+    $rex = '[前中后]豹\d+';
 
 
+    //  =,前后三玩法对子=,前后三玩法半顺=[前中后]半\d+,前后三玩法=[前中后]杂\d+
 
-require_once __DIR__."/../../config/cfg.php";
-//
-//$wefa428=getWefa("abc大100");
-//$z429=$wefa428;
+    $wefa_rex = '/^' . $rex . '$/iu';
+    if (preg_match($wefa_rex, $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "前后三玩法豹子";
+    } else if (preg_match('/^[前中后]顺\d+$/iu', $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "前后三玩法顺子";
+    } else if (preg_match('/^[前中后]对\d+$/iu', $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "前后三玩法对子";
+    } else if (preg_match('/^[前中后]半\d+$/iu', $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "前后三玩法半顺";
+    } else if (preg_match('/^[前中后]杂\d+$/iu', $bet_nums)) {
+        //  print_rx("     match.." . $p . " " . $numb);
+        //start process....
+        //cancel even up trance...
+        return   "前后三玩法杂六";
+    }
+}
 
 function getWefa($bet_nums)
 {
-
-   return \ltryCore:: getWefa($bet_nums);
+    return msgHdlrOther($bet_nums);
 }
 //msgHdlrOther("a大100");
 
@@ -233,8 +388,37 @@ function getWefa($bet_nums)
 //var_dump(getWefa("1/1/100"));
 //var_dump(getWefa("前豹100"));
 //C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe app/common/lotrySscV2.php
+// 获取玩法
+function msgHdlrOther($bet_nums)
+{
 
-require_once __DIR__."/../../lib/iniAutoload.php";
+  //  var_dump($bet_nums);
+    $fltMsghdl =  function ($var)
+    {
+    
+        if (startsWith($var, "msghdlrother"))
+            return false;
+    
+        else if (startsWith($var, "msghdl"))
+            return true;
+    };
+    $arr = get_defined_functions();
+    $arr = $arr['user'];
+   // var_dump($arr);
+
+    $arr =  array_filter($arr,  $fltMsghdl);
+    //var_dump($arr);
+
+    foreach ($arr as $msghdl654) {
+     //   var_dump($msghdl654);
+        $wefa = $msghdl654($bet_nums);
+        if ($wefa)
+            return $wefa  ;
+    } 
+
+
+}
+
 //对讲结果
 function dwijyo($betNum,   $bonusNum)
 {
@@ -275,10 +459,9 @@ function dwijyo($betNum,   $bonusNum)
       //   var_dump("kaij_num_curPos:".$kaij_num_curPos);
 
 
-        if(\strcls::contain($betNum,"/"))
-            $betNum_Dasyodeshwo =  explode("/", $betNum)[1];
-        else
-            $betNum_Dasyodeshwo = str_splitX( $betNum)[1];
+
+
+        $betNum_Dasyodeshwo = str_splitX( $betNum)[1];
         // str_splitX($betNum)[2];
         //  var_dump($betNum_Dasyodeshwo);
         $kaij_num_fnly = getKaijNumArr_Dasyaodeshwo($kaij_num_curPos);
@@ -336,10 +519,15 @@ function dwijyo($betNum,   $bonusNum)
         return  in_array($betnum, $kaij_num);
     }
 }
+
+function fromAbcdeTo12345($cyoIdex )
+{
+    
+  return  strpos("abcde",$cyoIdex);
+}
+
 function cyehose_bet_fullname($betnum)
 {
-    if( class_exists('\think\facade\Log'))
-    \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
     $betnum = str_replace("前", "前三", $betnum);
     $betnum = str_replace("后", "后三", $betnum);
     $betnum = str_replace("中", "中三", $betnum);
@@ -351,12 +539,21 @@ function cyehose_bet_fullname($betnum)
     return $betnum;
 }
 
-function fromAbcdeTo12345($cyoIdex )
-{
-    
-  return  strpos("abcde",$cyoIdex);
-}
 
+function cyehose_bet_name($betnum)
+{
+    $betnum = str_replace("半顺子", "半|", $betnum);
+    $betnum = str_replace("前三", "前", $betnum);
+    $betnum = str_replace("后三", "后", $betnum);
+    $betnum = str_replace("中三", "中", $betnum);
+    $betnum = str_replace("豹子", "豹|", $betnum);
+    $betnum = str_replace("对子", "对|", $betnum);
+
+    $betnum = str_replace("杂六", "杂|", $betnum);
+    $betnum = str_replace("顺子", "顺|", $betnum);
+
+    return $betnum;
+}
 //function getKaijNumArr_hezDasyods($bonusNum)
 
 function getKaijNumFly_longhuHaeWefa($bonusNum)

@@ -104,7 +104,7 @@ function    main_process()
 
     // $lottery_no = 1133;
 
-    startBet();
+    startBetEvt();
 
     //-----------封盘警告时间
     ($delay_waittime_Start_warngingEvt14 = function () {
@@ -170,7 +170,7 @@ function    main_process()
 
 
 
-function startBet()
+function startBetEvt()
 {
     \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     //-------------------- start bet
@@ -263,8 +263,8 @@ function fenpan_stop_event()
     foreach ($records as $k => $v) {
 
         // array_push($bet_lst_echo_arr,  \echox\getBetContxEcHo($value['text']));
-        require_once __DIR__ . "/lotryEcho.php";
-        $echo = \echox\getBetContxEcHo($v['BetContent']);
+        
+        $echo = \echoCls::getBetContxEcHo($v['BetContent']);
         $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $echo . "\r\n";
         $sum += $v['Bet'];
     }
@@ -290,7 +290,8 @@ function fenpan_stop_event()
     $set->save();
     \think\facade\Db::close();
 }
-
+require_once  __DIR__ . "/../../config/cfg.php";
+require_once  __DIR__ . "/../../lib/iniAutoload.php";
 function kaij_draw_evt()
 {
     \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
@@ -302,7 +303,7 @@ function kaij_draw_evt()
     var_dump($blkHash);
     $text = "第" . $lottery_no . "期开奖结果" . "\r\n";
     $kaij_num = getKaijNumFromBlkhash($blkHash);
-    $text = $text  . kaij_echo($kaij_num);
+    $text = $text  . \kaijx::kaij_echo($kaij_num);
     $text = $text . PHP_EOL . "本期区块号码:" . $lottery_no . "\r\n"
         . "本期哈希值:\r\n" . $blkHash . "\r\n";
     sendmessage($text);

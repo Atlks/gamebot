@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\controller;
 
+use app\common\Player;
 use think\Request;
 use app\model\Setting;
 use app\model\BotWords;
@@ -20,6 +21,14 @@ function var_dumpx()
 //  app\controller\Handle2.index()
 class Handle2
 {
+
+    public function  betTest()
+    {
+        $gm=new \app\common\Game2handlrLogic();
+      //  $gm->player=new Player(new \Date());
+        $gm-> regex_betV2("abc大100");
+        echo 100;
+    }
     public $Bot_Token = "";
     /**
      * 显示资源列表
@@ -74,6 +83,12 @@ class Handle2
                 \think\facade\Log::info($lineNumStr);
                 //       \think\facade\Log::info( json_encode $ret); //must cant be obj
                 //   var_dump($ret);
+                if(!isset( $GLOBALS['bet_ret_prm']))
+                {
+                    \think\facade\Log::betnotice("no find ret prm,maybe rev by chkbot. so ret");
+                    \libspc\log_info_tp("no find ret prm,maybe rev by chkbot. so ret", "", $lineNumStr, "betnotice");
+                    $GLOBALS['bet_ret_prm']=[]; die();
+                }               
                 $parameters =  $GLOBALS['bet_ret_prm'];
                 $parameters["method"] = "sendMessage";
                 //   $parameters["method"] = $method;
@@ -292,9 +307,10 @@ class Handle2
         //  die();
         $user_id = $message['from']['id'];
         $data = Test::where('chat_id', $message_id)
-            ->where('name', '小飞机漏发信息')
+            ->where('name', '小飞机漏发信息')    //  msg recv bu jcbot
             ->find();
         if ($data) {
+           // $GLOBALS['bet_ret_prm']=[];
             return;
         }
         $data = [

@@ -12,6 +12,8 @@ use app\common\NNGame;
 use app\model\Test;
 use app\common\Logs;
 use app\common\GameLogic;
+use app\common\BotPlayer;
+use app\common\helper;
 
 class Handle
 {
@@ -40,7 +42,7 @@ class Handle
             $data = [
                 'chat_id' => $updateId,
                 'name' => "网络钩子异常",
-                'text' => $e->getMessage(),
+                'text' => $e->getFile() . ":" . $e->getLine() . " " . $e->getMessage(),
             ];
             Test::create($data);
         }
@@ -76,19 +78,7 @@ class Handle
         $message_id = $message['message_id'];
         $chat_id = $message['chat']['id'];
         $user_id = $message['from']['id'];
-        $data = Test::where('chat_id', $message_id)
-        ->where('name','小飞机漏发信息')
-        ->find();
-        if($data)
-        {
-            return;
-        }
-        $data = [
-            'chat_id' => $message_id,
-            'name' => "网络钩子接收",
-            'text' => file_get_contents('php://input'),
-        ];
-        Test::create($data);
+        $type = $message['chat']['type'];
         $user_name = '';
         if (isset($message['from']['username']))
             $user_name = $message['from']['username'];
@@ -98,22 +88,105 @@ class Handle
         if (isset($message['from']['last_name']))
             $full_name = $full_name . $message['from']['last_name'];
 
-        if (isset($message['text'])) {
-            $text = $message['text'];
-            if ($text === "获取我的群信息") {
-                $reply_text = "我的群 " . $message['chat']['title'] . " id: " . $chat_id;
-                $params =
-                    [
-                        'chat_id' => $chat_id,
-                        'text' => $reply_text,
-                    ];
-                return $this->apiRequestWebhook("sendMessage", $params);
-                //$bot->sendMessage($chat_id, $reply_text);
+        if ($type === "private" && isset($message['text'])) {
+            $game = new Game();
+            if (empty($game->getPlayer($user_id))) {
+                $game->createPlayer($user_id, $full_name, $user_name);
             }
-        }
+            $game->receive($message_id);
+            $bot_player = new BotPlayer($user_id, $game);
+            $bot_player->HandleMessage($message);
+            if (!empty($bot_player->reply_text)) {
+                if ($bot_player->send_photo) {
+                    $cfile = new \CURLFile(app()->getRootPath() . "public/trend.jpg");
+                    $params = [
+                        'chat_id' => $chat_id,
+                        'photo' => $cfile,
+                    ];
+                    $bot->sendPhoto($chat_id, $cfile, null, null);
+                    //$resp =  $this->apiRequestWebhook("sendPhoto", $params);
+                    //$resp->contentType("multipart/form-data");
+                } 
+                else if($bot_player->start)
+                {
+                    $bot_words = BotWords::where('Id', 1)->find();
+                    $cfile = new \CURLFile(app()->getRootPath() . "public/static/start.jpg");
+                    $params = [
+                        'chat_id' => $chat_id,
+                        'photo' => $cfile,
+                    ];
+                    $text = $bot_words->Start_Bet;
+                    $text = Helper::replace_markdown($text);
+                    $relpyMarkup = new \TelegramBot\Api\Types\ReplyKeyboardMarkup($bot_player->reply_keyboard,null,true);
+                    $bot->sendPhoto($chat_id, $cfile, $text, null, null, $relpyMarkup, false, "MarkdownV2");
+                }
+                else {
+                    $params =
+                        [
+                            'chat_id' => $chat_id,
+                            'text' => $bot_player->reply_text,
+                            //'message_thread_id' => null,
+                            'parse_mode' => $bot_player->reply_mode,
+                            //'disable_web_page_preview' => true,
+                            'reply_markup' => $bot_player->reply_keyboard,
+                            //'disable_notification' => false,
+                        ];
+                    if ($bot_player->need_reply) {
+                        $params['reply_to_message_id'] = $message_id;
+                    }
+                    $method = "sendMessage";
+                    return $this->apiRequestWebhook($method, $params);
+                }
+            }
+        } else {
+            $data = Test::where('chat_id', $message_id)
+                ->where('name', '小飞机漏发信息')
+                ->find();
+            if ($data) {
+                return;
+            }
+            $data = [
+                'chat_id' => $message_id,
+                'name' => "网络钩子接收",
+                'text' => file_get_contents('php://input'),
+            ];
+            Test::create($data);
+            if(isset($update['my_chat_member']))
+            {
+                $reply_text = "my_chat_member 更新";
+                $params =
+                        [
+                            'chat_id' => $chat_id,
+                            'text' => $reply_text,
+                        ];
+                    return $this->apiRequestWebhook("sendMessage", $params); 
+            }
+            else if(isset($update["chat_member"]))
+            {
+                $reply_text = "chat_member 更新";
+                    $params =
+                        [
+                            'chat_id' => $chat_id,
+                            'text' => $reply_text,
+                        ];
+                    return $this->apiRequestWebhook("sendMessage", $params); 
+            }
+            if (isset($message['text'])) {
+                $text = $message['text'];
+                if ($text === "获取我的群信息") {
+                    $reply_text = "我的群 " . $message['chat']['title'] . " id: " . $chat_id;
+                    $params =
+                        [
+                            'chat_id' => $chat_id,
+                            'text' => $reply_text,
+                        ];
+                    return $this->apiRequestWebhook("sendMessage", $params);
+                    //$bot->sendMessage($chat_id, $reply_text);
+                }
+            }
 
-        if ($chat_id != Setting::find(2)->value) {
-            /*
+            if ($chat_id != Setting::find(2)->value) {
+                /*
             $token = Setting::find(11)->s_value;
             $bot = new \TelegramBot\Api\BotApi($token);
             $ci = Setting::find(12)->value;
@@ -124,60 +197,59 @@ class Handle
                 $text = $text . "内容 : " . $message['text'];
             $bot->leaveChat($chat_id);
             */
-            //$bot->sendMessage($ci, $text);
-            return;
-        }
-
-        $reply_text = "默认信息";
-        if (isset($message['text'])) {
-            // incoming text message
-            $text = $message['text'];
-            $game = new Game();
-
-            if (empty($game->getPlayer($user_id))) {
-                $game->createPlayer($user_id, $full_name, $user_name);
+                //$bot->sendMessage($ci, $text);
+                return;
             }
 
-            $game->receive($message_id);
-            $reply_text =  $game->player_exec($text, Setting::find(3)->value == 1);
+            $reply_text = "默认信息";
+            if (isset($message['text'])) {
+                // incoming text message
+                $text = $message['text'];
+                $game = new Game();
 
-            if (!empty($reply_text)) {
+                if (empty($game->getPlayer($user_id))) {
+                    $game->createPlayer($user_id, $full_name, $user_name);
+                }
 
-                if ($game->sendTrend()) {
+                $game->receive($message_id);
+                $reply_text =  $game->player_exec($text, Setting::find(3)->value == 1);
 
-                    $cfile = new \CURLFile(app()->getRootPath() . "public/trend.jpg");
-                    $params = [
-                        'chat_id' => $chat_id,
-                        'photo' => $cfile,
-                    ];
-                    $bot->sendPhoto($chat_id, $cfile, null, null, $message_id);
-                    //$resp =  $this->apiRequestWebhook("sendPhoto", $params);
-                    //$resp->contentType("multipart/form-data");
-                } else {
-                    $keyboard = null;
-                    if ($game->action()) {
-                        $keyboard_array = json_decode(BotWords::where('Id', 1)->find()->Button_Text);
-                        $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($keyboard_array);
-                    }
-                    else if($game->keyboard)
-                    {
-                        $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($game->keyboard);
-                    }
+                if (!empty($reply_text)) {
 
-                    $params =
-                        [
+                    if ($game->sendTrend()) {
+
+                        $cfile = new \CURLFile(app()->getRootPath() . "public/trend.jpg");
+                        $params = [
                             'chat_id' => $chat_id,
-                            'text' => $reply_text,
-                            //'message_thread_id' => null,
-                            'parse_mode' => is_null($game->parse_mode()) ? "" : $game->parse_mode(),
-                            'disable_web_page_preview' => true,
-                            'reply_to_message_id' => (int)$message_id,
-                            'reply_markup' => is_null($keyboard) ? "" : $keyboard->toJson(),
-                            'disable_notification' => false,
+                            'photo' => $cfile,
                         ];
+                        $bot->sendPhoto($chat_id, $cfile, null, null, $message_id);
+                        //$resp =  $this->apiRequestWebhook("sendPhoto", $params);
+                        //$resp->contentType("multipart/form-data");
+                    } else {
+                        $keyboard = null;
+                        if ($game->action()) {
+                            $keyboard_array = json_decode(BotWords::where('Id', 1)->find()->Button_Text);
+                            $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($keyboard_array);
+                        } else if ($game->keyboard) {
+                            $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($game->keyboard);
+                        }
 
-                    //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
-                    return $this->apiRequestWebhook("sendMessage", $params);
+                        $params =
+                            [
+                                'chat_id' => $chat_id,
+                                'text' => $reply_text,
+                                //'message_thread_id' => null,
+                                'parse_mode' => is_null($game->parse_mode()) ? "" : $game->parse_mode(),
+                                'disable_web_page_preview' => true,
+                                'reply_to_message_id' => (int)$message_id,
+                                'reply_markup' => is_null($keyboard) ? "" : $keyboard->toJson(),
+                                'disable_notification' => false,
+                            ];
+
+                        //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
+                        return $this->apiRequestWebhook("sendMessage", $params);
+                    }
                 }
             }
         }
@@ -188,10 +260,9 @@ class Handle
         $from = $callback_query['from']['id'];
         $func = $callback_query['data'];
         $data = Test::where('chat_id', $callback_query['id'])
-        ->where('name','小飞机漏发信息')
-        ->find();
-        if($data)
-        {
+            ->where('name', '小飞机漏发信息')
+            ->find();
+        if ($data) {
             return;
         }
         $data = [

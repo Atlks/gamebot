@@ -69,7 +69,8 @@ class Logs
         $content,
         $bet,
         $type,
-        $odds
+        $odds,
+        $from = 1
     ) {
         $record = [
             'UserId' => $user->Tg_Id,
@@ -81,6 +82,7 @@ class Logs
             'Odds' => $odds,
             'Type' => $type,
             'Test' => $user->Test,
+            'From' => $from,
         ];
         return BetRecord::create($record);
     }

@@ -40,8 +40,7 @@ class Gamelogic
         //swoole_timer_tick(10000,function($timer_id) use($gl){
         while (true) {
             try{
-                var_dump($gl->game_state);  //"start"
-              
+                 //"start"
             switch ($gl->game_state) {
                 case 'start':
                     if ($gl->Start()) {

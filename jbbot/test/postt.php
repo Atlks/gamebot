@@ -15,7 +15,7 @@ $options = array(
 );
 
 $context  = stream_context_create($options);
-$url='http://localhost/msgHander.php';
+$url='http://localhost/index.php?s=Handle2/index';
 echo file_get_contents($url, false, $context);
 
 

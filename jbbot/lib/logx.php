@@ -1,6 +1,13 @@
 <?php
 
 namespace libspc;
+
+
+
+function log_dbg_php($method_linenum, $msg, $obj )
+{
+    log_php($method_linenum, $msg, $obj, "dbg" );
+}
 function log_php($method_linenum, $msg, $obj, $lev = "info")
 {
     $logdir=__DIR__."/../runtime/";
@@ -38,8 +45,8 @@ function log_info_php($method_linenum, $msg, $obj, $lev = "info")
             $datamsg = "FALSE";
         //  var_dump( $datamsg);DIE();
     }
-    var_dump( $datamsg);
-    $logf = $logdir . date('Y-m-d') . "_lg142_$lev.log";
+   // var_dump( $datamsg);
+    $logf = $logdir . date('Y-m-d') . "_$lev lg142_.log";
     $logtxt = $method_linenum;
 
     file_put_contents($logf,   $logtxt . PHP_EOL, FILE_APPEND);
@@ -53,7 +60,7 @@ function log_info_php($method_linenum, $msg, $obj, $lev = "info")
 function log_info_tp($msg, $obj, $linenum, $lev = "info")
 {
     \think\facade\Log::$lev($linenum);
-    \think\facade\Log::info($msg . " is : " . json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    \think\facade\Log::$lev($msg . " is : " . json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 }
 function log_err($exception, $hdrName_method_linenum, $logdir, $lev = "err")
 {

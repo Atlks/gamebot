@@ -45,6 +45,7 @@ class Game
 
     // 游戏相关
     public $lottery_no = 0;
+    public $from = 1;       // 來源 1飞机群 2 网页 3 私聊 
     // 群信息相关
     private $message_id = 0;
     private $action = false;
@@ -362,7 +363,7 @@ class Game
             $text = $text . "\r\n";
 
             foreach ($bets as $key => $value) {
-                if (!$this->player->Bet($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'])) {
+                if (!$this->player->Bet($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'],$this->from)) {
                     $text = "下注失败:" . $this->player->get_last_error();
                     $this->action = false;
                     return $text;
@@ -813,6 +814,8 @@ class Game
         $count = 0;
         if (preg_match('/\d+/', $text, $out)) {
             $count = $out[0];
+            if ($count > 50)
+                $count = 50;
         }
 
         if ($count == 0)

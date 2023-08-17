@@ -23,7 +23,7 @@ function var_dumpx($o)
 class Game2handlrLogic
 {
     // 当前玩家
-    private $player = null;
+    public $player = null;
     // 用户数据库
     private $userDB = null;
     private $bet_types = null;
@@ -61,6 +61,19 @@ class Game2handlrLogic
 
     public function __construct($from = null)
     {
+        spl_autoload_register(function ($class_name ) {
+            // var_dump($class_name);  //"ltrx"
+
+            if(file_exists(__DIR__."/../../lib/". $class_name . '.php'))
+                require_once __DIR__."/../../lib/". $class_name . '.php';
+
+            else if(file_exists(__DIR__."/../lib/". $class_name . '.php'))
+                require_once __DIR__."/../lib/". $class_name . '.php';
+            else if(file_exists(__DIR__."/lib/". $class_name . '.php'))
+                require_once __DIR__."/lib/". $class_name . '.php';
+            else if(file_exists(__DIR__."/". $class_name . '.php'))
+                require_once __DIR__."/". $class_name . '.php';
+        });
         $this->userDB = new User();
         $config = Config::find(1);
         $this->setup($config);
@@ -229,7 +242,7 @@ class Game2handlrLogic
         var_dumpx("218L betnums:" . $content);
         \think\facade\Log::info("215L");
         \think\facade\Log::info($content);
-        if (!$this->player) return;
+       if (!$this->player) return;
         $config = Config::find(1);
         $this->min_limit = $config['Min_limit'];
         $total_bet_amount = 0;
@@ -256,10 +269,17 @@ class Game2handlrLogic
 
         //convert 
         require_once __DIR__ . "/lotrySscV2.php";
-        require_once __DIR__ . "/lotrySpltr.php";
-        $bet_str_arr_clr_spltMltSingle   =  \ltrspltr\msgHdlr($bet_str_arr_clr);
-        \think\facade\Log::betnotice("bet_str_arr_clr_spltMltSingle is:" . json_encode($bet_str_arr_clr_spltMltSingle, JSON_UNESCAPED_UNICODE));
-        \think\facade\Log::betnoticex("bet_str_arr_clr_spltMltSingle is:" . json_encode($bet_str_arr_clr_spltMltSingle, JSON_UNESCAPED_UNICODE));
+
+        try{
+
+            $bet_str_arr_clr_spltMltSingle   =  lotrySpltrCls::msgHdlr($bet_str_arr_clr);
+            \think\facade\Log::betnotice("bet_str_arr_clr_spltMltSingle is:" . json_encode($bet_str_arr_clr_spltMltSingle, JSON_UNESCAPED_UNICODE));
+            \think\facade\Log::betnoticex("bet_str_arr_clr_spltMltSingle is:" . json_encode($bet_str_arr_clr_spltMltSingle, JSON_UNESCAPED_UNICODE));
+        }catch(\Throwable $exception)
+        {
+            return  \excls::bizerrV2($exception);
+        }
+
 
 
         // \libspc\log_info("253_549", "bet_str_arr", $bet_str_arr_clr);
@@ -279,7 +299,7 @@ class Game2handlrLogic
 
             $match = false;
 
-            require_once __DIR__ . "/lotrySscV2.php";
+
             $bet_nums = $str;
             $bet_nums = trim($bet_nums);
             var_dumpx($bet_nums);
@@ -290,7 +310,7 @@ class Game2handlrLogic
             \think\facade\Log::betnotice($lineNumStr);
             \think\facade\Log::betnotice(" forech per betstr :getWefa($bet_nums) ");
 
-            $wefa413 = getWefa($bet_nums);
+            $wefa413 =\ltryCore:: getWefa($bet_nums);
             \think\facade\Log::betnotice("   wefa413 rzt :" .   $wefa413);
             //  var_dumpx($rows);
             //   var_dumpx($rows[0]['玩法']);
@@ -366,11 +386,11 @@ class Game2handlrLogic
         //-------------------------------------开始下注--------
         $bet_lst_echo_arr = [];
 
-        require_once __DIR__."/lotryEcho.php";
+       
         // $bet_amt_total_arr=[];
         foreach ($bets as $key => $value) {
 
-            array_push($bet_lst_echo_arr,  \echox\getBetContxEcHo($value['text']));
+            array_push($bet_lst_echo_arr,  \echoCls::getBetContxEcHo($value['text']));
 
             $bet = $value;
             $bet_amt_total_arr[] = $value['amount'] / 100;
@@ -403,10 +423,12 @@ class Game2handlrLogic
             . "余额:" . $this->player->getBalance();
 
         //   var_dump($text);
-        file_put_contents("exGlb304_55808.txt",   $text, FILE_APPEND);
+        //file_put_contents("exGlb304_55808.txt",   $text, FILE_APPEND);
         //    file_put_contents("exGlb304_55808.txt",   var_export($text, true), FILE_APPEND);
         \think\facade\Log::info("340L");
         \think\facade\Log::info($text);
+       
+        \think\facade\Log::bettonice("betecho:".$text);
         return $text;
 
 
@@ -883,4 +905,6 @@ class Game2handlrLogic
         $this->parse_mode = "MarkdownV2";
         return $text;
     }
+
+
 }

@@ -1129,7 +1129,7 @@ class GameLogicSsc
 
         $text = "第" . $this->lottery_no . "期开奖结果" .  $result_text . "\r\n";
         $text  = $text
-            .   kaij_echo_x($result_text) . PHP_EOL
+            .  $this-> kaij_echo_x($result_text) . PHP_EOL
             . "=====本期中奖名单======" . "\r\n";
         // $helper = new Helper();
         //  $helper->BubbleSort1($temp_arr, 'income');
@@ -1156,7 +1156,7 @@ class GameLogicSsc
     {
 
         try {
-            return kaij_echo($result_text);
+            return \kaijx:: kaij_echo($result_text);
         } catch (\Throwable $exception) {
 
             $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
@@ -1186,8 +1186,8 @@ class GameLogicSsc
                 $income = $row['Payout'] / 100 -  $betamt;
                 $uid = $row['UserId'];
                 $uname = $row['UserName'];
-                require_once __DIR__."/lotryEcho.php";
-                $bettx =  \echox\getBetContxEcHo($row['BetContent'])  ;
+              
+                $bettx =  \echoCls::getBetContxEcHo($row['BetContent'])  ;
                
                 
                 $txt = "$uname [$uid] $bettx 下注金额:$betamt 盈亏: $income \r\n";

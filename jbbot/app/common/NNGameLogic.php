@@ -122,10 +122,11 @@ class NNGameLogic
 
     public function Start()
     {
+        $bot = $this->bot;
         $today = date("Y-m-d", time());
-        if (empty($this->start_issue))
+        if (empty($this->start_issue)) {
             $data = $this->lottery->get_last_no();
-        else {
+        } else {
             $data =  [
                 'lottery_no' => intval($this->start_issue) + 1,
                 'hash_no' => intval($this->start_issue) + 1,
@@ -140,9 +141,18 @@ class NNGameLogic
         $this->elapsed_time *= 1000;
         $log = Logs::addLotteryLog($today, $this->lottery_no, $this->hash_no);
         $this->lottery_id = $log->id;
+        $chat = $bot->getChat($this->chat_id);
+        $ChatPermissions = $chat->getPermissions();
+        if ($ChatPermissions->isCanSendMessages()) {
+            $set = Setting::find(3);
+            $set->value = 0;
+            $set->save();
+        }
+        /*
         $set = Setting::find(3);
         $set->value = 0;
         $set->save();
+        */
         //$this->send_notice('start');
         $this->game_state = 'waiting_bet';
         return true;
@@ -168,7 +178,7 @@ class NNGameLogic
                     $draw_time = date("Y-m-d H:i:s", time() + $elapsed / 1000);
                     $text = $text . "开奖时间：$draw_time\n";
                     $text = Helper::replace_markdown($text);
-                    $text = $text . "开奖区块号 ：[" . $this->hash_no . "](https://tronscan.org/#/block/" . $this->hash_no . ")";
+                    $text = $text . "开奖区块号 ：[" . $this->hash_no . "](https://etherscan.io/block/" . $this->hash_no . ")";
                 } else {
                     $text = Helper::replace_markdown($text);
                 }
@@ -187,7 +197,10 @@ class NNGameLogic
                 $text = "--------本期下注玩家---------" . "\r\n";
                 $sum = 0;
                 foreach ($records as $k => $v) {
-                    $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $v['BetContent'] . "\r\n";
+                    if (isset($v['From']) && $v['From'] != 1) {
+                        $text = $text . "私聊玩家【*******" . substr($v['UserId'] . "", -4) . "】" . $v['BetContent'] . "\r\n";
+                    } else
+                        $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $v['BetContent'] . "\r\n";
                     $sum += $v['Bet'];
                 }
                 Logs::addLotteryBet($this->lottery_no, $sum);
@@ -208,7 +221,7 @@ class NNGameLogic
                 break;
             case 'draw':
                 if ($this->game_type ==  1) {
-                    $text = "第" . $this->lottery_no . "期 [点击官方开奖](https://tronscan.org/#/block/" . $this->hash_no . ")";
+                    $text = "第" . $this->lottery_no . "期 [点击官方开奖](https://etherscan.io/block/" . $this->hash_no . ")";
                 } else {
                     $words = GameString::where('name', '开始开奖')->find()->text;
                     $text = "第" . $this->lottery_no . $words;
@@ -222,7 +235,14 @@ class NNGameLogic
                         . "本期哈希值:\r\n" . $this->hash . "\r\n";
                 }
                 $text .= $this->result . "\r\n";
-                $bot->sendmessage($chat_id, $text);
+                if ($this->game_type == 1) {
+                    $words = GameString::where('name', '开奖验证')->find()->text;
+                    $words = Helper::replaceHashNo($this->hash_no, $words);
+                    $keyboard_array = json_decode($words);
+                    $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($keyboard_array);
+                    $bot->sendmessage($chat_id, $text, null, false, null, null, $keyboard);
+                } else
+                    $bot->sendmessage($chat_id, $text);
                 $this->SendTrendImage(20);
                 $cfile = new \CURLFile(app()->getRootPath() . "public/trend.jpg");
                 $bot->sendPhoto($chat_id, $cfile);
@@ -685,6 +705,7 @@ class NNGameLogic
                     'lose_bet' => 0,        // 输掉时已经扣除的本金
                     'return' => 0,          // 回本时需要退还的本金
                     'player' => new Player($user),
+                    'hide' => $v['From'] != 1
                 ];
             }
 
@@ -757,7 +778,7 @@ class NNGameLogic
             // 玩家的日报需要更新字段 PayoutAmount,Income;
             // 结算之后计入玩家流水
             $player->win($v['bet'], $v['payout'], $income, $lose + $lose_bet, $back + $return);
-            array_push($temp_arr, array('player' => $player, 'income' => $income + $back));
+            array_push($temp_arr, array('player' => $player, 'income' => $income + $back, 'hide' => $v['hide']));
         }
 
         $helper = new Helper();
@@ -765,7 +786,10 @@ class NNGameLogic
         foreach ($temp_arr as $v) {
             $player = $v['player'];
             $income = $v['income'];
-            $text = $text . $player->getName() . "【" . $player->getId() . "】" . number_format($income / 100.0, 2, ".", "") . "\r\n";
+            if ($v['hide'])
+                $text = $text . "私聊玩家【*******" . substr($player->getId() . "", -4) . "】" . number_format($income / 100.0, 2, ".", "") . "\r\n";
+            else
+                $text = $text . $player->getName() . "【" . $player->getId() . "】" . number_format($income / 100.0, 2, ".", "") . "\r\n";
         }
 
         $bet_recoreds = new BetRecord();
@@ -787,9 +811,19 @@ class NNGameLogic
         $today = date("Y-m-d", time());
         $log = Logs::addLotteryLog($today, $this->lottery_no, $this->hash_no);
         $this->lottery_id = $log->id;
+        $bot = $this->bot;
+        $chat = $bot->getChat($this->chat_id);
+        $ChatPermissions = $chat->getPermissions();
+        if ($ChatPermissions->isCanSendMessages()) {
+            $set = Setting::find(3);
+            $set->value = 0;
+            $set->save();
+        }
+        /*
         $set = Setting::find(3);
         $set->value = 0;
         $set->save();
+        */
         $this->chat_id = Setting::find(2)->value;
         //$this->send_notice('start');
         $this->game_state = 'waiting_bet';

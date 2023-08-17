@@ -11,16 +11,16 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-
+//    php public/HandleUpdates.php
 // [ 应用入口文件 ]  HandleUpdates/index
 namespace think;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$_GET['s']='Handle2/index';
+$_GET['s']='HandleUpdates2/index';
 
-global $errdir;
-$errdir=__DIR__."/../runtime/";
+require_once __DIR__."/../lib/iniErrCathr.php";
+
 
 // 执行HTTP应用并响应
 $http = (new App())->http;

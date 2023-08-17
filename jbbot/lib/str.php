@@ -7,7 +7,11 @@ $arr_ret=[];
     foreach ($arr as $item)
     {
         $arr311=explode("=",$item);
-        $arr_ret[$arr311[0]]=   $arr311[1];
+        $key=$arr311[0];
+        $key=trim($key);
+        $v=$arr311[1];
+        $v=trim($v);
+        $arr_ret[]=    array($key=> $v) ;
     }
     return $arr_ret;
 }
@@ -40,6 +44,7 @@ function str_splitX($str)
 //echo " str ddl:".str_delNum("后顺333");
 function str_delNum($str)
 {
+    if( class_exists('\think\facade\Log'))
     \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
     return preg_replace('/[\d]/', '', $str);
 }

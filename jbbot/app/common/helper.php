@@ -1,6 +1,8 @@
 <?php
 namespace app\common;
 
+use think\console\command\Help;
+
 class Helper 
 {
 
@@ -116,13 +118,11 @@ class Helper
     {
         if($user)
         {
-            $fullname = $user->getFirstName() ? $user->getFirstName() : "";
-            $fullname = $user->getLastName() ? $fullname . $user->getLastName() : $fullname . "";
-            $fullname = self::replace_markdown($fullname);
+            $fullname = self::replace_markdown($user->FullName);
             $replace_keyword = [
                 "【用户】" => $fullname,
-                "【id】" =>  $user->getId(),
-                "【@用户】" => '[' . $fullname . '](tg://user?id=' . $user->getId() . ')',
+                "【id】" =>  $user->Tg_Id,
+                "【@用户】" => '[' . $fullname . '](tg://user?id=' . $user->Tg_Id . ')',
             ];
             foreach ($replace_keyword as $k => $v) {
                 $text = preg_replace('/' . $k . '/u', $v, $text);

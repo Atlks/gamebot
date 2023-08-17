@@ -12,12 +12,12 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-// [ 应用入口文件 ]  HandleUpdates/index
+// [ 应用入口文件 ]
 namespace think;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$_GET['s']='Handle2/index';
+$_GET['s']='Handle2/betTest';
 
 global $errdir;
 $errdir=__DIR__."/../runtime/";
