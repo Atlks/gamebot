@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__."/../app/common/lotrySscV2.php";
 require_once __DIR__."/iniAutoload.php";
-echo \kaijx:: kaij_echo("12345");
+//echo \kaijx:: kaij_echo("12345");
 // 开奖工具类
 class kaijx
 {

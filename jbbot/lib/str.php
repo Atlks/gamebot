@@ -44,8 +44,9 @@ function str_splitX($str)
 //echo " str ddl:".str_delNum("后顺333");
 function str_delNum($str)
 {
-    if( class_exists('\think\facade\Log'))
-    \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
+    \log23::debug(__METHOD__,"func_get_args",func_get_args() );
+//    if( class_exists('\think\facade\Log'))
+//    \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
     return preg_replace('/[\d]/', '', $str);
 }
 

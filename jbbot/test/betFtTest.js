@@ -16,6 +16,7 @@ lines.forEach((line) => {
     cmd = "php   C:\\modyfing\\jbbot\\test/dwijyo.php " + (betnum) + " " + kaijnum;
     console.log(cmd)
     rzt=execSync(cmd).toString();
+    rzt=rzt.split("\r\n").pop();
     console.log(rzt)
     if(rzt!="true")
         throw "err pandwe";

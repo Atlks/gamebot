@@ -5,8 +5,8 @@ require_once __DIR__."/../../lib/iniAutoload.php";
 require_once __DIR__."/../../config/cfg.php";
 
 
-$wefa413 =\ltryCore:: getWefa("1.单.100");
-$wefa413=11;
+//$wefa413 =\ltryCore:: getWefa("1.单.100");
+//$wefa413=11;
 class ltryCore{
 
 

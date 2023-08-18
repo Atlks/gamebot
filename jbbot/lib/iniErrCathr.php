@@ -16,6 +16,19 @@ ini_set("error_log", $errdir . date('Y-m-d H') . "lg142_errLog.txt");
 
 set_error_handler("error_handler142");
 register_shutdown_function('shutdown_hdlr');
+
+set_exception_handler('ex_hdlr');
+
+
+function ex_hdlr($exception)
+{
+    //  \think\facade\Log::info (  json_encode($exception) );
+    \libspc\log_err($exception,__METHOD__,$GLOBALS['$errdir'],"err");
+    var_dump($exception);
+}
+
+
+
 function error_handler142($errno, $message, $filename, $lineno)
 {
     $ex229['errno'] = $errno;

@@ -389,6 +389,7 @@ class Game2handlrLogic
        
         // $bet_amt_total_arr=[];
         foreach ($bets as $key => $value) {
+           // str_
 
             array_push($bet_lst_echo_arr,  \echoCls::getBetContxEcHo($value['text']));
 

@@ -9,7 +9,9 @@ use app\model\Test;
 use app\common\Game2handlrLogic as Game;
 
 use app\model\BotWords;
+use TelegramBot\Api\Exception;
 use think\view\driver\Php;
+use function libspc\log_err_tp;
 
 class HandleUpdates2
 {
@@ -22,10 +24,15 @@ class HandleUpdates2
         $last_id = 0;
         while (true) {
             echo  date('Y-m-d H-i-s').PHP_EOL;
-            \libspc\log_info_php(__METHOD__,"", date('Y-m-d H-i-s'),"HandleUpdates2runlog");
+            \libspc\log_info_php(__METHOD__,"", date('Y-m-d H-i-s'),"chkbt_runlog");
             try {
                 $res = $bot->getUpdates($last_id, 100, 10, ["message", "callback_query"]);
+                var_dump($res);
+                \think\facade\Log::chkbtInfo(date('Y-m-d H-i-s') );
+                \think\facade\Log::chkbtInfo(  json_encode( $res,JSON_UNESCAPED_UNICODE));
                 foreach ($res as $update) {
+
+                    \think\facade\Log::chkbtInfo(  json_encode( $update,JSON_UNESCAPED_UNICODE));
                     $last_id = $update->getUpdateId();
                     $message = $update->getMessage();
                     $callback_query = $update->getCallbackQuery();
@@ -38,6 +45,7 @@ class HandleUpdates2
                             'text' => $update->toJson(),
                         ];
                         Test::create($data);
+                        \think\facade\Log::chkbtInfo(  json_encode( $data,JSON_UNESCAPED_UNICODE));
                         $check_id = $message->getMessageId();
                     }
                     elseif($callback_query)
@@ -50,10 +58,11 @@ class HandleUpdates2
                         Test::create($data);
                         $check_id = $callback_query->getId();
                     }
-                   // sleep(1);
+                    sleep(1);  //---------chk webhk is rev msg
                     $data = Test::where('chat_id', $check_id)
                     ->where('name',"网络钩子接收")
                     ->find();
+                    //如果find ,,webhk already rev process.just continue..beir zoyao process
                     if (empty($data)) {
                         sleep(2);
                         $data = Test::where('chat_id', $check_id)
@@ -61,13 +70,14 @@ class HandleUpdates2
                         ->find();
                         if (empty($data)) {
                              //sleep(1);
-                             // 如果不抛异常就保存
+                             // 如果不抛异常就保存    小飞机漏发信息  chkbt recv
                              $data = [
                                 'chat_id' => $check_id,
                                 'name' => "小飞机漏发信息",
                                 'text' => $update->toJson(),
                             ];
                             Test::create($data);
+                            \think\facade\Log::chkbtInfo(  json_encode( $data,JSON_UNESCAPED_UNICODE));
                             //$bot_token = Setting::find(1)->s_value;
                             //$game_bot = new \TelegramBot\Api\BotApi($bot_token);
                             $message = $update->getMessage();
@@ -85,6 +95,10 @@ class HandleUpdates2
                 }//end foreach
                 $last_id += 1;
             } catch (\Throwable $e) {
+                if ($e->getMessage() == "Connection timed out"){
+                    \think\facade\Log::chkbtWarn(  $e->getMessage() );
+                }
+
                 if ($e->getMessage() !== "Connection timed out") {
                     $data = [
                         'chat_id' => $last_id,
@@ -93,13 +107,19 @@ class HandleUpdates2
                     ];
                     Test::create($data);
                     $last_id += 1;
-                }
-                \libspc\log_err($e,__METHOD__,$GLOBALS['$errdir'],"err");
+                   // log23::ckbtErr()
+                    \libspc\log_err_tp($e,__METHOD__,"chkbtErr");
+                   // \think\facade\Log::ckbtErr(  $e->getMessage() );
+                } 
+               
             }
             usleep(10*1000); // 500ms   not need slpp ,bls long conn is 10s
+            break;
         }  //finish while
     }
 
+
+    //lookg not find use this
     public function update()
     {
         $bot_token = Setting::find(1)->s_value;
@@ -195,11 +215,11 @@ class HandleUpdates2
                         Test::create($data);
                     }
                 }   //endif
-                \libspc\log_err($e,__METHOD__,$GLOBALS['$errdir'],"err");
+             //   \libspc\log_err($e,__METHOD__,$GLOBALS['$errdir'],"err");
 
-            }  //end catth
-        }  //end while
-
+            }
+        }
+        // not use
         return;
     }
 
@@ -258,7 +278,16 @@ class HandleUpdates2
                         $keyboard_array = json_decode(BotWords::where('Id', 1)->find()->Button_Text);
                         $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($keyboard_array);
                     }
-                    $bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), true, null, $message_id, $keyboard);
+                    try {
+                        $bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), true, null, $message_id, $keyboard);
+                    }catch (\Exception  $exception)
+                    {
+                        \think\facade\Log::chkbtWarn( __METHOD__);
+                        \think\facade\Log::chkbtWarn(  $exception->getMessage() );
+                        \think\facade\Log::chkbtWarn( json_encode( $message,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+
+                    }
+
                 }
             }
         }

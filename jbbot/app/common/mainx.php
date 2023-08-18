@@ -18,12 +18,14 @@ global $chat_id;
 
 var_dump(__DIR__ . "/../../lib/ex.php");
 require_once(__DIR__ . "/../../lib/ex.php");
-var_dump(test752());
+require_once(__DIR__ . "/../../lib/iniErrCathr.php");
+ 
+//var_dump(test752());
 //$text = "--------本期下注玩家---------" . "\r\n";
-$text = "=====本期中奖名单======";
+//$text = "=====本期中奖名单======";
 //$text = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm 
 //$text = str_replace("-", "\=", $text);
-var_dump($text);
+//var_dump($text);
 require_once(__DIR__ . "/../../lib/tlgrmV2.php");
 //bot_sendMsgTxtMode($text, BOT_TOKEN, chat_id);
 //die();

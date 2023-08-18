@@ -15,6 +15,7 @@ $content454 = "a123456押9";
 $content454 = "a123押100";
 require_once __DIR__ . "/../../lib/strx.php";
 require_once __DIR__ . "/../../lib/str.php";
+require_once __DIR__ . "/../../app/common/ltryCore.php";
 $bet_str_arr_clr441 = \strspc\spltBySpace($content454);
 //var_dump( $bet_str_arr_clr441);
 

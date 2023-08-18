@@ -8,6 +8,9 @@ $bet = urldecode($_SERVER['argv'][1]);$kaijnum = $_SERVER['argv'][2];
 require_once __DIR__."/../app/common/lotrySscV2.php";
 $rzt=dwijyo($bet,$kaijnum );
 if($rzt)
-    echo "true";
+    echo "\r\ntrue";
 else
-    echo "false";
+    echo "\r\nfalse";
+
+
+vars

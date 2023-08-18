@@ -151,26 +151,7 @@ class Handle
                 'text' => file_get_contents('php://input'),
             ];
             Test::create($data);
-            if(isset($update['my_chat_member']))
-            {
-                $reply_text = "my_chat_member 更新";
-                $params =
-                        [
-                            'chat_id' => $chat_id,
-                            'text' => $reply_text,
-                        ];
-                    return $this->apiRequestWebhook("sendMessage", $params); 
-            }
-            else if(isset($update["chat_member"]))
-            {
-                $reply_text = "chat_member 更新";
-                    $params =
-                        [
-                            'chat_id' => $chat_id,
-                            'text' => $reply_text,
-                        ];
-                    return $this->apiRequestWebhook("sendMessage", $params); 
-            }
+        
             if (isset($message['text'])) {
                 $text = $message['text'];
                 if ($text === "获取我的群信息") {

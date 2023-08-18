@@ -1,15 +1,17 @@
 <?php
 
 
-var_dump( __DIR__."/lotryEcho.php");
+//var_dump( __DIR__."/lotryEcho.php");
 require_once  __DIR__."/lotryEcho.php";
-$rx_echo = "[大小单双]\d+=和值大小单双模式";
-$GLOBALS['rx_echo'] = $rx_echo;
+
 //var_dump(\echoCls::getBetContxEcHo("a123押100"));
  //var_dump(\echoCls::getBetContxEcHo("大100"));
 //var_dump(\echoCls::getBetContxEcHo("a大100"));
 //var_dump(\echoCls::getBetContxEcHo("abc单100"));
+//$rzt1140=\echoCls::getBetContxEcHo("a/1/1");
+$rzt1140=\echoCls::getBetContxEcHo("前豹100");
 
+$rzt1140=1;
 class echoCls
 {
 
@@ -22,23 +24,30 @@ class echoCls
     }
 
 
+
+
     static function getBetContxEcHo($bet_str)
     {
         global  $logdir;
         require_once __DIR__ . "/../lib/logx.php";
         require_once __DIR__ . "/../app/common/lotrySscV2.php";
         $rzt =  $bet_str;
-        if(class_exists('\think\facade\Log'))
-        \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
+      //  if(class_exists('\think\facade\Log'))
+        \log23::debug(__METHOD__,"func_get_args",func_get_args() );
+        \log23::debug4echo(__METHOD__,"func_get_args",func_get_args() );
+     //   @\think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
         // \think\facade\Log::betnotice ("at file:". __FILE__ . ":" . __LINE__ );
         $wanfa = getWefa($bet_str);
-        if ($wanfa == "特码球玩法" || $wanfa == "特码球大小单双玩法") {
-            $rzt = getBetContxEcHo_temacyo($bet_str);
-        } else if (startsWith($wanfa, "前后三玩法")) {
-            $rzt = str_delNum($bet_str);
-            $rzt = cyehose_bet_fullname($bet_str);
-        } else {
+        if (startsWith($wanfa, "前后三玩法")) {
+            $rzt_true = str_delNum($bet_str);
+            $rzt_fullname =\betstr\format_echo_cyehose($rzt_true);
+            \log23::debug4echo(__METHOD__," rzt", $rzt );
+          //  return    $rzt;
+            $money = GetAmt_frmBetStr($bet_str);
+            return    $rzt_fullname." ". $money."";
 
+        } else {
+           // 和值大小单双》》总和大100 ,,,特码球模式
             $arr = http_query_toArr($GLOBALS['rx_echo']);
             foreach ($arr as $itm) {
                 if (empty($itm))
@@ -56,7 +65,18 @@ class echoCls
                  //   \libspc\log_php("unitestLggr", " wefa:",   "$wefa", "untest", $logdir);
                     $msghdl149 = \strspc\pinyin1($mode);
                     $hdl =   $msghdl149 . "_msghdl";
-                    return  self:: $hdl($bet_str);  //no convert
+
+                if(method_exists(self::class,$hdl))
+                    return  self:: $hdl($bet_str);
+                else
+                {
+
+                    $hdl='\betstr\format_echo_'.$msghdl149;
+                    return  $hdl($bet_str);
+
+                }
+
+
                 }
             }
 
@@ -65,7 +85,11 @@ class echoCls
         }
         if(class_exists('\think\facade\Log'))
         \think\facade\Log::debug($rzt);
-        return   $rzt;
+
+        //str_format_other
+
+        //和龙湖 echo
+        return  \betstr\format_echo_other($bet_str);
     }
 
     function cyehose_bet_fullname($betnum)

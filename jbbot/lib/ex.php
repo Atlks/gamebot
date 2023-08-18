@@ -1,6 +1,21 @@
 <?php
 
 
+//$format_echo_other2=function($bet_str)
+//{
+//    $rzt_true = str_delNum($bet_str);
+//    $money = GetAmt_frmBetStr($bet_str);
+//    return    $rzt_true+" "+ $money;
+//};
+
+
+//echo $format_echo_other2("a1.11");
+
+/**
+ * 
+ * 
+ * 
+
 global $errdir;
 
 ini_set('display_errors', 'on');
@@ -70,3 +85,8 @@ function shutdown_hdlr()
         echo 'Script executed with finish....', PHP_EOL;
     }
 }
+
+
+
+ * 
+ */

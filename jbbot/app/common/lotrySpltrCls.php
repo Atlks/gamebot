@@ -13,76 +13,27 @@ require_once __DIR__."/../../config/cfg.php";
 // a123.200
 
 //$rzt717= lotrySpltrCls::msgHdlr("12345");
-//$rzt717= lotrySpltrCls::msgHdlr("a123.200");
+//$rzt717= lotrySpltrCls::msgHdlr("a1234.200");
 //$rzt717= lotrySpltrCls::msgHdlr("1.1.100 1.单.100");
 //$rzt717= lotrySpltrCls::msgHdlr("abc1.200");
- $rzt717= lotrySpltrCls::msgHdlr("a8.200");
+ //$rzt717= lotrySpltrCls::msgHdlr("a8.200");
+
+//$rzt717= lotrySpltrCls::msgHdlr("a123操200");
 //$rzt717= lotrySpltrCls::tmqwfabc1200zhms("abc1.200");
 $rzt717=1;
 class lotrySpltrCls
 {
 
     //abc1.200 mode    tmqwf_abc1_200_zhms_msghdl
-    static  function tmqwf_abc1_200_zhms_msghdl($betstr)
-    {
-        $a = [];
-        $strlen525 = mb_strlen($betstr);
-        $ya_pos = self::getYa_pos($betstr);
-        $bet_posx = mb_substr($betstr, 0, $ya_pos -1);
-        $betnum= mb_substr($betstr,$ya_pos -1, 1);
-        //   var_dump($bet_nums );
-        $betNumaArr = str_split($bet_posx);
-        foreach ($betNumaArr as $betpos) {
-
-         //   $hdl =  "format_tmqwfabc1200zhms";
 
 
-         //   $fmtOkStr=\betstr\format_tmqwfabc1200zhms($betstr);
-            $a[] = $betpos . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr($betstr);
-            //    ;
-        }
-        return $a;
-    }
-
-  static  function tmqwfzhms_msghdl($betstr)
-    {
-        $a = [];
-        $cyoNam = str_split($betstr)[0];
-
-        $ya_pos = self::getYa_pos($betstr);
-        //  var_dump( $ya_pos );
-        $strlen525 = mb_strlen($betstr);
-        //  var_dump(mb_strlen($betstr));  //9 is ok...  a123呀100 len is 8 also ok
-
-        //  var_dump("yapos is :$ya_pos strlen is:$strlen525 " );
-        $sublen = mb_strlen($betstr) - $ya_pos;
-        //   var_dump(" sublen:$sublen");
-        $bet_nums = mb_substr($betstr, 1, $ya_pos - 1);
-        //   var_dump($bet_nums );
-        $betNumaArr = str_split($bet_nums);
-        foreach ($betNumaArr as $betnum) {
-
-            $a[] = $cyoNam . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr($betstr);
-        }
-
-        //chick chongfu
-
-        if (count($a) != count(array_unique($a))) {
-            // echo '该数组有重复值';
-
-            \libspc\log_info_tp("投注内容拆分计算结果:",$a,__METHOD__,"betnotice");
-            throw    new \Exception('000000816123,bet_txt_dulip,投注内容有重复');
-        }
-
-        return $a;
-    }
 
 
 
 //可以抓取 stand bet ,,and fuza bet ....if mlt bet ,,cant
     static function msgHdlr($bet_str)
     {
-
+        require_once __DIR__."/betstr.php";
         require_once  __DIR__ . "/../../lib/iniAutoload.php";
         require_once __DIR__."/../../config/cfg.php";
         require_once  __DIR__ . "/../../lib/logx.php";
@@ -169,7 +120,16 @@ class lotrySpltrCls
                 $hdl =   $msghdl149 . "_msghdl";
                 \libspc\log_php("unitestLggr", "  ",    $hdl, "untest", $logdir);
                 $hdl=\encodex\encode_funName($hdl);
-                return self:: $hdl($bet_str);
+                if(method_exists(self::class, $hdl))
+                     return self:: $hdl($bet_str);
+                else
+                {
+                  //  require __DIR__."/betstr.php";
+                    $hdl="\betstr\decode_".$msghdl149;
+                    $hdl=\encodex\encode_funName($hdl);
+                    return $hdl($bet_str);
+                }
+
             }
             \libspc\log_php("unitestLggr", " match fail..",   "", "untest", $logdir);
         }
@@ -224,76 +184,65 @@ class lotrySpltrCls
 
 //var_dump(\xdebug_get_code_coverage());
 //特码求abc模式    abc大100   abc大100
-   static function tmqwfabczhms_msghdl($betstr)
-    {
 
-        require_once __DIR__ . "/lotrySscV2.php";
-        $betstr = trim($betstr);
-        $a = [];
-        // $cyoNam = str_split($betstr)[0];
-
-        $dasyaodeshwo = "";
-        $ya_pos = mb_strpos($betstr, '大');
-        $dasyaodeshwo = "大";
-        if ($ya_pos == false) {
-            $ya_pos = mb_strpos($betstr, '小');
-            $dasyaodeshwo = "小";
-        } else if ($ya_pos == false) {
-            $ya_pos = mb_strpos($betstr, '单');
-            $dasyaodeshwo = "单";
-        } else if ($ya_pos == false) {
-            $ya_pos = mb_strpos($betstr, '双');
-            $dasyaodeshwo = "双";
-        }
-        //  var_dump( $ya_pos );
-        $strlen525 = mb_strlen($betstr);
-        //  var_dump(mb_strlen($betstr));  //9 is ok...  a123呀100 len is 8 also ok
-
-        //  var_dump("yapos is :$ya_pos strlen is:$strlen525 " );
-        // $sublen = mb_strlen($betstr) - $ya_pos;
-        //   var_dump(" sublen:$sublen");
-        //  var_dump($betstr);
-        //  var_dump($ya_pos);
-        $bet_nums = mb_substr($betstr, 0, $ya_pos);
-        //  var_dump($bet_nums);
-        $betNumaArr = str_split($bet_nums);
-        foreach ($betNumaArr as $betnum) {
-
-            $a[] = $betnum . "" .  $dasyaodeshwo . "" . getAmt_frmBetStr($betstr);
-        }
-        //  var_dump(\xdebug_get_declared_vars());
-        return $a;
-    }
 
     /**
+     * depx
      * @param $betstr
      * @return false|int
      */
-    public static function getYa_pos($betstr)
-    {
-        $ya_pos = strpos($betstr, '押');
-        if ($ya_pos == false)
-            $ya_pos = strpos($betstr, '.');
-        if ($ya_pos == false)
-            $ya_pos = strpos($betstr, '/');
-        return $ya_pos;
-    }
 
-    function msgHdlr22($bet_str_arr_clr)
-    {
-        //   var_dump( $bet_str_arr_clr);
-        $a = [];
-        foreach ($bet_str_arr_clr as $betstr) {
 
-            $bet_wefa =    GetWefa($betstr);
-            if ($bet_wefa == '特码球玩法组合模式') {
-                $tmp =  spltSingleArrFrmTemacyoZuheMod($betstr);
-                //  var_dump( $tmp);
-                $a =   array_merge($a, $tmp);
-            } else
-                $a[] = $betstr;
-        }
-        return $a;
-    }
+//    function msgHdlr22($bet_str_arr_clr)
+//    {
+//        //   var_dump( $bet_str_arr_clr);
+//        $a = [];
+//        foreach ($bet_str_arr_clr as $betstr) {
+//
+//            $bet_wefa =    GetWefa($betstr);
+//            if ($bet_wefa == '特码球玩法组合模式') {
+//                $tmp =  spltSingleArrFrmTemacyoZuheMod($betstr);
+//                //  var_dump( $tmp);
+//                $a =   array_merge($a, $tmp);
+//            } else
+//                $a[] = $betstr;
+//        }
+//        return $a;
+//    }
+
+
+//    static  function tmqwfzhms_msghdl_dep($betstr)
+//    {
+//        $a = [];
+//        $cyoNam = str_split($betstr)[0];
+//
+//        $ya_pos = self::getYa_pos($betstr);
+//        //  var_dump( $ya_pos );
+//        $strlen525 = mb_strlen($betstr);
+//        //  var_dump(mb_strlen($betstr));  //9 is ok...  a123呀100 len is 8 also ok
+//
+//        //  var_dump("yapos is :$ya_pos strlen is:$strlen525 " );
+//        $sublen = mb_strlen($betstr) - $ya_pos;
+//        //   var_dump(" sublen:$sublen");
+//        $bet_nums = mb_substr($betstr, 1, $ya_pos - 1);
+//        //   var_dump($bet_nums );
+//        $betNumaArr = str_split($bet_nums);
+//        foreach ($betNumaArr as $betnum) {
+//
+//            $a[] = $cyoNam . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr($betstr);
+//        }
+//
+//        //chick chongfu
+//
+//        if (count($a) != count(array_unique($a))) {
+//            // echo '该数组有重复值';
+//
+//            \libspc\log_info_tp("投注内容拆分计算结果:",$a,__METHOD__,"betnotice");
+//            throw    new \Exception('000000816123,bet_txt_dulip,投注内容有重复');
+//        }
+//
+//        return $a;
+//    }
+//
 
 }

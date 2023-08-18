@@ -41,6 +41,7 @@ class LotteryHash28 extends Lottery
         $this->data = [
             'lottery_no' => $hash,
             'hash_no' => $hash,
+            'opentime' => time()
         ];
         return $this->data;
     }

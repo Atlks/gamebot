@@ -37,6 +37,7 @@ class Handle2
      */
     public function index()
     {
+        ob_start();
         require_once __DIR__ . "/../../lib/logx.php";
         $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  " . PHP_EOL;
 
@@ -93,6 +94,8 @@ class Handle2
                 $parameters["method"] = "sendMessage";
                 //   $parameters["method"] = $method;
                 $payload = json_encode($parameters);
+
+                ob_end_clean();
                 header('Content-Type: application/json');
                 header('aaa: application/json');
                 header('Content-Length:' . strlen($payload) + 2);
