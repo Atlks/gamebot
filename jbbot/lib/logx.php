@@ -42,7 +42,7 @@ function log_phpV2($method_linenum, $msg, $obj, $lev = "info")
     // file_put_contents($logf,   $logtxt , FILE_APPEND);
     //   file_put_contents($logf,   $linenum_magicNum . PHP_EOL, FILE_APPEND);
     //  varname is xxx
-    $logtxt .= " " . $msg . "==>" . $datamsg;
+    $logtxt .=date('md His'). " " . $msg . "==>" . $datamsg;
 
     file_put_contents($logf, $logtxt . PHP_EOL, FILE_APPEND);
 }

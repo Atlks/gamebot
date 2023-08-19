@@ -1187,7 +1187,7 @@ class GameLogicSsc
                 $uid = $row['UserId'];
                 $uname = $row['UserName'];
               
-                $bettx =  \echoCls::getBetContxEcHo($row['BetContent'])  ;
+                $bettx =  \betstr\format_echo_x($row['BetContent'])  ;
                
                 
                 $txt = "$uname [$uid] $bettx 下注金额:$betamt 盈亏: $income \r\n";

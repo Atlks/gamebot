@@ -68,7 +68,7 @@ class Handle2
             if (isset($update["message"])) {
                 $msgobj = $update["message"];
                 $msgid =  $msgobj['message_id'];
-                $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_" . $msgid . ".json";
+                $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d') . "_" . $msgid . ".json";
                 if (file_exists($logf)) {
                     file_put_contents($logf, "1123");
                     \think\facade\Log::warning(" file exist:" . $logf);
@@ -296,8 +296,8 @@ class Handle2
 
     public function processMessage($message)
     {
-        \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args()));
-        \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
+        \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
+        \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(),JSON_UNESCAPED_UNICODE));
         //  var_dump(__METHOD__ . json_encode(func_get_args()));
         //  var_dump( $this->Bot_Token);
 

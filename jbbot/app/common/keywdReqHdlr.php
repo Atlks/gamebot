@@ -31,6 +31,7 @@ class keywdReqHdlr extends Command
     // todo need log err in log file..
     protected function execute(Input $input, Output $output)
     {
+        usleep(150*1000);
         try{
             \think\facade\Log::info("-------------@@starty...------");
             \think\facade\Log::info("-------------@@starty...------");
@@ -57,6 +58,24 @@ class keywdReqHdlr extends Command
 
           //  var_dump($json);
          //   die();
+            $msgobj= $json;
+//            if (!isset($msgobj['message_id'])) {
+//                return;
+//            }
+
+                $msgid =$msgobj['message_id']  ;
+                $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d') . "_" . $msgid . ".json";
+            if (file_exists($logf)) {
+                file_put_contents($logf, "1123");
+                \think\facade\Log::warning(__METHOD__);
+                \think\facade\Log::warning(" file exist:" . $logf);
+                 return;
+            }
+
+            file_put_contents($logf, $json_t);
+
+
+            //--------process msgt
             $ret =   $hdr->processMessage($json);
             $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
             var_dump($lineNumStr);
@@ -64,7 +83,9 @@ class keywdReqHdlr extends Command
     
             \think\facade\Log::info($lineNumStr);
             \think\facade\Log::info(json_encode($ret));
-    
+
+
+            //-----------------------send msg
             //if here null maybe  processMessage  grp id chk fail.
             $bet_ret_prmFmt=$GLOBALS['bet_ret_prm'];
             var_dump( $bet_ret_prmFmt); 

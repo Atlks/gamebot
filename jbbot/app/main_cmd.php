@@ -36,5 +36,5 @@ while (true) {
         file_put_contents($logf,  $logtxt . PHP_EOL, FILE_APPEND);
         throw $exception; // for test
     }
-    sleep(1);
+    usleep(100*1000);
 }

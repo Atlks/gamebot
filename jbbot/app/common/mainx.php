@@ -69,7 +69,7 @@ class mainx extends Command
 
                 // throw $exception; // for test
             }
-            sleep(1);
+            usleep(50*1000);
             break;
         }
     }
@@ -266,7 +266,7 @@ function fenpan_stop_event()
 
         // array_push($bet_lst_echo_arr,  \echox\getBetContxEcHo($value['text']));
         
-        $echo = \echoCls::getBetContxEcHo($v['BetContent']);
+        $echo =\betstr\format_echo_x($v['BetContent']);
         $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $echo . "\r\n";
         $sum += $v['Bet'];
     }
@@ -293,7 +293,7 @@ function fenpan_stop_event()
     \think\facade\Db::close();
 }
 require_once  __DIR__ . "/../../config/cfg.php";
-require_once  __DIR__ . "/../../lib/iniAutoload.php";
+require  __DIR__ . "/../../lib/iniAutoload.php";
 function kaij_draw_evt()
 {
     \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));

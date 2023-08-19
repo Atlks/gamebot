@@ -13,9 +13,10 @@ $content454 = "a1234押100";
 $content454 = "a12押9";
 $content454 = "a123456押9";
 $content454 = "a123押100";
-require_once __DIR__ . "/../../lib/strx.php";
-require_once __DIR__ . "/../../lib/str.php";
-require_once __DIR__ . "/../../app/common/ltryCore.php";
+
+
+require __DIR__ . "/../../lib/iniAutoload.php";
+ 
 $bet_str_arr_clr441 = \strspc\spltBySpace($content454);
 //var_dump( $bet_str_arr_clr441);
 
@@ -222,8 +223,9 @@ require_once __DIR__."/../../config/cfg.php";
 
 function getWefa($bet_nums)
 {
-
-   return \ltryCore:: getWefa($bet_nums);
+    require __DIR__ . "/../../lib/iniAutoload.php";
+    require_once __DIR__ . "/../../app/common/betstr.php";
+   return \betstr\getWefa($bet_nums);
 }
 //msgHdlrOther("a大100");
 
@@ -235,7 +237,7 @@ function getWefa($bet_nums)
 //var_dump(getWefa("前豹100"));
 //C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe app/common/lotrySscV2.php
 
-require_once __DIR__."/../../lib/iniAutoload.php";
+
 //对讲结果
 function dwijyo($betNum,   $bonusNum)
 {
@@ -339,8 +341,8 @@ function dwijyo($betNum,   $bonusNum)
 }
 function cyehose_bet_fullname($betnum)
 {
-    if( class_exists('\think\facade\Log'))
-    \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
+  //  if( class_exists('\think\facade\Log'))
+ //   \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
     $betnum = str_replace("前", "前三", $betnum);
     $betnum = str_replace("后", "后三", $betnum);
     $betnum = str_replace("中", "中三", $betnum);
@@ -397,6 +399,7 @@ function getKaijNumArr_hezDasyods($bonusNum)
 //获取开奖序列  --大小单双
 function getKaijNumArr_Dasyaodeshwo($bonusNum)
 {
+
     $glb = [];
     //   if($bonusNum)
     //  $a[];

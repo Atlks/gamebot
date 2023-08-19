@@ -52,7 +52,14 @@ class testCls extends Command
 
   protected function execute(Input $input, Output $output)
   {
+   //   $rzt717= lotrySpltrCls::msgHdlr("a123操200");
+    //  $rzt717= lotrySpltrCls::msgHdlr("1小100");
+  //    $rzt717= lotrySpltrCls::msgHdlr("abc小100");
+      $rzt717= lotrySpltrCls::msgHdlr("123小100");
+//$rzt717= lotrySpltrCls::tmqwfabc1200zhms("abc1.200");
+      $rzt717=1;
 
+      die();
     painTest();
     die();
 

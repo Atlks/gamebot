@@ -8,8 +8,8 @@ require_once  __DIR__."/lotryEcho.php";
  //var_dump(\echoCls::getBetContxEcHo("大100"));
 //var_dump(\echoCls::getBetContxEcHo("a大100"));
 //var_dump(\echoCls::getBetContxEcHo("abc单100"));
-//$rzt1140=\echoCls::getBetContxEcHo("a/1/1");
-$rzt1140=\echoCls::getBetContxEcHo("前豹100");
+$rzt1140=\echoCls::getBetContxEcHo("a/1/1");
+//$rzt1140=\echoCls::getBetContxEcHo("前豹100");
 
 $rzt1140=1;
 class echoCls
