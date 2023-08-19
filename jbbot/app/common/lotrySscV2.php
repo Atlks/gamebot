@@ -221,12 +221,11 @@ require_once __DIR__."/../../config/cfg.php";
 //$wefa428=getWefa("abc大100");
 //$z429=$wefa428;
 
-function getWefa($bet_nums)
-{
-    require __DIR__ . "/../../lib/iniAutoload.php";
-    require_once __DIR__ . "/../../app/common/betstr.php";
-   return \betstr\getWefa($bet_nums);
-}
+//function getWefa($bet_nums)
+//{
+//
+//   return \betstr\getWefa($bet_nums);
+//}
 //msgHdlrOther("a大100");
 
 
@@ -241,13 +240,15 @@ function getWefa($bet_nums)
 //对讲结果
 function dwijyo($betNum,   $bonusNum)
 {
-
+    $betNum= \betstr\convert_StandFmt($betNum);
     require_once __DIR__."/../../lib/logx.php";
     \libspc\log_info_php("unitest","",func_get_args(),"untest",__DIR__."/../../runtime/");
    // var_dump(__METHOD__ . json_encode(func_get_args(),JSON_UNESCAPED_UNICODE));
     //   echo PHP_EOL;
-    $wefa = getWefa($betNum);
-  //  var_dump($wefa );
+    $wefa = \betstr\getWefa($betNum) ;
+  if($wefa==null)
+      throw new \think\exception\ValidateException($betNum);
+    //  var_dump($wefa );
   //  die();
     //global $glb;
     $glb['betNum'] = $betNum;

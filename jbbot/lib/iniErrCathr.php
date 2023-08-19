@@ -38,8 +38,13 @@ function error_handler142($errno, $message, $filename, $lineno)
     $j = json_encode($ex229);
     global $errdir;
     file_put_contents($errdir . date('Y-m-d H') . "lg142_errHdlr_.log",  $j . PHP_EOL, FILE_APPEND);
-    if(class_exists('\think\facade\Log'))
-    \think\facade\Log::info($j);
+
+        try {
+            if(class_exists('\think\Facade'))
+                if(class_exists('\think\facade\Log'))
+            \think\facade\Log::info($j);
+        }catch(\Exception $e){}
+
     var_dump($j); //also echo throw 
   //  throw $j;
 }

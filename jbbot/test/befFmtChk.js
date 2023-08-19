@@ -9,6 +9,8 @@ var lines = data.split(/\r\n/);
 
 // print all lines
 lines.forEach((line) => {
+
+    console.log("9999999999999999999999999999999999999");
     console.log(line);
     arr = line.split(",");
     betnum = arr[0];
@@ -31,26 +33,28 @@ lines.forEach((line) => {
 
 console.log(111)
 return;
-
-// read contents of the file
-data = fs.readFileSync('betFalse.txt', 'UTF-8');
-
-// split the contents by new line
-lines = data.split(/\r\n/);
-
-// print all lines
-lines.forEach((line2) => {
-    line=(line2).trim();
-    if(line=="")
-        return;
-    console.log(line);
-    arr = line.split(",");
-    betnum = arr[0];
-    kaijnum = arr[1];  //encodeURIComponent
-    cmd = "php   C:\\modyfing\\jbbot\\test/dwijyo.php " + (betnum) + " " + kaijnum;
-    console.log(cmd)
-    rzt=execSync(cmd).toString();
-    console.log(rzt)
-    if(rzt=="true")
-        throw "err pandwe";
-})
+//
+// // read contents of the file
+// data = fs.readFileSync('betFalse.txt', 'UTF-8');
+//
+// // split the contents by new line
+// lines = data.split(/\r\n/);
+//
+// // print all lines
+// lines.forEach((line2) => {
+//
+//     line=(line2).trim();
+//     if(line=="")
+//         return;
+//
+//     console.log(line);
+//     arr = line.split(",");
+//     betnum = arr[0];
+//     kaijnum = arr[1];  //encodeURIComponent
+//     cmd = "php   C:\\modyfing\\jbbot\\test/dwijyo.php " + (betnum) + " " + kaijnum;
+//     console.log(cmd)
+//     rzt=execSync(cmd).toString();
+//     console.log(rzt)
+//     if(rzt=="true")
+//         throw "err pandwe";
+// })

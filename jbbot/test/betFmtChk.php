@@ -4,7 +4,7 @@
 // php test/dwijyo.php 虎100 12345
 namespace think;
 
-ob_start();
+//ob_start();
 
 require __DIR__ . '/../vendor/autoload.php';
 $bet = urldecode($_SERVER['argv'][1]);
@@ -22,9 +22,11 @@ require __DIR__ . "/../lib/iniAutoload.php";
 
 new App();
 
-$bet_str_arr_clr_spltMltSingle = \betstr\split_decode_split($bet);
 
-ob_end_clean();
+$bet_str_arr_clr_spltMltSingle = \betstr\split_decode_split($bet);
+var_dump($bet);
+echo $bet."\r\n";
+//ob_end_clean();
 echo json_encodex($bet_str_arr_clr_spltMltSingle);
 \log23::fmtChkUnitest(__METHOD__, $bet, $bet_str_arr_clr_spltMltSingle);
 

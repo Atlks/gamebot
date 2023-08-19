@@ -8,7 +8,7 @@ use \log23;
 use think\Exception;
 use think\exception\ValidateException;
 
-$GLOBALS['refLib419']='betstr';
+
 require __DIR__ . "/../../lib/iniAutoload.php";
 
 
@@ -23,11 +23,54 @@ require __DIR__ . "/../../lib/iniAutoload.php";
 //$rzt312 = decode_tmqwf_a_dx_100_zhms("1小大100");
 //$rzt312 = decode_tmqwf_a_dx_100_zhms("a小大100");
 //
-$rzt312 = split_decode_splitx("a单100");
+//$rzt312 = split_decode_splitx("a单100");
 //$rzt312 = decode_tmqwf_ab_d_100_zhms("12大100");
 //$rzt312 = decode_tmqwf_ab_d_100_zhms("ab大100");
-$rzt312 = 99;
 
+$rzt312 = convert_StandFmt("a大100");
+$rzt312 = 99;
+function convert_StandFmt($bet_str)
+{
+    //----------组合模式  e100押30 is err
+    // require_once __DIR__ . "/../../lib/str.php";
+    // var_dump($GLOBALS['msgrex_zuhe']);
+    global $logdir;
+    $arr = http_query_toArr($GLOBALS['msgrex_zuhe']);
+    //parse_str( $msgrex_urlencode, $arr);
+    // var_dump($arr);
+    foreach ($arr as $itm) {
+        if (empty($itm))
+            continue;
+        $wefa = key($itm);
+        $rx = current($itm);
+        //   require_once __DIR__ . "/../../lib/strx.php";
+        $p = '/^' . $rx . '$/iu';
+        //  print_rx($p);
+        \libspc\log_php("unitestLggr", "****", $p . " betstr:" . $bet_str, "untest", $logdir);
+        if (preg_match($p, $bet_str)) {
+            //  print_rx("     match.." . $p . " " . $numb);
+            \libspc\log_php("unitestLggr", " match ok..", "", "untest", $logdir);
+
+            $msghdl149 = \strspc\pinyin1($wefa);
+            \libspc\log_php("unitestLggr", "  pinyin1($wefa):", $msghdl149, "untest", $logdir);
+            $hdl = $msghdl149 . "_msghdl";
+            \libspc\log_php("unitestLggr", "  ", $hdl, "untest", $logdir);
+            $hdl = \encodex\encode_funName($hdl);
+            if (function_exists($hdl))
+                return $hdl($bet_str);
+            else {
+                //  require __DIR__."/betstr.php";   \betstr\decode_tmqwf_ab_d_100_zhms
+                $hdl = "\betstr\decode_" . $msghdl149;
+                $hdl = \encodex\encode_funName($hdl);
+                return $hdl($bet_str)[0];
+            }
+
+        }
+
+    }
+    return  $bet_str;
+
+}
 
 $split = function () {
 
@@ -49,9 +92,34 @@ function format_echo_cyehose($betnum)
     return $betnum;
 }
 
+function decode_tmqwf($bet_nums){
+
+    return format_tmqwf_1_syego_d_ms($bet_nums);
+}
+function decode_tmqdxdswf($str){
+
+    $arr = explode("/",$str);
+    $dotIdx = strpos($str, ".");
+    $money =    $arr [2];
+
+
+
+    if (is_numeric($arr[0])) {
+        $arr_cyo = str_split("abcde");
+        $cyoName = $arr_cyo[$arr[0] - 1];
+    } else {
+        $cyoName = $arr[0];
+    }
+
+    return $arr[0] . "/" . $arr[1] . "/" . $money;
+  //  return format_tmqwfabc1200zhms($bet_nums);
+}
+
+
+
 function getWefa($bet_nums)
 {
-    $bet_nums=format_tmq_standFmt($bet_nums);
+  //  $bet_nums=format_tmq_standFmt($bet_nums);
     // $arr = http_query_toArr($GLOBALS['msgrex']);
     $arr = http_query_toArr($GLOBALS['msgrex']);
     foreach ($arr as $itm) {
@@ -217,7 +285,7 @@ function format_tmqwf_1_syego_d_ms($str)
 
 function format_tmq_standFmtV2($str)
 {
-    $rzt=split_deco
+  //  $rzt=split_deco
 }
 
 //fromat to tmq standfmt From antoher single bet fmt
@@ -387,14 +455,14 @@ function split_decode_splitx($bet_str)
 
     //--------------statnd mode
 
-    $arr = split_FrmStandBetstr($bet_str);
-    if ($arr != null)
-        return $arr;
+//    $arr = split_FrmStandBetstr($bet_str);
+//    if ($arr != null)
+//        return $arr;
 
     //单注格式转换器  signle fmt cvt
-    $arr = split_FrmEasyModeBetstr($bet_str);
-    if ($arr != null)
-        return $arr;
+//    $arr = split_FrmEasyModeBetstr($bet_str);
+//    if ($arr != null)
+//        return $arr;
 
 
     //----------组合模式  e100押30 is err

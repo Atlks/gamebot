@@ -9,7 +9,7 @@ require __DIR__ . "/../lib/iniAutoload.php";
 
 $fs=get_included_files();
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . "/../lib/iniAutoload.php";
+
 
 // 应用初始化
 $consl=new App() ;
