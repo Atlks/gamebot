@@ -20,7 +20,7 @@ require __DIR__ . "/../lib/iniAutoload.php";
 //
 //$response = $http->run();
 
-new App();
+//new App();
 
 
 $bet_str_arr_clr_spltMltSingle = \betstr\split_decode_split($bet);

@@ -17,7 +17,7 @@ use Exception;
 use http\Exception\BadConversionException;
 use think\exception\ValidateException;
 use think\log;
-use function betstr\format_echo_x;
+use function betstr\format_echo_ex;
 
 function var_dumpx($o)
 {
@@ -275,7 +275,7 @@ class Game2handlrLogic
 
         try{
 
-            $bet_str_arr_clr_spltMltSingle   =  \betstr\split_decode_splitx($bet_str_arr_clr);
+            $bet_str_arr_clr_spltMltSingle   = betstrX__split_convert_decode($bet_str_arr_clr);
             \think\facade\Log::betnotice("bet_str_arr_clr_spltMltSingle is:" . json_encode($bet_str_arr_clr_spltMltSingle, JSON_UNESCAPED_UNICODE));
             \think\facade\Log::betnoticex("bet_str_arr_clr_spltMltSingle is:" . json_encode($bet_str_arr_clr_spltMltSingle, JSON_UNESCAPED_UNICODE));
         }catch(ValidateException $e)
@@ -317,7 +317,7 @@ class Game2handlrLogic
             \think\facade\Log::betnotice($lineNumStr);
             \think\facade\Log::betnotice(" forech per betstr :getWefa($bet_nums) ");
 
-            $wefa413 =\betstr\getWefa($bet_nums);
+            $wefa413 =betstrX__parse_getWefa($bet_nums);
             \think\facade\Log::betnotice("   wefa413 rzt :" .   $wefa413);
             //  var_dumpx($rows);
             //   var_dumpx($rows[0]['玩法']);
@@ -398,7 +398,8 @@ class Game2handlrLogic
         foreach ($bets as $key => $value) {
            // str_
 
-            array_push($bet_lst_echo_arr, \betstr\format_echo_x($value['text']));
+            array_push($bet_lst_echo_arr, betstrX__format_echo_ex($value['text']));
+
 
             $bet = $value;
             $bet_amt_total_arr[] = $value['amount'] / 100;
@@ -913,6 +914,8 @@ class Game2handlrLogic
         $this->parse_mode = "MarkdownV2";
         return $text;
     }
+
+
 
 
 }

@@ -8,45 +8,56 @@ function log_dbg_php($method_linenum, $msg, $obj)
     log_php($method_linenum, $msg, $obj, "dbg");
 }
 
-function log_phpV2($method_linenum, $msg, $obj, $lev = "info")
-{
-    //log_err
-    $logdir = __DIR__ . "/../runtime/";
-    $datamsg = $obj;
+function get_variable_name(&$var333, $scopeVarArr = NULL) {
+    if (NULL == $scopeVarArr) {
+        $scopeVarArr = $GLOBALS;
+    }
+    $tmp  = $var333;
+    $var   = "tmp_exists_" . mt_rand();
+    // $name = array_search($var, $scope, TRUE);
+    $name = array_search($var333, $scopeVarArr);
+    $var333   = $tmp;
+    return $name;
+}
+
+$var11=34567;
+//var_dump(get_variable_name( $var11,get_defined_vars()));
+
+// [kka:12] 0821051358 vrr==>11
+//log_phpV2(__LINE__."kka",get_variable_name( $var11,get_defined_vars()),$var11,"lev413");
+/*
+ * @auther atlks
+ * @
+ * */
+function log_phpV2($method_linenum, $varname, $varobj, $lev = "info")
+{//log_err
+    if (is_object($varobj) && get_class($varobj) == "Exception") {
+        log_err($varobj, $method_linenum, $lev);
+        return;
+    }
+    if (is_object($varobj) || is_array($varobj))
+        $varobj = json_encode($varobj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    if (is_bool($varobj))
+        $varobj = $varobj ? "TRUE" : "FALSE";
+    $logf = __DIR__ . "/../runtime/" . date('Y-m-d') . "_$lev.log";
+    $logtxt  = "[$method_linenum] " . date('mdHis') . " " . $varname . "==>" . $varobj;
+    file_put_contents($logf, $logtxt . PHP_EOL, FILE_APPEND);
+}
 
 //    if (is_array($obj) == "Exception") {
 //        log_err($obj, $method_linenum, $lev);
 //        return;
 //    }
-    if (is_object($obj)){
+// file_put_contents($logf,   $logtxt , FILE_APPEND);
+//   file_put_contents($logf,   $linenum_magicNum . PHP_EOL, FILE_APPEND);
+//  varname is xxx
+//  var_dump( $datamsg);//  var_dump( $datamsg);DIE();
 
-      if (get_class($obj) == "Exception") {
-          log_err($obj, $method_linenum, $lev);
-          return;
-      }
-    }
-
-    if (is_object($obj) || is_array($obj)) {
-        $datamsg = json_encode($obj, JSON_UNESCAPED_UNICODE);
-    } else if (is_bool($obj)) {
-        if ($obj)
-            $datamsg = "TRUE";
-        else
-            $datamsg = "FALSE";
-        //  var_dump( $datamsg);DIE();
-    }
-    //  var_dump( $datamsg);
-    $logf = $logdir . date('Y-m-d') . "_lg142_$lev.log";
-    $logtxt = $method_linenum;
-
-    // file_put_contents($logf,   $logtxt , FILE_APPEND);
-    //   file_put_contents($logf,   $linenum_magicNum . PHP_EOL, FILE_APPEND);
-    //  varname is xxx
-    $logtxt .=date('md His'). " " . $msg . "==>" . $datamsg;
-
-    file_put_contents($logf, $logtxt . PHP_EOL, FILE_APPEND);
-}
-
+/*
+ * @deprecated
+ * @deprecated
+ *@todo  todoxxxmsgn
+ * */
 function log_php($method_linenum, $msg, $obj, $lev = "info")
 {
     $logdir = __DIR__ . "/../runtime/";

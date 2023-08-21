@@ -19,7 +19,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $_GET['s']='HandleUpdates2/index';
 
-require_once __DIR__."/../lib/iniErrCathr.php";
+include_once __DIR__."/../lib/iniAutoload.php";
 
 
 // 执行HTTP应用并响应

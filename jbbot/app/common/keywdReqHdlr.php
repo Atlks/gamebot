@@ -28,7 +28,7 @@ class keywdReqHdlr extends Command
             ->setDescription('the cmd2 command');
     }
 
-    // todo need log err in log file..
+
     protected function execute(Input $input, Output $output)
     {
         usleep(150*1000);

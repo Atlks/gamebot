@@ -11,7 +11,7 @@ use think\exception\ValidateException;
 
 require __DIR__ . "/../../lib/iniAutoload.php";
 
-
+//$bet_str_arr_clr_spltMltSingle   =  \betstr\split_decode_splitx("大小100");
 
 
 
@@ -27,12 +27,76 @@ require __DIR__ . "/../../lib/iniAutoload.php";
 //$rzt312 = decode_tmqwf_ab_d_100_zhms("12大100");
 //$rzt312 = decode_tmqwf_ab_d_100_zhms("ab大100");
 
-$rzt312 = convert_StandFmt("a大100");
+//$rzt312 = convert_StandFmt("a大100");
+//$rzt312 = split_decode_splitx("a大100 a1.200");
+//$rzt312 = split_decode_splitx(" a1.200");
+//$rzt312 = split_decode_splitx(" a单200");
 $rzt312 = 99;
+
+function convert_kaij_echo_ex($result_text)
+{
+    try {
+        return  kaij_echo($result_text);
+    } catch (\Throwable $exception) {
+
+        $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        \think\facade\Log::error(" kaij_echo($result_text)");
+        \think\facade\Log::error("errmsg:" . $exception->getMessage());
+        \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
+        \think\facade\Log::error("errtraceStr:" . $exception->getTraceAsString());
+        return "";
+    }
+}
+
+
+   function kaij_echo($kaijNum)
+{
+    $a = str_split($kaijNum);
+    $sum = array_sum($a);
+
+    $kaij_num_dasyaodeshwo_fnly = join(" ", getKaijNumArr_hezDasyods($kaijNum));
+    //  $kaij_num_dasyaodeshwo_fnly =join("",getKaijNumArr_($kaijNum)) ;
+
+    $kaij_num_cyehgouse_fnly = join("", getKaijNumArr_cyehose($kaijNum));
+
+    $kaij_num_cyehgouse_fnly = cyehose_bet_name($kaij_num_cyehgouse_fnly);
+    $kaij_num_cyehgouse_fnly =  cyehose_bet_name($kaij_num_cyehgouse_fnly);
+    $kaij_num_cyehgouse_fnly =  cyehose_bet_name($kaij_num_cyehgouse_fnly);
+    $kaij_num_cyehgouse_fnly =  cyehose_bet_name($kaij_num_cyehgouse_fnly);
+    $s = join("+", $a) . "=$sum $kaij_num_dasyaodeshwo_fnly " . getKaijNumFly_longhuHaeWefa($kaijNum) . " $kaij_num_cyehgouse_fnly";
+    $s = substr($s, 0, strlen($s) - 1);
+    return $s;
+}
+
+
+   function cyehose_bet_name($betnum)
+{
+    $betnum = str_replace("半顺子", "半|", $betnum);
+    $betnum = str_replace("前三", "前", $betnum);
+    $betnum = str_replace("后三", "后", $betnum);
+    $betnum = str_replace("中三", "中", $betnum);
+    $betnum = str_replace("豹子", "豹|", $betnum);
+    $betnum = str_replace("对子", "对|", $betnum);
+
+    $betnum = str_replace("杂六", "杂|", $betnum);
+    $betnum = str_replace("顺子", "顺|", $betnum);
+
+    return $betnum;
+}
+
+
+  function kaij_echo_x($result_text)
+{
+
+
+}
+
+
+
 function convert_StandFmt($bet_str)
 {
     //----------组合模式  e100押30 is err
-    // require_once __DIR__ . "/../../lib/str.php";
+
     // var_dump($GLOBALS['msgrex_zuhe']);
     global $logdir;
     $arr = http_query_toArr($GLOBALS['msgrex_zuhe']);
@@ -43,18 +107,18 @@ function convert_StandFmt($bet_str)
             continue;
         $wefa = key($itm);
         $rx = current($itm);
-        //   require_once __DIR__ . "/../../lib/strx.php";
+
         $p = '/^' . $rx . '$/iu';
         //  print_rx($p);
-        \libspc\log_php("unitestLggr", "****", $p . " betstr:" . $bet_str, "untest", $logdir);
+       // \libspc\log_php("unitestLggr", "****", $p . " betstr:" . $bet_str, "untest", $logdir);
         if (preg_match($p, $bet_str)) {
             //  print_rx("     match.." . $p . " " . $numb);
-            \libspc\log_php("unitestLggr", " match ok..", "", "untest", $logdir);
+          //  \libspc\log_php("unitestLggr", " match ok..", "", "untest", $logdir);
 
             $msghdl149 = \strspc\pinyin1($wefa);
-            \libspc\log_php("unitestLggr", "  pinyin1($wefa):", $msghdl149, "untest", $logdir);
+          //  \libspc\log_php("unitestLggr", "  pinyin1($wefa):", $msghdl149, "untest", $logdir);
             $hdl = $msghdl149 . "_msghdl";
-            \libspc\log_php("unitestLggr", "  ", $hdl, "untest", $logdir);
+         //   \libspc\log_php("unitestLggr", "  ", $hdl, "untest", $logdir);
             $hdl = \encodex\encode_funName($hdl);
             if (function_exists($hdl))
                 return $hdl($bet_str);
@@ -80,14 +144,7 @@ function format_echo_cyehose($betnum)
     \log23::debug4echo(__METHOD__, "  ", func_get_args());
 //    if( class_exists('\think\facade\Log'))
 //        \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
-    $betnum = str_replace("前", "前三", $betnum);
-    $betnum = str_replace("后", "后三", $betnum);
-    $betnum = str_replace("中", "中三", $betnum);
-    $betnum = str_replace("豹", "豹子", $betnum);
-    $betnum = str_replace("对", "对子", $betnum);
-    $betnum = str_replace("顺", "顺子", $betnum);
-    $betnum = str_replace("半", "半顺", $betnum);
-    $betnum = str_replace("杂", "杂六", $betnum);
+
 
     return $betnum;
 }
@@ -116,9 +173,22 @@ function decode_tmqdxdswf($str){
 }
 
 
+function decode_hzdxdswf($bet_nums){
+    return "和值".$bet_nums;
+}
+//  longhu ha shwafa
+function decode_lhhwflh($bet_nums)
+{
+return $bet_nums;
+}
+function decode_lhhwfh($bet_nums)
+{
+    return $bet_nums;
+}
 
 function getWefa($bet_nums)
 {
+    require_once __DIR__."/../../lib/str.php";
   //  $bet_nums=format_tmq_standFmt($bet_nums);
     // $arr = http_query_toArr($GLOBALS['msgrex']);
     $arr = http_query_toArr($GLOBALS['msgrex']);
@@ -140,23 +210,87 @@ function getWefa($bet_nums)
     //  return msgHdlrOther($bet_nums);
 }
 
-function split_decode_split($betstrsssss)
+//function split_decode_split($betstrsssss)
+//{
+//    // return lotrySpltrCls::msgHdlr($betstrsssss);
+//
+//    return \betstr\split_decode_splitx($betstrsssss);
+//}
+function print_rx($s)
 {
-    // return lotrySpltrCls::msgHdlr($betstrsssss);
 
-    return \betstr\split_decode_splitx($betstrsssss);
 }
 
-function format_echo_x($betstr)
+//all stand single format ..ex warp
+function format_echo_ex($betstr)
 {
     try {
-        return \echoCls::getBetContxEcHo($betstr);
+        return  convert_getBetContxEcHo($betstr);
     } catch (\Exception $exception) {
         \log23::err(__METHOD__, func_get_args(), __LINE__);
         \log23::err(__METHOD__, "ex", $exception);
         return "";
     }
 }
+function convert_getBetContxEcHo($bet_str)
+{
+        global  $logdir;
+     //   require_once __DIR__ . "/../lib/logx.php";
+   //     require_once __DIR__ . "/../app/common/lotrySscV2.php";    require_once __DIR__ . "/../app/common/betstr.php";
+        $rzt =  $bet_str;
+      //  if(class_exists('\think\facade\Log'))
+        \log23::debug(__METHOD__,"func_get_args",func_get_args() );
+        \log23::debug4echo(__METHOD__,"func_get_args",func_get_args() );
+     //   @\think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
+        // \think\facade\Log::betnotice ("at file:". __FILE__ . ":" . __LINE__ );
+
+        $wanfa =getWefa($bet_str);
+
+
+
+        {
+            //  ,特码球模式
+            $arr = http_query_toArr($GLOBALS['rx_echo']);
+            foreach ($arr as $itm) {
+                if (empty($itm))
+                    continue;
+                $rx = key($itm);
+                $mode = current($itm);
+
+                $p = '/^'  . $rx . '$/iu';
+                print_rx($p);
+               // \libspc\log_php("unitestLggr", "****",    $p . " betstr:" . $bet_str, "untest", $logdir);
+               // \libspc\log_php("unitestLggr", "****",    $p . " betstr:" . $bet_str, "dbg", $logdir);
+                if (preg_match($p, $bet_str)) {
+                 //   \libspc\log_php("unitestLggr", " match ok..",   "", "dbg", $logdir);
+                 //   \libspc\log_php("unitestLggr", " match ok..",   "", "untest", $logdir);
+                    //   \libspc\log_php("unitestLggr", " wefa:",   "$wefa", "untest", $logdir);
+                    $msghdl149 = \strspc\pinyin1($mode);
+
+                      $hdl='\betstr\format_echo_'.$msghdl149;
+                    return $hdl($bet_str);
+                    //$hdl($bet_str);
+
+
+
+
+                }
+            }
+
+            //def ret same txt;
+            $rzt =  $bet_str;
+        }
+
+
+        if(class_exists('\think\facade\Log'))
+            \think\facade\Log::debug($rzt);
+
+        //str_format_other 总和和值模式 龙虎和和 前后三   目前已经和回显一致了无需定制了。。
+        return  format_echo_default( $bet_str);
+
+      //  \betstr\format_echo_($bet_str);
+
+    }
 
 
 function getDaxiaodeshwo_any_pos($betstr)
@@ -213,7 +347,7 @@ function getYa_pos($betstr)
 
 
 //和龙湖
-function format_echo_other($bet_str)
+function format_echo_default($bet_str)
 {
     $rzt_true = str_delNum($bet_str);
     $money = GetAmt_frmBetStr($bet_str);
@@ -229,9 +363,9 @@ function format_echo_tmqms($bet_str)
     if (!is_numeric($cyo_num))
         $cyo_num_rply = $cyo_num;   //大小单双
 
-    $rzt_true = $arr[0] . "球" . $cyo_num_rply;
+
     $money = $arr[2];
-    return $rzt_true . " " . $money . ".00";
+    return  $arr[0] . "球" . $cyo_num_rply . " " . $money . ".00";
 }
 
 ;
@@ -444,28 +578,105 @@ function decode_tmqwfzhms($betstr)
 function splitToSingleBetstrArr()
 {
 }
+//cyehose baoz
+function decode_qhswfbz($betnum){
+    return replace_cyehose_toStandName($betnum);
+}
+function decode_qhswfsz($betnum){
+    return replace_cyehose_toStandName($betnum);
+}
+function decode_qhswfbs($betnum){
+    return replace_cyehose_toStandName($betnum);
+}
+function decode_qhswf_bz_dz_sz_zl($bet_str){
+    return replace_cyehose_toStandName($bet_str);
+}
+
+function decode_hzdxdswf_dx100($betstr){
+  $mony=  \ltrx::getAmt_frmBetStr($betstr);
+    $rzt_true = str_delNum($betstr);
+    $betnums=mb_str_split($rzt_true);
+    $a=[];
+    foreach ($betnums as $itm) {
+$a[]="总和".$itm.$mony;
+    }
+    return $a;
+}
 
 
-function split_decode_splitx($bet_str)
+function replace_cyehose_toStandName($betnum)
+{
+    $betnum = str_replace("前", "前三", $betnum);
+    $betnum = str_replace("后", "后三", $betnum);
+    $betnum = str_replace("中", "中三", $betnum);
+     $betnum = str_replace("豹", "豹子", $betnum);
+    $betnum = str_replace("对", "对子", $betnum);
+    $betnum = str_replace("顺", "顺子", $betnum);
+    $betnum = str_replace("半", "半顺", $betnum);
+    $betnum = str_replace("杂", "杂六", $betnum);
+    return  $betnum;
+}
+function decode_qhswfzl($betnum){
+
+    $betnum = replace_cyehose_toStandName($betnum);
+
+
+    return $betnum;
+}
+function decode_qhswfdz($betnum){
+
+    return replace_cyehose_toStandName($betnum);
+}
+
+function split_decode_split($bet_str)
 {
     global $logdir;
     $bet_str = trim($bet_str);
     $bet_str = replace_spec_charToSplash($bet_str); //
 
 
-    //--------------statnd mode
+    //-----------------mlt 模式了
+    //$bet_str="a 123";
+    $ya_pos = strpos($bet_str, ' ');
+    // var_dump( $bet_str);
+    // var_dump( $ya_pos);   // die();
+    if ($ya_pos > 0) {
+        return mltBet_msghdl($bet_str);
+        //die();
 
-//    $arr = split_FrmStandBetstr($bet_str);
-//    if ($arr != null)
-//        return $arr;
-
-    //单注格式转换器  signle fmt cvt
-//    $arr = split_FrmEasyModeBetstr($bet_str);
-//    if ($arr != null)
-//        return $arr;
+    }
 
 
-    //----------组合模式  e100押30 is err
+    $a = [];
+    $tmp = convert_toStandmode($bet_str);
+    if(is_array($tmp))
+       $a = array_merge($a, $tmp);
+    else
+        $a[]=$tmp;
+    if (!empty($a))
+        return $a;
+    else {
+
+        \log23::warn_validBetstr(__METHOD__, "bet_str", $bet_str);
+        throw  new  ValidateException($bet_str);
+        //no converter
+        //    \libspc\log_php("unitestLggr", " match fail..", "", "untest", $logdir);
+
+
+        //---------------- err fmt mode  shoule throw errfmt
+        //  var_dump($bet_str);
+        // die();
+        //die();
+    }
+
+
+}
+
+
+//----------组合模式  e100押30  or  a1.100  活单注但是不标准模式
+// 返回arr 或者单注
+function convert_toStandmode($bet_str)
+{  global $logdir;
     require_once __DIR__ . "/../../lib/str.php";
     // var_dump($GLOBALS['msgrex_zuhe']);
 
@@ -480,15 +691,21 @@ function split_decode_splitx($bet_str)
         require_once __DIR__ . "/../../lib/strx.php";
         $p = '/^' . $rx . '$/iu';
         //  print_rx($p);
-        \libspc\log_php("unitestLggr", "****", $p . " betstr:" . $bet_str, "untest", $logdir);
-        if (preg_match($p, $bet_str)) {
+      //  \log23::dbg218(__METHOD__,"rx=>",$p);
+       // \log23::dbg218(__METHOD__,"betstr=>",$bet_str);
+        if( str_starts_with($p,"前后三"))
+            echo "dbg";
+        $matchRzt=preg_match($p, $bet_str);
+      //  \log23::dbg218(__METHOD__,"matchrzt=>",$matchRzt);
+        //\libspc\log_php("unitestLggr", "****", $p . " betstr:" . $bet_str, "untest", $logdir);
+        if ($matchRzt) {
             //  print_rx("     match.." . $p . " " . $numb);
-            \libspc\log_php("unitestLggr", " match ok..", "", "untest", $logdir);
+           // \libspc\log_php("unitestLggr", " match ok..", "", "untest", $logdir);
 
             $msghdl149 = \strspc\pinyin1($wefa);
-            \libspc\log_php("unitestLggr", "  pinyin1($wefa):", $msghdl149, "untest", $logdir);
+           // \libspc\log_php("unitestLggr", "  pinyin1($wefa):", $msghdl149, "untest", $logdir);
             $hdl = $msghdl149 . "_msghdl";
-            \libspc\log_php("unitestLggr", "  ", $hdl, "untest", $logdir);
+          //  \libspc\log_php("unitestLggr", "  ", $hdl, "untest", $logdir);
             $hdl = \encodex\encode_funName($hdl);
             if (function_exists($hdl))
                 return $hdl($bet_str);
@@ -499,32 +716,23 @@ function split_decode_splitx($bet_str)
                 return $hdl($bet_str);
             }
 
-        }
-        \libspc\log_php("unitestLggr", " match fail..", "", "untest", $logdir);
-    }
-    //  var_dump(111);
+        } //end match select case
 
-    //-----------------mlt 模式了
-    //$bet_str="a 123";
-    $ya_pos = strpos($bet_str, ' ');
-    // var_dump( $bet_str);
-    // var_dump( $ya_pos);   // die();
-    if ($ya_pos > 0) {
-        return mltBet_msghdl($bet_str);
-        //die();
-
-    }
-
-
-    //---------------- err fmt mode  shoule throw errfmt
-    //  var_dump($bet_str);
-    // die();
-    //die();
-     \log23::validBetstr(__METHOD__,"bet_str",$bet_str);
+        }  //end for
+    \log23::warn_validBetstr(__METHOD__,"bet_str",$bet_str);
     throw  new  ValidateException($bet_str);
-    //no convert
 
 }
+//--------------statnd mode
+
+//    $arr = split_FrmStandBetstr($bet_str);
+//    if ($arr != null)
+//        return $arr;
+
+//单注格式转换器  signle fmt cvt
+//    $arr = split_FrmEasyModeBetstr($bet_str);
+//    if ($arr != null)
+//        return $arr;
 
 function split_FrmEasyModeBetstr(?bool $bet_str)
 {  global $logdir;
@@ -551,8 +759,8 @@ function split_FrmEasyModeBetstr(?bool $bet_str)
             $a = [];
             $a[] = $fmtOkStr;
             return $a;  //no convert
-        } else
-            \libspc\log_php("unitestLggr", " match fail..", "", "dbg", $logdir);
+        } else{}
+          //  \libspc\log_php("unitestLggr", " match fail..", "", "dbg", $logdir);
     }
     return null;
 
@@ -570,17 +778,17 @@ function split_FrmStandBetstr( $bet_str)
         $rx = current($itm);
         $p = '/^' . $rx . '$/iu';
         //   print_rx($p);
-        \libspc\log_php("unitestLggr", "****", $p . " betstr:" . $bet_str, "untest", $logdir);
-        \libspc\log_php("unitestLggr", "****", $p . " betstr:" . $bet_str, "dbg", $logdir);
+      //  \libspc\log_php("unitestLggr", "****", $p . " betstr:" . $bet_str, "untest", $logdir);
+     //   \libspc\log_php("unitestLggr", "****", $p . " betstr:" . $bet_str, "dbg", $logdir);
         if (preg_match($p, $bet_str)) {
-            \libspc\log_php("unitestLggr", " match ok..", "", "dbg", $logdir);
-            \libspc\log_php("unitestLggr", " match ok..", "", "untest", $logdir);
-            \libspc\log_php("unitestLggr", " wefa:", "$wefa", "untest", $logdir);
+           // \libspc\log_php("unitestLggr", " match ok..", "", "dbg", $logdir);
+           // \libspc\log_php("unitestLggr", " match ok..", "", "untest", $logdir);
+          //  \libspc\log_php("unitestLggr", " wefa:", "$wefa", "untest", $logdir);
             $a = [];
             $a[] = $bet_str;
             return $a;  //no convert
-        } else
-            \libspc\log_php("unitestLggr", " match fail..", "", "dbg", $logdir);
+        } else{}
+          //  \libspc\log_php("unitestLggr", " match fail..", "", "dbg", $logdir);
     }
     return null;
 
@@ -599,12 +807,12 @@ function replace_spec_charToSplash(string $bet_str)
     return $bet_str;
 }
 
-function mltBet_msghdl($betstr)
+function mltBet_msghdl($betstrMlt)
 {
     $logdir = __DIR__ . "/../../runtime/";
     \libspc\log_php("unitestLggr", "  ", __METHOD__ . json_encode(func_get_args()), "dbg", $logdir);
-    $betstr = trim($betstr);
-    $bet_str_arr = explode(" ", $betstr);
+    $betstrMlt = trim($betstrMlt);
+    $bet_str_arr = explode(" ", $betstrMlt);
     $bet_str_arr_clr = array_filter($bet_str_arr);
 
 
@@ -612,7 +820,7 @@ function mltBet_msghdl($betstr)
     foreach ($bet_str_arr_clr as $betstr) {
 
 
-        $tmp = split_decode_splitx($betstr);
+        $tmp = split_decode_split($betstr);
         //  var_dump( $tmp);
         $a = array_merge($a, $tmp);
     }
@@ -654,21 +862,37 @@ function format_tmqwf_a1_100_ms($str)
     $money = substr($str, $dotIdx + 1);
     return $arr[0] . "/" . $arr[1] . "/" . $money;
 }
-
-
-//abc1.200
-//dep
-function format_tmqwfabc1200zhms($str)
+function decode_tmqwf_a1_100_ms($str)
 {
     $arr = str_splitx($str);
     $dotIdx = strpos($str, ".");
     $money = substr($str, $dotIdx + 1);
-
-    $cyoNam . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr($betstr);
-
-
     return $arr[0] . "/" . $arr[1] . "/" . $money;
 }
+
+
+function decode_tmqwf_11_100_ms($str)
+{
+    $arr = str_splitx($str);
+    $dotIdx = strpos($str, "/");
+    $money = substr($str, $dotIdx + 1);
+    return $arr[0] . "/" . $arr[1] . "/" . $money;
+}
+
+
+//abc1.200
+//dep
+//function format_tmqwfabc1200zhms($str)
+//{
+//    $arr = str_splitx($str);
+//    $dotIdx = strpos($str, ".");
+//    $money = substr($str, $dotIdx + 1);
+//
+//    $cyoNam . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr($betstr);
+//
+//
+//    return $arr[0] . "/" . $arr[1] . "/" . $money;
+//}
 
 
 $format_echo_other2 = function ($bet_str) {

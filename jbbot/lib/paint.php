@@ -7,7 +7,7 @@
     // 数据
     $data = ["turn" => '回合', "result" => "结果", "sum" => "特码", "zuhe" => "双面", "limit" => "极值", "kind" => "形态"];
     $row_x = ["turn" => '1234567', "result" => "a+b+c=", "sum" => "bb", "zuhe" => "组 合", "limit" => "极值", "kind" => "形态"];
-    // TODO::字体路径
+
     $font = app()->getRootPath() . "public/msyhbd.ttc";
     $font_number = app()->getRootPath() . "public/simfang.ttf";
     //echo $font;

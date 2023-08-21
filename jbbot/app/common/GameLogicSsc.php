@@ -346,8 +346,8 @@ class GameLogicSsc
 
         // 数据
         $data = ["turn" => '期数', "result" => "         A   B    C   D   E", "sum" => "和", "zuhe" => "组合", 'limit' => "龙虎"];
-        $row_x = ["turn" => '12345678', "result" => "a+b+c=102", "sum" => "bb", "zuhe" => "组合", 'limit' => "极"];
-        // TODO::字体路径
+        $row_x = ["turn" => '12345678', "result" => "a+b+c=102", "sum" => "22", "zuhe" => "组合", 'limit' => "龍"];
+
         $font = app()->getRootPath() . "public/msyhbd.ttc";
         $font_path =  $font;
         var_dump($font_path);
@@ -397,6 +397,8 @@ class GameLogicSsc
         # 创建画笔
         // 背景颜色（蓝色）
         $bg_color = imagecolorallocate($img, 10, 10, 10);
+        $blue_color=imagecolorallocate($img, 10, 10, 255);
+        $blue_color_half=imagecolorallocate($img, 100, 100, 255);
         // 表面颜色（浅灰）
         $surface_color = imagecolorallocate($img, 235, 242, 255);
         // 标题字体颜色（白色）
@@ -469,15 +471,14 @@ class GameLogicSsc
                     $pos_y =  $temp_height - 20;
                     var_dump($pos_x . "  " . $pos_y);
                     $leftpad = 33;
-                    draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $red_color, $px_thick);
-                    $pos_x = $pos_x + $leftpad;
-                    draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $red_color, $px_thick);
-                    $pos_x = $pos_x + $leftpad;
-                    draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $red_color, $px_thick);
-                    $pos_x = $pos_x + $leftpad;
-                    draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $red_color, $px_thick);
-                    $pos_x = $pos_x + $leftpad;
-                    draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $red_color, $px_thick);
+
+                    for($i=0;$i<5;$i++)
+                    {
+                        $numbs = str_split($value);
+                        $curColr=   $numbs[$i]<5? $blue_color_half:$red_color;
+                        draw_oval($img, $pos_x, $pos_y, $elipse_width, $elipse_height, $curColr, $px_thick);
+                        $pos_x = $pos_x + $leftpad;
+                    }
 
 
                     $a = str_split($value);
@@ -488,16 +489,15 @@ class GameLogicSsc
                     $strarr =  preg_split('/(?<!^)(?!$)/u', $value);
                     $color1 = $color2 = 0;
 
-                    if ($strarr[0] == "小") {
-                        $color2 = $small_1_color;
-                    } else {
-                        $color2 = $big_2_color;
-                    }
-                    if ($strarr[1] == "单") {
-                        $color1 = $small_1_color;
-                    } else {
-                        $color1 = $big_2_color;
-                    }
+
+//  $green_color jsut is light blue
+                    $color1= ($strarr[0] == "小" || $strarr[0] == "单")?$green_color:$red_color;
+
+                    $color2=( $strarr[1] == "小" || $strarr[1] == "单")?$green_color:$red_color;
+
+
+
+
 
                     $a = trim($strarr[0]);
                     $b = trim($strarr[1]);
@@ -1061,7 +1061,7 @@ class GameLogicSsc
 
             //-------------###判断输赢
             $betContext = $v['BetContent'];
-            $wanfa = getWefa($betContext);
+            $wanfa =betstrX__parse_getWefa($betContext);
 
             $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
             $logtxt = " dwijyo() betnumL:" . $betContext . "  kaijnum:" . $kaij_num  . $lineNumStr;
@@ -1074,7 +1074,10 @@ class GameLogicSsc
             var_dump($income);
             $user = $this->userDb->findByUserId($user_id);
             $player = new \app\common\Player($user);
-            if (!dwijyo($betContext, $kaij_num)) {
+
+            $rzt_dwojyo= betstrX__compare_dwijyo($betContext, $kaij_num);
+              //  dwijyo($betContext, $kaij_num);
+            if (!$rzt_dwojyo) {
                 \think\facade\Log::info("dwijyuo rzt false");
                 var_dump("dwijyuo rzt false");
             } else {
@@ -1129,7 +1132,7 @@ class GameLogicSsc
 
         $text = "第" . $this->lottery_no . "期开奖结果" .  $result_text . "\r\n";
         $text  = $text
-            .  $this-> kaij_echo_x($result_text) . PHP_EOL
+            .  betstrX__convert_kaij_echo_ex($result_text) . PHP_EOL
             . "=====本期中奖名单======" . "\r\n";
         // $helper = new Helper();
         //  $helper->BubbleSort1($temp_arr, 'income');
@@ -1152,22 +1155,6 @@ class GameLogicSsc
     }
 
 
-    public function kaij_echo_x($result_text)
-    {
-
-        try {
-            return \kaijx:: kaij_echo($result_text);
-        } catch (\Throwable $exception) {
-
-            $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-            \think\facade\Log::error(" kaij_echo($result_text)");
-            \think\facade\Log::error("errmsg:" . $exception->getMessage());
-            \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
-            \think\facade\Log::error("errtraceStr:" . $exception->getTraceAsString());
-            return "";
-        }
-    }
-
 
     public function calcIncome($lotteryno)
     {
@@ -1187,7 +1174,8 @@ class GameLogicSsc
                 $uid = $row['UserId'];
                 $uname = $row['UserName'];
               
-                $bettx =  \betstr\format_echo_x($row['BetContent'])  ;
+                $bettx = betstrX__format_echo_ex($row['BetContent']);
+                  //  \betstr\format_echo_ex()  ;
                
                 
                 $txt = "$uname [$uid] $bettx 下注金额:$betamt 盈亏: $income \r\n";
@@ -1277,4 +1265,6 @@ class GameLogicSsc
         curl_close($curl);
         return $output;
     }
+
+
 }

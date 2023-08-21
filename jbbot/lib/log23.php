@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
-require  __DIR__."/iniAutoload.php";
+//require  __DIR__."/iniAutoload.php";
   class log23
 {
 //    public function __construct($name)

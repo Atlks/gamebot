@@ -11,6 +11,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+//    php public/HandleUpdates_core.php
 //    php public/HandleUpdates.php
 // [ 应用入口文件 ]  HandleUpdates/index
 namespace think;
@@ -18,7 +19,7 @@ namespace think;
 require __DIR__ . '/../vendor/autoload.php';
 
 
-require_once __DIR__."/../lib/iniErrCathr.php";
+require_once __DIR__."/../lib/iniAutoload.php";
 
 
 while (true) {

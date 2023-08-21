@@ -22,7 +22,8 @@ $kaijnum = $_SERVER['argv'][2];
 //  a/单/100 11690
 new App();
 
-$rzt = dwijyo($bet, $kaijnum);
+require_once  __DIR__."/../app/common/lotrySscV2.php";
+$rzt = dwijyo_NonStandMode($bet, $kaijnum);
 if ($rzt)
     echo "\r\ntrue";
 else

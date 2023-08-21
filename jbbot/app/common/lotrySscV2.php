@@ -8,6 +8,8 @@
 
 //
 //$content = "a1234押100";
+use function betstr\split_decode_splitx;
+
 $content454 = "a大100";
 $content454 = "a1234押100";
 $content454 = "a12押9";
@@ -16,8 +18,8 @@ $content454 = "a123押100";
 
 
 require __DIR__ . "/../../lib/iniAutoload.php";
- 
-$bet_str_arr_clr441 = \strspc\spltBySpace($content454);
+require_once __DIR__ . "/../../lib/str.php";
+//$bet_str_arr_clr441 = \strspc\spltBySpace($content454);
 //var_dump( $bet_str_arr_clr441);
 
 // var_dump( spltSingleArr($bet_str_arr_clr441) );
@@ -216,7 +218,7 @@ $arr = get_defined_functions();
 
 
 
-require_once __DIR__."/../../config/cfg.php";
+//require_once __DIR__."/../../config/cfg.php";
 //
 //$wefa428=getWefa("abc大100");
 //$z429=$wefa428;
@@ -236,12 +238,19 @@ require_once __DIR__."/../../config/cfg.php";
 //var_dump(getWefa("前豹100"));
 //C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe app/common/lotrySscV2.php
 
-
+// no stand mode bet,,but msut single item..just for easy test
+function dwijyo_NonStandMode($betNum,   $bonusNum)
+{
+  $betstr=  \betstr\convert_toStandmode($betNum);
+if(is_array($betstr))
+    $betstr= $betstr[0];
+  return dwijyo($betstr,$bonusNum);
+}
 //对讲结果
 function dwijyo($betNum,   $bonusNum)
 {
-    $betNum= \betstr\convert_StandFmt($betNum);
-    require_once __DIR__."/../../lib/logx.php";
+  //  $betNum= \betstr\convert_StandFmt($betNum);
+//    require_once __DIR__."/../../lib/logx.php";
     \libspc\log_info_php("unitest","",func_get_args(),"untest",__DIR__."/../../runtime/");
    // var_dump(__METHOD__ . json_encode(func_get_args(),JSON_UNESCAPED_UNICODE));
     //   echo PHP_EOL;
@@ -291,14 +300,15 @@ function dwijyo($betNum,   $bonusNum)
 
         return  in_array($betNum_Dasyodeshwo, $kaij_num_fnly);
     } else if ($wefa == "和值大小单双玩法") {
-        $betnum = str_splitX($betNum)[0];
+        $betnum_true = mb_substr($betNum,2,1)  ;//总和大100
+            //str_splitX($betNum)[0];
       //  var_dump($betnum);
         $kaij_num = getKaijNumArr_hezDasyods($bonusNum);
         print_rx(" kaij num::");
       //  var_dump($kaij_num);
 
 
-        return  in_array($betnum, $kaij_num);
+        return  in_array($betnum_true, $kaij_num);
     } else if (startsWith($wefa, "龙虎和玩法")) {
         $betnum = str_splitX($betNum)[0];   //"和"
         //  var_dump($betnum);
@@ -323,7 +333,7 @@ function dwijyo($betNum,   $bonusNum)
             return false;
     } else if (startsWith($wefa, "前后三玩法")) {
         $betnum = str_delNum($betNum);
-        $betnum = cyehose_bet_fullname($betnum);
+     //   $betnum = cyehose_bet_fullname($betnum);
 
 
 

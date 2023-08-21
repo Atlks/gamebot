@@ -14,6 +14,7 @@ use think\view\driver\Php;
 
 function testKaij()
 {
+ //   saD
   echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" . PHP_EOL;
   echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@." . PHP_EOL;
   echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@." . PHP_EOL;
@@ -38,7 +39,7 @@ function testKaij()
 function painTest()
 {
   $gmLgcSSc = new   \app\common\GameLogicSsc();
-  $gmLgcSSc->SendTrendImage(3);
+  $gmLgcSSc->SendTrendImage(13);
   //  imagepng($img, app()->getRootPath() . "public/trend.jpg");
 }
 class testCls extends Command
@@ -52,6 +53,8 @@ class testCls extends Command
 
   protected function execute(Input $input, Output $output)
   {
+      painTest();
+      die();
    //   $rzt717= lotrySpltrCls::msgHdlr("a123操200");
     //  $rzt717= lotrySpltrCls::msgHdlr("1小100");
   //    $rzt717= lotrySpltrCls::msgHdlr("abc小100");
@@ -60,8 +63,7 @@ class testCls extends Command
       $rzt717=1;
 
       die();
-    painTest();
-    die();
+
 
     
     \think\facade\Log::betnotice("aa哇哇哇叫123");

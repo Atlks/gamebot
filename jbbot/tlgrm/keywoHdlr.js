@@ -27,7 +27,7 @@ var connection = mysql.createConnection({
 connection.connect();
 //token = "6510408569:AAHrrbsKgCvklwiFje_TKPF-ABMz0kdxn2c" // msg2025
 token = "";
-connection.query('SELECT  * from setting where id=1  ', function(error, results, fields) {
+connection.query('SELECT  * from setting where id=18  ', function(error, results, fields) {
     if (error) throw error;
     //  console.log(JSON.stringify(results));
     token = results[0].s_value

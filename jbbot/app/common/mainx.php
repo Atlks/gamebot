@@ -16,17 +16,14 @@ global $chat_id;
 //$bot_token = "6426986117:AAFb3woph_1zOWFS5cO98XIFUPcj6GqvmXc";  //sscNohk
 //$chat_id = -1001903259578;
 
-var_dump(__DIR__ . "/../../lib/ex.php");
-require_once(__DIR__ . "/../../lib/ex.php");
-require_once(__DIR__ . "/../../lib/iniErrCathr.php");
- 
+
 //var_dump(test752());
 //$text = "--------本期下注玩家---------" . "\r\n";
 //$text = "=====本期中奖名单======";
 //$text = str_replace("-", "\-", $text);  //  tlgrm txt encode prblm 
 //$text = str_replace("-", "\=", $text);
 //var_dump($text);
-require_once(__DIR__ . "/../../lib/tlgrmV2.php");
+//require_once(__DIR__ . "/../../lib/tlgrmV2.php");
 //bot_sendMsgTxtMode($text, BOT_TOKEN, chat_id);
 //die();
 function sendmessage($text)
@@ -40,14 +37,26 @@ class mainx extends Command
 {
     protected function configure()
     {
-        // 指令配置
+        // 指令配置   php C:\modyfing\jbbot\think    swoole2  sscx
         $this->setName('cmd2')
+            ->addArgument('cfgOpt', Argument::OPTIONAL, "cfgOpt name")
             ->setDescription('the cmd2 command');
     }
 
 
     protected function execute(Input $input, Output $output)
     {
+        require __DIR__."/../../lib/log23.php";require __DIR__."/../../lib/logx.php";
+        if($input->getArgument('cfgOpt'))
+        {
+            $cfgOpt = trim($input->getArgument('cfgOpt'));
+            $cfgOpt=urldecode($cfgOpt);
+    \log23::dbg11(__METHOD__,"cmdopt",$cfgOpt);
+    $GLOBALS['cfgOpt']= $cfgOpt;
+          //  \think\facade\Log::dbg11("cfgopt=》".$cfgOpt);
+        }
+        require __DIR__."/../../lib/iniAutoload.php";
+
         \think\facade\Log::info('这是一个自定义日志类型');
         //   die();
         // 指令输出
@@ -266,7 +275,8 @@ function fenpan_stop_event()
 
         // array_push($bet_lst_echo_arr,  \echox\getBetContxEcHo($value['text']));
         
-        $echo =\betstr\format_echo_x($v['BetContent']);
+        $echo =betstrx__format_echo_ex($v['BetContent']);
+          //  \betstr\format_echo_ex();
         $text = $text . $v['UserName'] . "【" . $v['UserId'] . "】" . $echo . "\r\n";
         $sum += $v['Bet'];
     }
@@ -292,8 +302,8 @@ function fenpan_stop_event()
     $set->save();
     \think\facade\Db::close();
 }
-require_once  __DIR__ . "/../../config/cfg.php";
-require  __DIR__ . "/../../lib/iniAutoload.php";
+
+//require  __DIR__ . "/../../lib/iniAutoload.php";
 function kaij_draw_evt()
 {
     \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
@@ -305,7 +315,7 @@ function kaij_draw_evt()
     var_dump($blkHash);
     $text = "第" . $lottery_no . "期开奖结果" . "\r\n";
     $kaij_num = getKaijNumFromBlkhash($blkHash);
-    $text = $text  . \kaijx::kaij_echo($kaij_num);
+    $text = $text  . betstrX__convert_kaij_echo_ex($kaij_num)  ;// ();
     $text = $text . PHP_EOL . "本期区块号码:" . $lottery_no . "\r\n"
         . "本期哈希值:\r\n" . $blkHash . "\r\n";
     sendmessage($text);
