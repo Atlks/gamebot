@@ -53,6 +53,28 @@ class testCls extends Command
 
   protected function execute(Input $input, Output $output)
   {
+
+      $json_t=file_get_contents(__DIR__."/../../db/req.json");
+      $json = json_decode($json_t, true);
+
+
+      $hdr =   new  \app\controller\Handle2();
+      $hdr->Bot_Token= $GLOBALS['BOT_TOKEN'];
+      $ret =   $hdr->processMessage($json);
+
+
+      die();
+//  //    select sum(bet),sum(payout),sum(bet)-sum(payout) as income
+//  //    from betrecord where lotterno=xxx group by userid
+
+      $lotteryno=17954621;
+      $rows =  \think\facade\Db::name('bet_record')->where('lotteryno', '=', $lotteryno)
+          ->field(' username,userid,sum(bet) bet,sum(payout) payout,sum(bet)-sum(payout) as income')
+          ->group('userid,username')
+          ->select();
+
+      die();
+
       painTest();
       die();
    //   $rzt717= lotrySpltrCls::msgHdlr("a123操200");

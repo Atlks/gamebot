@@ -259,10 +259,11 @@ class Game2handlrLogic
         $bet_types = [];
         var_dumpx($this->bet_types); //   bet RX FROM DB
 
-        // require_once __DIR__ . "/../../lib/logx.php";
+        require_once __DIR__ . "/../../lib/iniAutoload.php";
+
         // select betrx from db
         //echo  var_export($content,true) ;
-        require_once __DIR__ . "/../../lib/strx.php";
+
         $bet_str_arr_clr = \strspc\convtCnSpace($content);
         $lineNumStr = " mm:))" . __METHOD__ . "() sa " . __FILE__ . ":" . __LINE__;
         \think\facade\Log::betnotice($lineNumStr);
@@ -271,7 +272,7 @@ class Game2handlrLogic
         \think\facade\Log::info(json_encode($bet_str_arr_clr));
 
         //convert 
-        require_once __DIR__ . "/lotrySscV2.php";
+         require_once __DIR__ . "/lotrySscV2.php";
 
         try{
 
@@ -280,23 +281,10 @@ class Game2handlrLogic
             \think\facade\Log::betnoticex("bet_str_arr_clr_spltMltSingle is:" . json_encode($bet_str_arr_clr_spltMltSingle, JSON_UNESCAPED_UNICODE));
         }catch(ValidateException $e)
         {
-            return "格式错误".$e->getMessage();
-        }
-        catch(\Throwable $exception)
-        {
-            return  \excls::bizerrV2($exception);
+            return "格式错误:".$e->getMessage();
         }
 
-
-
-        // \libspc\log_info("253_549", "bet_str_arr", $bet_str_arr_clr);
-
-
-
-        //convert 
-        //  $bet_str_arr_spltSingleArr = spltSingleArr($bet_str_arr_clr);
-
-        $before_bet = $this->player->getBetRecord($this->lottery_no);
+   $before_bet = $this->player->getBetRecord($this->lottery_no);
         $bets = array();
         $text = "";
 
@@ -326,7 +314,7 @@ class Game2handlrLogic
                 return "格式错误";
             }
 
-            $amount = getAmt_frmBetStr($bet_nums) * 100;  //bcs money amt is base fen...so   cheni 100
+            $amount = getAmt_frmBetStr340($bet_nums) * 100;  //bcs money amt is base fen...so   cheni 100
 
 
             $wanfa = $wefa413;
@@ -375,11 +363,12 @@ class Game2handlrLogic
 
             //  $bet['bet_type']=[];
             //  var_dump(  $bet['bet_type']);  ==rows..
-            $bet['bet_type']['Odds'] = $type['Odds'];
+            $bet['bet_type']['Odds'] = $type['Odds'];  //bet_type==type
             $bet['odds'] = $type['Odds'];
+            $bet['betNoAmt']= str_delLastNum($bet_nums);
             array_push($bets, $bet);
         }
-        // ----------bef bet chk finish
+        // ----------------------bef bet chk finish
 
         \think\facade\Log::info("305L  ");
         if ($total_bet_amount > $this->player->getBalance(false)) {
@@ -404,7 +393,7 @@ class Game2handlrLogic
             $bet = $value;
             $bet_amt_total_arr[] = $value['amount'] / 100;
             //   var_dump( $value);   //  need ['id n   odds]
-            if (!$this->player->Bet($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'])) {
+            if (!$this->player->BetV2($value['amount'], $this->lottery_no, $value['text'], $value['bet_type'])) {
                 $text = "下注失败:" . $this->player->get_last_error();
                 $this->action = false;
                 return $text;
@@ -427,7 +416,7 @@ class Game2handlrLogic
             "【" . $this->player->getName() . '-' . $this->player->getId() . '】' . "\r\n"
             . "下注内容：\r\n" .  join("\r\n", $bet_lst_echo_arr) . "\r\n" . PHP_EOL
             . '下注:' . $bet_amt_total . PHP_EOL
-            . '已押:' . $bet_amt_total . PHP_EOL
+           // . '已押:' . $bet_amt_total . PHP_EOL
             //   . $text            
             . "余额:" . $this->player->getBalance();
 
@@ -674,6 +663,8 @@ class Game2handlrLogic
     //bet acton
     public function player_exec($text, $stop_bet = false)
     {
+        \think\facade\Log::betnotice(__METHOD__.json_encode(func_get_args(),JSON_UNESCAPED_UNICODE));
+
         // 先判断是否是执行一般指令
         //    var_dumpx($this->exec_pattern);   //"/^(余额|流水|取消全部注单|取消全部|取消下注|取消|下分\d+$|回\d+$|下\d+$|最近下注|zd|开奖|上分|地址|财务|充值|返水|反水|查\d+$|上分\d+$|上\d+$|走势|历史|汇旺)$/u"
         //  var_dumpx( $cmd);
@@ -682,6 +673,8 @@ class Game2handlrLogic
                 $cmd[0] = substr($cmd[0], 0, -strlen($test[0])) . "\d+$";
             }
             $func = $this->command[$cmd[0]];
+            \think\facade\Log::betnotice("cmd_fun==>".json_encode( $func,JSON_UNESCAPED_UNICODE));
+
             if (!empty($func)) {
                 return $this->$func($text);
             }
@@ -851,6 +844,17 @@ class Game2handlrLogic
 
     public function callRecharge($text = null)
     {
+
+        \think\facade\Log::betnotice(__METHOD__.json_encode(func_get_args(),JSON_UNESCAPED_UNICODE));
+
+        \think\facade\Log::betnotice("this->player==>>".json_encode($this->player,JSON_UNESCAPED_UNICODE));
+
+          if($this->player==null)
+              $this->player=$GLOBALS['cur_user'];
+
+        \think\facade\Log::betnotice("this->player==>>".json_encode($this->player,JSON_UNESCAPED_UNICODE));
+
+
         //$text = "";
         if ($this->player) {
             if (preg_match('/\d+/', $text, $out)) {
@@ -858,12 +862,29 @@ class Game2handlrLogic
                 if ($amount > 9000000000) return "";
                 if ($this->player->isTest() || !$this->use_paybot)
                     $this->player->Recharge($amount, $this->message_id, "");
+                \think\facade\Log::betnotice("use_paybot=>".json_encode($this->use_paybot,JSON_UNESCAPED_UNICODE));
+
                 if ($this->use_paybot) {
                     $text = "上下分步骤：\n1️⃣入款流程：点击下方【充值提现】\n2️⃣点击菜单【充值】复制上分地址充值\n3️⃣成功到帐后自动到游戏余额 无需查分!";
                     $this->keyboard = json_decode(GameString::where('name', '上分机器人')->find()->text);
                 } else {
-                    $text = $this->getWords('上分申请成功');
+                    //fase prcse
+                    $text = $this->getWords(' 上分申请成功');
+                    if($text=="")
+                    {
+                        $bot_words = BotWords::where('Id', 1)->find();
+
+                        $text=$bot_words->Recharge_Finish;
+
+                        $text=str_replace("【id】",strval($this->player->id),$text);
+                        $text=str_replace("【用户】",$this->player->fullname,$text);
+                        $text=str_replace("【换行】","\r\n",$text);
+
+                    }
                 }
+
+                \think\facade\Log::betnotice("rettxt=>".json_encode($text,JSON_UNESCAPED_UNICODE));
+
                 return $text;
             }
 

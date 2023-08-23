@@ -50,6 +50,40 @@ function str_delNum($str)
     return preg_replace('/[\d]/', '', $str);
 }
 
+function str_delLastNum($str)
+{
+    \log23::debug(__METHOD__,"func_get_args",func_get_args() );
+//    if( class_exists('\think\facade\Log'))
+//    \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
+    return preg_replace('/(\d+)$/iu', '', $str);
+}
+
+//var_dump( str_delLastNumX("a/1/100"));
+//var_dump( str_delLastNumX("单100"));
+$adaf=1;
+function str_delLastNumX($str)
+{
+    if(class_exists("\log23"))
+    \log23::debug(__METHOD__, "func_get_args", func_get_args());
+//    if( class_exists('\think\facade\Log'))
+//    \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
+
+    if (preg_match('/(\/\d+)$/iu', $str))
+        return preg_replace('/(\/\d+)$/iu', '', $str);
+    else
+           return preg_replace('/(\d+)$/iu', '', $str);
+}
+
+//function getAmt_frmBetStr($str)
+//{
+//    $str = trim($str);
+//    //   $str = $msg['text'];
+//    if (preg_match('/(\d+)$/', $str, $match)) {
+//        $number = $match[0];
+//    }
+//    return  $number;
+//}
+
 // order_str as char arr
 function order_str($num)
 {

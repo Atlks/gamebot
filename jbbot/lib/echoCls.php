@@ -88,7 +88,7 @@ class echoCls
 
 
         $cyoName = $cyo_arr[0];
-        $money = GetAmt_frmBetStr($bet_str);
+        $money = getAmt_frmBetStr340($bet_str);
         return     $cyoName . "球" . $cyo_num_rply . "  " .  $money  . ".00";
     }
 

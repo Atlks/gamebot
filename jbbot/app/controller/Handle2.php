@@ -30,6 +30,36 @@ class Handle2
         echo 100;
     }
     public $Bot_Token = "";
+
+
+    public function msghdl($frmNet)
+    {
+        try{
+            $update = json_decode($frmNet, true);
+            $message = $update["message"];
+
+            $text = $message['text'];
+            $chat_id = $message['chat']['id'];
+            if ($text === "获取我的群信息") {
+                $reply_text = "我的群 " . $message['chat']['title'] . " id: " . $chat_id;
+
+                // $this->  $bot->sendMessage($chat_id, $reply_text);
+
+
+                $set = Setting::find(1);
+
+                $GLOBALS['BOT_TOKEN'] = $set->s_value;
+                require_once(__DIR__ . "/../../lib/tlgrmV2.php");
+                $r = sendmsg_reply_txt( $reply_text, $GLOBALS['BOT_TOKEN'], $chat_id);
+            }
+
+        }catch (\Exception $e){
+
+        }
+
+
+
+    }
     /**
      * 显示资源列表
      *    s=handle/processMessage
@@ -52,7 +82,9 @@ class Handle2
 
             //-----------------------------------store  onece 
             \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
-            $frmNet = file_get_contents('php://input');
+            $frmNet = file_get_contents('php://input');$this->msghdl( $frmNet);
+
+         //   msghdl($frmNet);
             $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_rcv"  . ".json";
             file_put_contents($logf,  $frmNet);
 
@@ -117,7 +149,7 @@ class Handle2
             $data = [
                 'chat_id' => $updateId,
                 'name' => "网络钩子异常",
-                'text' => $e->getMessage(),
+                'text' => $e->getFile() . ":" . $e->getLine() . " " . $e->getMessage(),
             ];
             Test::create($data);
             $exception = $e;
@@ -371,6 +403,23 @@ class Handle2
             return;
         }
 
+
+
+        $game = new \app\common\Game2handlrLogic();
+        try{
+           // if (empty($game->getPlayer($user_id))) {
+                $GLOBALS['cur_user']=$game->getPlayer($user_id);
+                \think\facade\Log::betnotice("cur_user=>" . json_encode($GLOBALS['cur_user'], JSON_UNESCAPED_UNICODE));
+
+         //   }
+
+        }catch (\Exception $e){
+
+            \think\facade\Log::error(__METHOD__.$e->getMessage());
+        }
+
+
+
         $reply_text = "默认信息";
         if (isset($message['text'])) {
             // incoming text message
@@ -378,7 +427,7 @@ class Handle2
             //  $cmd= ' return new '. parse_ini_file(__DIR__."/../../.env")['handle_game'].'();';
             //  var_dumpx($cmd);
             //  $game=  eval($cmd);
-            $game = new \app\common\Game2handlrLogic();
+
 
             //  $game   new app\common\GameSsc();
             var_dumpx($game);
@@ -387,9 +436,16 @@ class Handle2
                 $game->createPlayer($user_id, $full_name, $user_name);
             }
 
+            try {
+                $GLOBALS['cur_user'] = $game->getPlayer($user_id);
+            } catch (\Exception $e) {
+            }
+
             $game->receive($message_id);
             //start bet
 
+
+            //-----------------------这里应该处理其他cmd和bet cmd
             $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
             \think\facade\Log::info($lineNumStr);
             \think\facade\Log::info(" game->player_exec()");
@@ -400,6 +456,8 @@ class Handle2
             \think\facade\Log::info(" reply_text ::" . $reply_text);
             var_dumpx($reply_text);   //"下注命令错误"
 
+
+         //---------------这里处理 猴急 后记
             if (!empty($reply_text)) {
 
                 if ($game->sendTrend()) {

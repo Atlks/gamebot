@@ -4,11 +4,13 @@ declare(strict_types=1);
 //    app\common\Player
 namespace app\common;
 
+use app\common\Logs;
+
 use app\model\User;
 use app\model\BetRecord;
 use app\model\MoneyLog;
 use app\model\UserDailyReport;
-use app\common\Logs;
+
 use app\model\RebateConfig;
 use app\common\helper;
 use app\model\Setting;
@@ -19,8 +21,8 @@ class Player
     protected $records;
 
     // 可变动属性
-    protected $id = 0;
-    protected $fullname = "";
+    public $id = 0;
+    public $fullname = "";
     protected $test = 0;
     protected $balance = 0;
     protected $blockBlance = 0;
@@ -175,6 +177,46 @@ class Player
         return false;
     }
 
+
+    public function betV2($amount, $lottery_no, $content, $bet_type, $from = 1)
+    {
+        if ($amount > $this->balance) {
+            $this->error("余额不足");
+            return false;
+        }
+        $user = User::where('Tg_Id', $this->id)->find();
+        $this->balance = $user->Balance;
+        //xxxxx   .... bettype,,betodds
+     //   $res = Logs::addRecord($user, $lottery_no, $content, $amount, $bet_type['Id'], $bet_type['Odds'], $from);
+
+        require_once __DIR__."/../../lib/str.php";
+        $record = [
+            'UserId' => $user->Tg_Id,
+            'UserName' => $user->FullName,
+            'LotteryNo' => $lottery_no,
+            'BetContent' => $content,
+            'Bet' => $amount,
+            'Status' => 0,
+            'Odds' => $bet_type['Odds'],
+            'Type' => $bet_type['Id'],
+            'Test' => $user->Test,
+            'From' => $from,
+            'betNoAmt'=> str_delLastNum($content)
+        ];
+        $res = BetRecord::create($record);
+
+
+        if (!empty($res)) {
+            Logs::addMoneyLog($user, "下注", -$amount, "系统自动记录", $content, time());
+            $this->balance -= $amount;
+            $user->Balance = $this->balance;
+            $user->save();
+            return true;
+        }
+        $this->error("下注订单生成失败");
+        return false;
+    }
+
     // 下注冻结
     public function frozen($amount, $lottery_no, $content)
     {
@@ -198,14 +240,10 @@ class Player
         return false;
     }
 
-    public function cancel($lottery_no)
-    {
+    public function cancel($lottery_no)    {
         $user = User::where('Tg_Id', $this->id)->find();
         if (!empty($user)) {
-            Logs::cancelBet($user, $lottery_no);
-        }
-    }
-
+            Logs::cancelBet($user, $lottery_no);}}
     public function cancelNN($lottery_no)
     {
         $user = User::where('Tg_Id', $this->id)->find();
@@ -279,6 +317,18 @@ class Player
 
     public function Recharge($amount, $message_id, $remark)
     {
+      //  var_dump(__METHOD__ . json_encode(func_get_args()));
+        \think\facade\Log::betnotice(__METHOD__.json_encode(func_get_args(),JSON_UNESCAPED_UNICODE));
+
+        \think\facade\Log::betnotice("this=>".json_encode($this,JSON_UNESCAPED_UNICODE));
+
+//        $user = User::where('Tg_Id', $this->id)->find();
+//     //   Logs::user_report($user, $amount, "返水");
+//     //   Logs::addMoneyLog($user, "返水", $amount, "系统自动记录", "", time());
+//        $user->Balance = $this->balance+$amount;
+//        $user->save();
+
+
         $log = Logs::addRechargeLog($this->id, $this->fullname, $this->test, $amount, 6, $message_id, $remark);
         if (empty($log)) {
             $this->error("上分列表记录创建失败");
@@ -288,7 +338,17 @@ class Player
             $helper = new Helper();
             //var_dump($log->id);
             $push_url = Setting::find(13)->s_value;
+            \think\facade\Log::betnotice(__METHOD__."() push_url==>".json_encode($push_url,JSON_UNESCAPED_UNICODE));
+
             $helper->http_request($push_url . $log->id);
+
+
+
+                    $user = User::where('Tg_Id', $this->id)->find();
+     //   Logs::user_report($user, $amount, "返水");
+     //   Logs::addMoneyLog($user, "返水", $amount, "系统自动记录", "", time());
+                    $user->Balance = $this->balance+$amount;
+                    $user->save();
         }
         return true;
     }

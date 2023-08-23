@@ -8,6 +8,8 @@ class Helper
 
     function http_request($url = '', $data = null, $header = [],  $timeout = 3)
     {
+        \think\facade\Log::betnotice(__METHOD__."".json_encode(func_get_args(),JSON_UNESCAPED_UNICODE));
+
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);

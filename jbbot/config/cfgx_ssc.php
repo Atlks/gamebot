@@ -87,6 +87,26 @@ if(!function_exists("betstrX__format_echo_ex")) {
         return \betstr\format_echo_ex($text);
     }
 }
+
+
+if(!function_exists("betstrX__format_echo_grpbyBet")) {
+    function betstrX__format_echo_grpbyBet($betNoAmt,$amt)
+    {
+        $echo =\betstr\format_echo_ex($betNoAmt."99");
+        $bet= explode(" ",$echo);
+        $money=$amt/100;
+        $betNmoney=$bet[0]." ".+$money;
+
+        return  $betNmoney;
+    }
+}
+
+
+
+
+
+
+
 //function betstrx__format_echo(string $msghdl149,$bet_str)
 //{
 //

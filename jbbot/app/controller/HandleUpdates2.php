@@ -23,11 +23,12 @@ class HandleUpdates2
         $bot = new \TelegramBot\Api\BotApi($bot_token);
         $last_id = 0;
         while (true) {
-            echo  date('Y-m-d H-i-s').PHP_EOL;
-            \libspc\log_info_php(__METHOD__,"", date('Y-m-d H-i-s'),"chkbt_runlog");
+            //include_once __DIR__ ."/../../lib/iniAutoload.php";
+            //echo  date('Y-m-d H-i-s').PHP_EOL;
+            //\libspc\log_info_php(__METHOD__,"", date('Y-m-d H-i-s'),"chkbt_runlog");
             try {
                 $res = $bot->getUpdates($last_id, 100, 10, ["message", "callback_query"]);
-                var_dump($res);
+                //var_dump($res);
                 \think\facade\Log::chkbtInfo(date('Y-m-d H-i-s') );
                 \think\facade\Log::chkbtInfo(  json_encode( $res,JSON_UNESCAPED_UNICODE));
                 foreach ($res as $update) {
@@ -39,25 +40,29 @@ class HandleUpdates2
                     $check_id = 0;
                     if($message)
                     {
-                        $data = [
-                            'chat_id' => $message->getMessageId(),
-                            'name' => "检测程序接收",
-                            'text' => $update->toJson(),
-                        ];
-                        Test::create($data);
-                        \think\facade\Log::chkbtInfo(  json_encode( $data,JSON_UNESCAPED_UNICODE));
                         $check_id = $message->getMessageId();
                     }
                     elseif($callback_query)
                     {
-                        $data = [
-                            'chat_id' => $callback_query->getId(),
-                            'name' => "检测程序接收",
-                            'text' => $update->toJson(),
-                        ];
-                        Test::create($data);
                         $check_id = $callback_query->getId();
                     }
+
+                    $data = Test::where('chat_id', $check_id)
+                    ->where('name',"小飞机漏发")
+                    ->find();
+
+                    if($data)
+                    {
+                        $last_id += 1;
+                        continue;
+                    }
+
+                    $data = [
+                        'chat_id' => $check_id,
+                        'name' => "检测程序接收",
+                        'text' => $update->toJson(),
+                    ];
+                    Test::create($data);
                     sleep(1);  //---------chk webhk is rev msg
                     $data = Test::where('chat_id', $check_id)
                     ->where('name',"网络钩子接收")
@@ -99,22 +104,23 @@ class HandleUpdates2
                     \think\facade\Log::chkbtWarn(  $e->getMessage() );
                 }
 
-                if ($e->getMessage() !== "Connection timed out") {
+                if ($e->getMessage() !== "Connection timed out" && !preg_match('/^Operation/',$e->getMessage())) {
                     $data = [
                         'chat_id' => $last_id,
-                        'name' => "检查循环报错",
+                        'name' => "检查循环报错22",
                         'text' => $e->getMessage(),
                     ];
                     Test::create($data);
                     $last_id += 1;
                    // log23::ckbtErr()
-                    \libspc\log_err_tp($e,__METHOD__,"chkbtErr");
+                    //\libspc\log_err_tp($e,__METHOD__,"chkbtErr");
                    // \think\facade\Log::ckbtErr(  $e->getMessage() );
                 } 
+                   
                
             }
-            usleep(10*1000); // 500ms   not need slpp ,bls long conn is 10s
-            break;
+            //usleep(10*1000); // 500ms   not need slpp ,bls long conn is 10s
+            //break;
         }  //finish while
     }
 

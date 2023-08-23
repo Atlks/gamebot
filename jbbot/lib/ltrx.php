@@ -5,7 +5,7 @@
 class ltrx
 {
 
-    static  function getAmt_frmBetStr($str)
+    static  function getAmt_frmBetStr341($str)
     {
         $str = trim($str);
         //   $str = $msg['text'];

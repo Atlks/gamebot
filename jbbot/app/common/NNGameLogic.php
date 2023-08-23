@@ -294,7 +294,7 @@ class NNGameLogic
         // 数据
         $data = ["turn" => '期数', "result" => "结果", "a" => "a(闲)", "b" => "b(闲)", "c" => "c(庄)"];
         $row_x = ["turn" => '1234567', "result" => "1 2 3", "a" => "牛几", "b" => "牛几", "c" => "牛几"];
-        // TODO::字体路径
+
         $font = app()->getRootPath() . "public/msyhbd.ttc";
 
         //echo $font;

@@ -40,7 +40,7 @@ function log_phpV2($method_linenum, $varname, $varobj, $lev = "info")
     if (is_bool($varobj))
         $varobj = $varobj ? "TRUE" : "FALSE";
     $logf = __DIR__ . "/../runtime/" . date('Y-m-d') . "_$lev.log";
-    $logtxt  = "[$method_linenum] " . date('mdHis') . " " . $varname . "==>" . $varobj;
+    $logtxt  =   sprintf("%s [%s] %s=>%s", date('mdHis'), $method_linenum, $varname,$varobj );
     file_put_contents($logf, $logtxt . PHP_EOL, FILE_APPEND);
 }
 

@@ -89,10 +89,29 @@ class Logs
 
     public static function getBetRecordByLotteryNo($lottery_no, $status = 0)
     {
+
+
         \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
         $res = BetRecord::where('LotteryNo', $lottery_no)
             ->where('Status', $status)
             ->order('UserId', 'desc')
+            ->select();
+        return $res;
+    }
+
+
+    public static function getBetRecordByLotteryNoGrpbyU($lottery_no, $status = 0)
+    {
+        //
+//        ->group('userid,username')
+//        ->select();
+
+        \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
+        $res = BetRecord::where('LotteryNo', $lottery_no)
+            ->where('Status', $status)
+            ->order('UserId', 'desc')
+            ->group('userid,username,betNoAmt')
+            ->field(' betNoAmt,UserName,UserId,sum(bet) Bet,sum(payout) Payout,sum(bet)-sum(payout) as income')
             ->select();
         return $res;
     }

@@ -26,7 +26,7 @@ return [
             // 单文件日志写入
             'single'         => false,
             // 独立日志级别
-            'apart_level'    => ['emergency','critical','alert','error','beterror','error','noticexx','betnotice','notice','chkbtInfo','chkbtErr','chkbtWarn','warning'],
+            'apart_level'    => ['Timerinfo','emergency','critical','alert','error','beterror','error','noticexx','betnotice','notice','chkbtInfo','chkbtErr','chkbtWarn','warning'],
             // 最大日志文件数量
             'max_files'      => 0,
             // 使用JSON格式记录

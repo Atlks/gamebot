@@ -83,7 +83,7 @@ class HandleUpdates
                 if ($e->getMessage() !== "Connection timed out") {
                     $data = [
                         'chat_id' => $last_id,
-                        'name' => "检查循环报错",
+                        'name' => "检查循环报错11",
                         'text' => $e->getMessage(),
                     ];
                     Test::create($data);

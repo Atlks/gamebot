@@ -91,7 +91,10 @@ function convert_kaij_echo_ex($result_text)
 
 }
 
+function format_echo_ex_grpbybet($betNoAmt,$amt)
+{
 
+}
 
 function convert_StandFmt($bet_str)
 {
@@ -462,7 +465,7 @@ function decode_tmqwf_a_dx_100_zhms($betstr)
         $betpos=mb_str_split($betstr)[0];
         $betpos = convert_cyoName($betpos);
         //   $fmtOkStr=\betstr\format_tmqwfabc1200zhms($betstr);
-        $a[] = $betpos . "/" . $i . "/" . \ltrx::getAmt_frmBetStr($betstr);
+        $a[] = $betpos . "/" . $i . "/" . \ltrx::getAmt_frmBetStr341($betstr);
         //    ;
     }
     return $a;
@@ -503,7 +506,7 @@ function decode_tmqwf_ab_d_100_zhms($betstr)
 
         $betpos = convert_cyoName($betpos);
         //   $fmtOkStr=\betstr\format_tmqwfabc1200zhms($betstr);
-        $a[] = $betpos . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr($betstr);
+        $a[] = $betpos . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr341($betstr);
         //    ;
     }
     return $a;
@@ -536,7 +539,7 @@ function decode_tmqwf_abc1_200_zhms($betstr)
 
 
         //   $fmtOkStr=\betstr\format_tmqwfabc1200zhms($betstr);
-        $a[] = $betpos . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr($betstr);
+        $a[] = $betpos . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr341($betstr);
         //    ;
     }
     return $a;
@@ -560,7 +563,7 @@ function decode_tmqwfzhms($betstr)
     $betNumaArr = mb_str_split($bet_nums);
     foreach ($betNumaArr as $betnum) {
 
-        $a[] = $cyoNam . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr($betstr);
+        $a[] = $cyoNam . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr341($betstr);
     }
 
     //chick chongfu
@@ -569,7 +572,8 @@ function decode_tmqwfzhms($betstr)
         // echo '该数组有重复值';
 
         \libspc\log_info_tp("投注内容拆分计算结果:", $a, __METHOD__, "betnotice");
-        throw    new \Exception('000000816123,bet_txt_dulip,投注内容有重复');
+     //   throw    new \Exception('000000816123,bet_txt_dulip,投注内容有重复');
+        throw new ValidateException("投注内容有重复:");
     }
 
     return $a;
@@ -593,7 +597,7 @@ function decode_qhswf_bz_dz_sz_zl($bet_str){
 }
 
 function decode_hzdxdswf_dx100($betstr){
-  $mony=  \ltrx::getAmt_frmBetStr($betstr);
+  $mony=  \ltrx::getAmt_frmBetStr341($betstr);
     $rzt_true = str_delNum($betstr);
     $betnums=mb_str_split($rzt_true);
     $a=[];

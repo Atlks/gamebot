@@ -69,6 +69,65 @@ class LotteryHashSsc extends Lottery
     }
 
     // 获取当前彩期
+    public function get_current_noV3()
+    {
+        \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
+        //if this data ,ret true
+        //  if (!$this->data) return false;
+
+        while (true) {
+            try {
+
+
+                $txt=file_get_contents("https://api.kzx71.vip/getLastNo");
+                $jsonobj=json_decode(  $txt,true);
+                $qihao =  $jsonobj['data']['issue'];
+                $GLOBALS['opentime']= $jsonobj['data']['openTime'];
+                $GLOBALS['qihao']= $qihao;
+                //
+//                var_dump($blknum);
+//                // die();
+                $blknum=$qihao ;
+                 if(empty($blknum)) {
+                    sleep(1);
+                    continue;
+                }
+                if (!$blknum) {
+                    sleep(1);
+                    continue;
+                } else if (strlen($blknum) < 5) {
+                    sleep(1);
+                    continue;
+                }
+//
+                // $qihao = $blknum ;
+//                var_dump($qihao);
+                //   touzhu time 90s,, fenpe30s
+
+                $this->data = [
+                    'lottery_no' => $qihao,
+                    'hash_no' => $qihao,
+                    'closetime'=> $jsonobj['data']['closeTime']
+                ];
+                return $this->data;
+                //die();
+                //return   $qihao;
+            } catch (\Throwable $e) {
+                $exception = $e;
+                $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+                \think\facade\Log::error("----------------errrrr3---------------------------");
+                \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
+                \think\facade\Log::error("errmsg:" . $exception->getMessage());
+                \think\facade\Log::error("errtraceStr:" . $exception->getTraceAsString());
+                // var_dump($e);
+            }
+
+            sleep(1);
+        }
+    }
+
+
+
     public function get_current_noV2()
     {
         \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
@@ -115,6 +174,7 @@ class LotteryHashSsc extends Lottery
             sleep(1);
         }
     }
+
 
     // 获取当前彩期
     public function get_current_no()

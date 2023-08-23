@@ -361,7 +361,7 @@ class GameLogic
         // 数据
         $data = ["turn" => '期数', "result" => "结果", "sum" => "和", "zuhe" => "组合", 'limit' => "极值", "kind" => "形态"];
         $row_x = ["turn" => '12345678', "result" => "a+b+c=", "sum" => "bb", "zuhe" => "组合", 'limit' => "极值", "kind" => "形态"];
-        // TODO::字体路径
+
         $font = app()->getRootPath() . "public/msyhbd.ttc";
 
         //echo $font;

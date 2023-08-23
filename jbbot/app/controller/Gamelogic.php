@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\controller;
 
 use think\Request;
+use think\route\dispatch\Controller;
 use think\swoole;
 use app\common\GameLogic as GL;
 use app\common\NNGameLogic as NNGL;
@@ -338,6 +339,77 @@ class Gamelogic
         //echo "收到请求上分:".$id;
         return "投递成功";
     }
+
+
+
+
+
+
+
+    public function push_ssc($id)
+    {
+        $delay_time = Setting::find(9)->value;
+        $helper = new Helper();
+        $key = Setting::find(16)->s_value;
+        $sign = md5("jb" . 1 . $id . $key );
+
+
+
+       // sleep(  $delt_sec);
+        //------------------------------swoole_timer_after evt
+        $delt_sec=$delay_time/1000;
+        $next_exe_tmstp=$delt_sec+time();
+        $obj=array("hdlr"=>"\app\controller\Gamelogic/swoole_timer_afterx","id"=>$id,"sign"=>$sign,"crt_time"=>date("Y-m-d his"),"next_exe_tmstp"=> $next_exe_tmstp);
+        $jsonT=json_encode($obj,JSON_UNESCAPED_UNICODE);
+        $fil=sprintf("%s/../../pushmsg/%s_%s.txt",__DIR__,time(),rand());
+
+
+        file_put_contents($fil, $jsonT);
+
+
+
+         //----next delay some sec ,to exe putUrl()
+//        function xxx445($id, $sign)   {
+//
+//
+//        }
+//        xxx445($id, $sign) ;
+
+      //  swoole_timer_after(, , $id, $sign);
+        //echo "收到请求上分:".$id;
+        return "投递成功";
+    }
+
+    public function  swoole_timer_afterx($obj)
+    {
+
+        $id=$obj['id'];
+        $sign=$obj['sign'];
+        echo "开始上下分:" . $id . "\n";
+        $data = [
+            'id' => $id,
+            'status' => 1,
+            'sign' => $sign,
+            'test' => 1,
+        ];
+        $url = Setting::find(14)->s_value;
+        echo $url;
+        $helper = new Helper();
+        $helper->puturl($url."/money/recharge/v2/status", $data);
+
+        \think\facade\Db::close();
+        echo "结束上下分\n";
+
+    }
+
+
+    public  function  timer_start_tp()
+    {
+        require_once __DIR__."/../common/timer.php";
+
+        \timerx_start();
+    }
+
 
     public function stop()
     {

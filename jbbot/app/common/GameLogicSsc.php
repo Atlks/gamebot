@@ -1053,7 +1053,7 @@ class GameLogicSsc
         $records_update = [];  //中奖记录
         $temp_arr = [];  //榜单显示临时变量
         //---------------------#开始计算输赢   得到中奖玩家名单 get bingo user lst
-        foreach ($records as $k => $v) {
+        foreach ($records as $k => $v) :
             $record_id = $v['Id'];
             $user_id = $v['UserId'];  //tg id
             $betType_id = $v['Type'];
@@ -1070,7 +1070,7 @@ class GameLogicSsc
             \think\facade\Log::info($logtxt);
             $player = $v['player'];
             $payout = 0;
-            $income = $payout - $v['Bet'];
+
             var_dump($income);
             $user = $this->userDb->findByUserId($user_id);
             $player = new \app\common\Player($user);
@@ -1081,6 +1081,7 @@ class GameLogicSsc
                 \think\facade\Log::info("dwijyuo rzt false");
                 var_dump("dwijyuo rzt false");
             } else {
+                //-----------------中奖啦
                 var_dump("dwijyuo rzt true");
                 \think\facade\Log::info("dwijyuo rzt true");
                 $odds = $v['Odds'];
@@ -1106,6 +1107,7 @@ class GameLogicSsc
 
             //  win （betAmt,PaybackAmt,IncomeAmt
             //不管输赢都要计算流水
+            $income = $payout - $v['Bet'];  //这个fld only for calc user rpt
             $player->win($v['Bet'], $payout, $income);
 
 
@@ -1116,7 +1118,7 @@ class GameLogicSsc
             //    array_push($temp_arr, array('player' => $player, 'income' => $income));
 
             $total_payout += $payout;
-        }
+        endforeach;
         //  结束对讲
 
 
@@ -1130,6 +1132,7 @@ class GameLogicSsc
         $kaij_num_fly_echo = "";
 
 
+        //-------------show 开奖结果 和中奖名单
         $text = "第" . $this->lottery_no . "期开奖结果" .  $result_text . "\r\n";
         $text  = $text
             .  betstrX__convert_kaij_echo_ex($result_text) . PHP_EOL
@@ -1137,7 +1140,7 @@ class GameLogicSsc
         // $helper = new Helper();
         //  $helper->BubbleSort1($temp_arr, 'income');
 
-        $text = $text . $this->calcIncome($this->lottery_no);
+        $text = $text . $this->calcIncomeGrpby($this->lottery_no);
 
 
 
@@ -1155,7 +1158,61 @@ class GameLogicSsc
     }
 
 
+    // show jonjyo list 中奖名单
+    public function calcIncomeGrpby($lotteryno)
+    {
+        try {
+            $a = [];
+            //  //    select sum(bet),sum(payout),sum(bet)-sum(payout) as income
+//  //    from betrecord where lotterno=xxx group by userid
 
+
+            $rows =  \think\facade\Db::name('bet_record')->where('lotteryno', '=', $lotteryno)
+                ->field(' betNoAmt,UserName,UserId,sum(bet) Bet,sum(payout) Payout,sum(bet)-sum(payout) as income')
+                ->group('userid,username,betNoAmt')
+                ->select();
+
+
+           // $rows =  \think\facade\Db::name('bet_record')->where('lotteryno', '=', $lotteryno)->select();
+            //  var_dump( $rows);
+            //  var_dump( $rows[0]['UserName']);
+            foreach ($rows as $row) {
+                $betamt = $row['Bet'] / 100;
+
+                var_dump($row['Payout'] / 100);
+                var_dump($betamt);
+                $payout = $row['Payout'];
+                var_dump($row['Payout'] / 100 - $betamt);
+                $income = $row['Payout'] / 100 -  $betamt;
+                $uid = $row['UserId'];
+                $uname = $row['UserName'];
+
+              //  $bettx = betstrX__format_echo_ex($row['BetContent']);
+                //  \betstr\format_echo_ex()  ;
+
+              //  $bettx
+                $echo =betstrx__format_echo_ex($row['betNoAmt']."99");
+                $betStrNoamt= explode(" ",$echo)[0];
+
+                $txt = "$uname [$uid] $betStrNoamt 下注金额:$betamt 盈亏: $income \r\n";
+                var_dump($txt);
+                $a[] = $txt;
+            }
+            return join("", $a);
+        } catch (\Throwable $exception) {
+            $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+            \think\facade\Log::error("----------------errrrr5---------------------------");
+            \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
+            \think\facade\Log::error("errmsg:" . $exception->getMessage());
+            \think\facade\Log::error("errtraceStr:" . $exception->getTraceAsString());
+            var_dump($exception);
+            return "";
+            // throw $exception; // for test
+        }
+    }
+
+
+  // show jonjyo list 中奖名单
     public function calcIncome($lotteryno)
     {
         try {

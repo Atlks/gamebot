@@ -78,6 +78,24 @@ function bot_sendMsg($msg, $bot_token, $chat_id)
     echo file_get_contents($url_tmp);
     echo PHP_EOL;
 }
+
+
+function sendmsg_reply_txt($msg, $bot_token, $chat_id)
+{
+    //  $rplmsgid = $json['message_id'];
+    // $chat_id = $json['chat']['id'];
+    //   $msg = $msg_tmplt;
+    //   echo $url_tmp;
+    echo PHP_EOL;
+    echo PHP_EOL;
+    //  reply_to_message_id=$rplmsgid&
+    $url_tmp = "https://api.telegram.org/bot$bot_token/sendMessage?chat_id=$chat_id&text=" . urlencode($msg);
+    echo PHP_EOL;
+    echo PHP_EOL;
+    echo file_get_contents($url_tmp);
+    echo PHP_EOL;
+}
+
 function sendmsg_reply($msg, $bot_token, $chat_id)
 {
     //  $rplmsgid = $json['message_id'];

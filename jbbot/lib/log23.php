@@ -16,7 +16,10 @@ require __DIR__ . '/../vendor/autoload.php';
         var_dump($arguments);
        // \libspc\log_to_tp($arguments[0],$arguments[1],$arguments[2],$method);
 ob_end_clean();
-        \libspc\log_phpV2($arguments[0],$arguments[1],$arguments[2],$method);
+
+        $objtxt=isset($arguments[2])?$arguments[2]:"";
+
+        \libspc\log_phpV2($arguments[0],$arguments[1], $objtxt,$method);
     }
 
     // 没啥鸟用  必须实例化对象先才可
