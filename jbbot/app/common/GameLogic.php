@@ -41,6 +41,7 @@ class GameLogic
     private $special_mode = 0;
     private $game_type = 0;
     private $start_issue;
+    private $trend_type = 0;
 
     // 当前状态
     public $game_state = 'start';
@@ -186,8 +187,7 @@ class GameLogic
         $this->lottery_id = $log->id;
         $chat = $bot->getChat($this->chat_id);
         $ChatPermissions = $chat->getPermissions();
-        if($ChatPermissions->isCanSendMessages())
-        {
+        if ($ChatPermissions->isCanSendMessages()) {
             $set = Setting::find(3);
             $set->value = 0;
             $set->save();
@@ -359,7 +359,10 @@ class GameLogic
     private function createTrendImage($records)
     {
         // 数据
-        $data = ["turn" => '期数', "result" => "结果", "sum" => "和", "zuhe" => "组合", 'limit' => "极值", "kind" => "形态"];
+        if($this->trend_type == 1)
+            $data = ["turn" => '期数', "result" => "  A     B     C", "sum" => "和", "zuhe" => "组合", 'limit' => "极值", "kind" => "形态"];
+        else
+            $data = ["turn" => '期数', "result" => "结果", "sum" => "和", "zuhe" => "组合", 'limit' => "极值", "kind" => "形态"];
         $row_x = ["turn" => '12345678', "result" => "a+b+c=", "sum" => "bb", "zuhe" => "组合", 'limit' => "极值", "kind" => "形态"];
 
         $font = app()->getRootPath() . "public/msyhbd.ttc";
@@ -494,6 +497,26 @@ class GameLogic
                         $color = $null_color;
 
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $color, $font, $value);
+                } elseif ($k == "result" && $this->trend_type == 1) {
+                    if (preg_match_all('/\d+/', $value, $num_array)) {
+                        $box = imagettfbbox($font_size, 0, $font, $value);
+                        $w = $box[2] - $box[0];
+                        $w = intval($w/6);
+                        $offset_w = 0;
+                        $a = ["+", "+", "="];
+                        $of = [0,2,3];
+                        for ($i = 0; $i < 3; $i++) {
+                            $num = $num_array[0][$i];
+                            $flag = $a[$i];
+                            $offset_w = $i * $w * 2 + $of[$i];
+                            $color = $small_1_color;
+                            if ($num > 4) {
+                                $color = $big_2_color;
+                            }
+                            imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $offset_w, $temp_height - $font_size / 2, $color, $font, $num . "");
+                            imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $w + $offset_w, $temp_height - $font_size / 2, $text_color, $font, $flag);
+                        }
+                    }
                 } else {
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $text_color, $font, $value);
                 }
@@ -1428,8 +1451,7 @@ class GameLogic
         if (is_bool($data)) return false;
         $this->lottery_no = $data['lottery_no'];
         $this->hash_no = $data['hash_no'];
-        if($this->game_type != 1)
-        {
+        if ($this->game_type != 1) {
             $this->elapsed_time = time() - $data['opentime'];
             $this->elapsed_time *= 1000;
         }
@@ -1439,8 +1461,7 @@ class GameLogic
         $bot = $this->bot;
         $chat = $bot->getChat($this->chat_id);
         $ChatPermissions = $chat->getPermissions();
-        if($ChatPermissions->isCanSendMessages())
-        {
+        if ($ChatPermissions->isCanSendMessages()) {
             $set = Setting::find(3);
             $set->value = 0;
             $set->save();

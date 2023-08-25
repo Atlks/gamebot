@@ -1,6 +1,9 @@
 <?php
 
 
+
+// php app/common/timer_starter.php
+
 // php public/hd2test.php
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
@@ -11,27 +14,36 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+//    php public/HandleUpdates_core.php
 //    php public/HandleUpdates.php
 // [ 应用入口文件 ]  HandleUpdates/index
 namespace think;
 
-require __DIR__ . '/../vendor/autoload.php';
-
-$_GET['s']='HandleUpdates2/index';
-
-include_once __DIR__."/../lib/iniAutoload.php";
+require __DIR__ . '/../../vendor/autoload.php';
 
 
-// 执行HTTP应用并响应
-$http = (new App())->http;
-
-$response = $http->run();
-
-\think\facade\Log::ckbtInfo(date('Y-m-d H-i-s') );
-
-$response->send();
-
-$http->end($response);
+require_once __DIR__."/../../lib/iniAutoload.php";
 
 
-//str_starts_with(ss，need)
+while (true) {
+    try {
+
+
+        $filename = __DIR__ . "/asyn_timer_tpCmd.php";
+
+        $cmd =  "php " . $filename . "       ";
+        var_dump($cmd);
+
+        system($cmd);
+
+
+    } catch (\Throwable $exception) {
+        var_dump($exception);
+
+
+    }
+    usleep(1000*1000);  //100ms
+}
+
+
+

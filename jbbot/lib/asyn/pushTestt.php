@@ -11,27 +11,42 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-//    php public/HandleUpdates.php
+
 // [ 应用入口文件 ]  HandleUpdates/index
 namespace think;
 
-require __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-$_GET['s']='HandleUpdates2/index';
+//$_GET['s']='Handle2/index';
 
-include_once __DIR__."/../lib/iniAutoload.php";
+global $errdir;
+$errdir=__DIR__."/../../runtime/";
 
+
+ //$_GET['s']='Gamelogic/push';   //invalid request:Gamelogic/push
+
+//$_GET['c']='Gamelogic';
+//$_GET['a']='push';
+//  "method not exists:app\controller\Index->index()
+//$_SERVER['PATH_INFO']='/push_ssc';   //router mode
+
+
+ $_GET['s']='Gamelogic/push_ssc';
+ $_GET['id']=1;
 
 // 执行HTTP应用并响应
 $http = (new App())->http;
-
 $response = $http->run();
 
-\think\facade\Log::ckbtInfo(date('Y-m-d H-i-s') );
+
+//$gm=new \app\common\Gamelogic();
+//$gm->push(123);
+
+// 执行HTTP应用并响应
 
 $response->send();
 
 $http->end($response);
 
 
-//str_starts_with(ss，need)
+

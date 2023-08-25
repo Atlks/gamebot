@@ -49,7 +49,10 @@ class BotPlayer
         }
 
         if ($this->game) {
-            $this->reply_text = $this->game->player_exec($text, Setting::find(3)->value == 1);
+            $stop = Setting::find(4)->value == 1;
+            if(!$stop)
+                $stop = Setting::find(3)->value == 1;
+            $this->reply_text = $this->game->player_exec($text, $stop);
             $this->send_photo = $this->game->sendTrend();
             if ($this->game->action()) {
                 $keyboard = json_decode(BotWords::where('Id', 1)->find()->Button_Text, true);

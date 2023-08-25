@@ -104,7 +104,6 @@ $GLOBALS['alltimeCycle']=120;
 
     function main_process()
     {
-
         \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
         global $lottery_no;
         $lottery_no = 111;
@@ -114,79 +113,52 @@ $GLOBALS['alltimeCycle']=120;
         var_dump($GLOBALS['bot_token']);
         //var_dump(BOT_TOKEN);
         $set = Setting::find(1);
-
         $GLOBALS['BOT_TOKEN'] = $set->s_value;
         $GLOBALS['chat_id'] = Setting::find(2)->value;
-
         var_dump($GLOBALS['BOT_TOKEN']);
         var_dump($GLOBALS['chat_id']); //die();
         //  bot_sendMsg("----",BOT_TOKEN,chat_id);die();
-
-        //  die();
-
         $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
         \think\facade\Log::info($lineNumStr);
         $bot_words = \app\model\BotWords::where('Id', 1)->find();
         global $lottery_no;
-
         // $lottery_no = 1133;
-
-
-
-
-        //--------------------------------开始投注时间60s
-        echo "-------------------------开始投注----" . PHP_EOL;
-
+        echo "-------------------------开始投注----60s" . PHP_EOL;
         startBetEvt();
-
         // $GLOBALS['kaijtime']
         // touzhu ,60then  warning  ,30 then stop  ,,30then kaij
         list($alltimeCycle, $bet_time_sec_ramain_adjust) = getBettimeRemain();   // $bet_time:105000     105s   1分40s
+
+        $bet_time_sec_ramain_adjust=chkRemainTime_forBet($bet_time_sec_ramain_adjust);
         sleep($bet_time_sec_ramain_adjust);
-
-
 
         //------------------------warning bet time
         fenpan_wanrning_event();
 
-
         $waring_time_sec_remain = getWarningBetTimeRemain();
-
-
+        $waring_time_sec_remain=chkRemainTime_forBet($waring_time_sec_remain);
         sleep($waring_time_sec_remain);
 
-
-
-
-        ($delay_waittime_evt = function () {
-        })();
-
-
-        //-------------封盘时间 stop evet
-
-
+        //-----------------------------封盘时间 stop evet
         fenpan_stop_event();
-
-
-
         $delay_to_statrt_Kaijyo_sec= $stop_remain_time_sec=getStopRemaintime();
+       // $delay_to_statrt_Kaijyo_sec=chkRemainTime($delay_to_statrt_Kaijyo_sec);
         sleep($delay_to_statrt_Kaijyo_sec);
-
-
-
-        //-------------开始开奖流程
-
-
         //---------------------开奖流程
-
-
         kaij_draw_evt();
-
-
-
     }
 
-    function getStopRemaintime() {
+
+    //Not suit for stop evet
+ function chkRemainTime_forBet(mixed $bet_time_sec_ramain_adjust) {
+        if(time()-15 > $GLOBALS['kaijtime'])
+            return 0;
+        else return $bet_time_sec_ramain_adjust;
+
+
+}
+
+ function getStopRemaintime() {
 
 
         $bet_time = Setting::find(6)->value; //1*60*1000;

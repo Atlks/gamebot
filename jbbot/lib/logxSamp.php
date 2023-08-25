@@ -2,6 +2,9 @@
 
 
 <?php
+$GLOBALS['reqchain']="rcv125";
+include "logx.php";
+\log_setReqChainLog_enterMeth("METH",123);
 
 
 $curMethod=__CLASS__.":".__FUNCTION__. json_encode(func_get_args()). " sa ".__FILE__ . ":" . __LINE__;

@@ -1,7 +1,6 @@
 <?php
 
 
-
 //  格式转换模式  单注识别  方便转换标准fmt
 
 
@@ -24,24 +23,24 @@ $wefa_rex = $wefa_rex . '&前后三玩法对子=[前中后]三对子\d+&前后�
 $GLOBALS['msgrex'] = $wefa_rex;
 
 
-
 //-------------------组合模式rx and easy mode...   点|押|操|草|.]
 //    [12345]\/[\d大小单双]\/[\d]   >>  a/1/100
-$wefa_rex_zuhe =  '特码球玩法组合模式=[abcde][0123456789大小单双]+\/\d+';   // a123押100    a123/100  a大小/100
-$wefa_rex_zuhe .=  '&特码球玩法_abc1.200_组合模式=[abcde]+\d\/\d+';  /// abc1/100 abc1押100   a1/100    a1.100
-$wefa_rex_zuhe .=    '&特码球玩法_ab_大_100_组合模式=[12345abcde]+[大小单双]\d+';  //  a大100  模式   abc大100  1单200 模式   123单100
+$wefa_rex_zuhe = '特码球玩法组合模式=[abcde][0123456789大小单双]+\/\d+';   // a123押100    a123/100  a大小/100
+$wefa_rex_zuhe .= '&特码球玩法_abc1.200_组合模式=[abcde]+\d\/\d+';  /// abc1/100 abc1押100   a1/100    a1.100
+$wefa_rex_zuhe .= '&特码球玩法_ab_大_100_组合模式=[12345abcde]+[大小单双]\d+';  //  a大100  模式   abc大100  1单200 模式   123单100
 
-$wefa_rex_zuhe .=   '&特码球玩法_a_大小_100_组合模式= [12345abcde][大小单双]+\d+ ';  //   a大小单双100   1大小100    1大100
-$wefa_rex_zuhe .=  ' & 前后三玩法_豹子_对子_顺子_杂六 = [前中后][豹对顺半杂]\d+  ';
+$wefa_rex_zuhe .= '&特码球玩法_a_大小_100_组合模式= [12345abcde][大小单双]+\d+ ';  //   a大小单双100   1大小100    1大100
+$wefa_rex_zuhe .= ' & 前后三玩法_豹子_对子_顺子_杂六 = [前中后][豹对顺半杂]\d+  ';
 $wefa_rex_zuhe .= '&和值大小单双玩法_dx100=[大小单双]+\d+';   //大小100  hzdxdswf_dx100
-//$wefa_rex_zuhe .=  ' & 前后三玩法_豹子_对子_顺子_杂六 = [前中后][]\d+  ';
-//$wefa_rex_zuhe .=  ' & 前后三玩法_豹子_对子_顺子_杂六 = [前中后]三[豹对顺]子\d+  ';
 
-$wefa_rex_zuhe .=  ' & 特码球玩法_11_100_模式= [12345]\d\/\d+  ';   //   11/100
-$GLOBALS['msgrex_zuhe'] =$wefa_rex_zuhe."&".$wefa_rex;
+
+$wefa_rex_zuhe .= ' & 特码球玩法_11_100_模式= [12345]\d\/\d+  ';   //   11/100
+$GLOBALS['msgrex_zuhe'] = $wefa_rex_zuhe . "&" . $wefa_rex;
+
 
 //--------------not impt use
-//
+////$wefa_rex_zuhe .=  ' & 前后三玩法_豹子_对子_顺子_杂六 = [前中后][]\d+  ';
+////$wefa_rex_zuhe .=  ' & 前后三玩法_豹子_对子_顺子_杂六 = [前中后]三[豹对顺]子\d+  ';
 //-------------------------------already have
 //& [abcde12345]+[大小单双]\d+ = 特码球大小单双玩法_ab12大_模式    already have
 //      a/1/100模式   a.1.100模式     1.1.100模式
@@ -58,80 +57,52 @@ $GLOBALS['msgrex_zuhe'] =$wefa_rex_zuhe."&".$wefa_rex;
 //------------------只有三个对外接口  投注输入格式化接口同一个格式化，玩法计算为了获取赔率，回显输出格式化  ，开将接口 兑奖接口
 //统一格式化
 
-if(!function_exists("betstrX__split_convert_decode"))
-{
+if (!function_exists("betstrX__split_convert_decode")) {
     function betstrX__split_convert_decode($bet_str_arr_clr)
     {
-        return  \betstr\split_decode_split($bet_str_arr_clr);
+        return \betstr\split_decode_split($bet_str_arr_clr);
     }
-
-}
 
 
 // $bet_nums  单注标准格式
 
 
-if(!function_exists("betstrX__parse_getWefa"))
-{
     function betstrX__parse_getWefa($bet_nums)
     {
-        return  \betstr\getWefa($bet_nums);
+        return \betstr\getWefa($bet_nums);
     }
-}
 
 
-
-if(!function_exists("betstrX__format_echo_ex")) {
     function betstrX__format_echo_ex($text)
     {
         return \betstr\format_echo_ex($text);
     }
-}
 
 
-if(!function_exists("betstrX__format_echo_grpbyBet")) {
-    function betstrX__format_echo_grpbyBet($betNoAmt,$amt)
+    function betstrX__format_echo_grpbyBet($betNoAmt, $amt)
     {
-        $echo =\betstr\format_echo_ex($betNoAmt."99");
-        $bet= explode(" ",$echo);
-        $money=$amt/100;
-        $betNmoney=$bet[0]." ".+$money;
+        $echo = \betstr\format_echo_ex($betNoAmt . "99");
+        $bet = explode(" ", $echo);
+        $money = $amt / 100;
+        $betNmoney = $bet[0] . " " . +$money;
 
-        return  $betNmoney;
+        return $betNmoney;
     }
-}
-
-
-
-
-
-
-
-//function betstrx__format_echo(string $msghdl149,$bet_str)
-//{
-//
-//}
-
-//require  __DIR__."/../lib/iniAutoload.php";
-//var_dump( \betstr\format_echo_ex("a/1/100") );
 
 
 // 开奖结果格式化输出
-if(!function_exists("betstrX__convert_kaij_echo_ex"))
-{
+
     function betstrX__convert_kaij_echo_ex($result_text)
     {
-        return   \betstr\convert_kaij_echo_ex($result_text);
+        return \betstr\convert_kaij_echo_ex($result_text);
     }
-}
 
 
 //对讲
-if(!function_exists("betstrX__compare_dwijyo"))
-{
+
     function betstrX__compare_dwijyo($betContext, $kaij_num)
     {
-        return dwijyo($betContext,   $kaij_num);
+        return dwijyo($betContext, $kaij_num);
     }
 
 }

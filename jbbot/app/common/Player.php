@@ -268,8 +268,12 @@ class Player
             $user->Total_Payouts += $payout;
             Logs::addMoneyLog($user, "赔付", $payout, "系统自动记录", "", time());
             $user->Balance += $payout;
-            if (!is_null($back))
-                $user->Balance += $back;
+            $dirty = true;
+        }
+
+        if (!is_null($back))
+        {
+            $user->Balance += $back;
             $dirty = true;
         }
 
@@ -348,7 +352,7 @@ class Player
      //   Logs::user_report($user, $amount, "返水");
      //   Logs::addMoneyLog($user, "返水", $amount, "系统自动记录", "", time());
                     $user->Balance = $this->balance+$amount;
-                    $user->save();
+                 //   $user->save();
         }
         return true;
     }

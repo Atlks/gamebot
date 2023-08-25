@@ -26,35 +26,46 @@ function  loadErrHdr()
 
 function ex_hdlr($exception)
 {
+    try{
     //  \think\facade\Log::info (  json_encode($exception) );
     \libspc\log_err($exception,__METHOD__,$GLOBALS['$errdir'],"err");
     var_dump($exception);
+
+   }catch(\Exception $e){ var_dump($e);}
 }
 
 
 
 function error_handler142($errno, $message, $filename, $lineno)
 {
-    $ex229['errno'] = $errno;
-    $ex229['message'] = $message;
-    $ex229['filename'] = $filename;
-    $ex229['lineno'] = $lineno;
-    $j = json_encode($ex229);
-    global $errdir;
-    file_put_contents($errdir . date('Y-m-d H') . "lg142_errHdlr_.log",  $j . PHP_EOL, FILE_APPEND);
+    //must try ,bcs runtimne log dir no auth maybe
 
-    try {
-        if(class_exists('\think\Facade'))
-            if(class_exists('\think\facade\Log'))
-                \think\facade\Log::info($j);
-    }catch(\Exception $e){}
+    try{
+        $ex229['errno'] = $errno;
+        $ex229['message'] = $message;
+        $ex229['filename'] = $filename;
+        $ex229['lineno'] = $lineno;
+        $j = json_encode($ex229);
+        global $errdir;
+        file_put_contents($errdir . date('Y-m-d H') . "lg142_errHdlr_.log",  $j . PHP_EOL, FILE_APPEND);
 
-    var_dump($j); //also echo throw
+        try {
+            if(class_exists('\think\Facade'))
+                if(class_exists('\think\facade\Log'))
+                    \think\facade\Log::info($j);
+        }catch(\Exception $e){
+
+        }
+
+        var_dump($j); //also echo throw
+    }catch(\Exception $e){ var_dump($e);}
+
     //  throw $j;
 }
 
 function shutdown_hdlr()
 {
+    try{
     // print_r(error_get_last());
     //cant show echo ,bcs of ok also output
     //
@@ -78,6 +89,9 @@ function shutdown_hdlr()
         //   echo  PHP_EOL . PHP_EOL . "-----------shutdown echo finish--------------------" . PHP_EOL;
         //   echo 'Script executed with finish....', PHP_EOL;
     }
+
+
+}catch(\Exception $e){ var_dump($e);}
 }
 
 //$format_echo_other2=function($bet_str)

@@ -355,36 +355,21 @@ class Gamelogic
 
 
 
-       // sleep(  $delt_sec);
+
         //------------------------------swoole_timer_after evt
-        $delt_sec=$delay_time/1000;
-        $next_exe_tmstp=$delt_sec+time();
-        $obj=array("hdlr"=>"\app\controller\Gamelogic/swoole_timer_afterx","id"=>$id,"sign"=>$sign,"crt_time"=>date("Y-m-d his"),"next_exe_tmstp"=> $next_exe_tmstp);
-        $jsonT=json_encode($obj,JSON_UNESCAPED_UNICODE);
-        $fil=sprintf("%s/../../pushmsg/%s_%s.txt",__DIR__,time(),rand());
+        $nextFunc="\app\controller\Gamelogic.nextFun";
+
+        require_once __DIR__."/../common/asyn_timer.php";
+        swoole_timer_afterx( $nextFunc,array($id,$sign),$delay_time / 1000);
 
 
-        file_put_contents($fil, $jsonT);
-
-
-
-         //----next delay some sec ,to exe putUrl()
-//        function xxx445($id, $sign)   {
-//
-//
-//        }
-//        xxx445($id, $sign) ;
-
-      //  swoole_timer_after(, , $id, $sign);
-        //echo "收到请求上分:".$id;
         return "投递成功";
     }
 
-    public function  swoole_timer_afterx($obj)
+    public function  nextFun($id,$sign)
     {
 
-        $id=$obj['id'];
-        $sign=$obj['sign'];
+
         echo "开始上下分:" . $id . "\n";
         $data = [
             'id' => $id,
@@ -395,6 +380,12 @@ class Gamelogic
         $url = Setting::find(14)->s_value;
         echo $url;
         $helper = new Helper();
+
+
+          \think\facade\Log::betnotice(__LINE__.__METHOD__." url=>". $url."/money/recharge/v2/status");
+        \think\facade\Log::betnotice(__LINE__.__METHOD__."  dt=>".  json_encode($data));
+
+
         $helper->puturl($url."/money/recharge/v2/status", $data);
 
         \think\facade\Db::close();
@@ -402,12 +393,12 @@ class Gamelogic
 
     }
 
-
+//   C:\modyfing\jbbot\app\controller\Gamelogic.php:399
     public  function  timer_start_tp()
     {
-        require_once __DIR__."/../common/timer.php";
+        require_once __DIR__."/../common/asyn_timer.php";
 
-        \timerx_start();
+        \async_timer_start();
     }
 
 

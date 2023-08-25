@@ -6,6 +6,7 @@
 // execSync
 
 //   node tlgrm/keywoHdlr.js
+// node  C:\modyfing\jbbot\tlgrm\keywoHdlr.js
 const { exec, execSync } = require('child_process');
 const TelegramBot = require('node-telegram-bot-api');
 

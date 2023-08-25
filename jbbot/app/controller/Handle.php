@@ -193,7 +193,10 @@ class Handle
                 }
 
                 $game->receive($message_id);
-                $reply_text =  $game->player_exec($text, Setting::find(3)->value == 1);
+                $stop = Setting::find(4)->value == 1;
+                if(!$stop)
+                    $stop = Setting::find(3)->value == 1;
+                $reply_text =  $game->player_exec($text, $stop);
 
                 if (!empty($reply_text)) {
 

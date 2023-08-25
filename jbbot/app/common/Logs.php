@@ -110,7 +110,7 @@ class Logs
         $res = BetRecord::where('LotteryNo', $lottery_no)
             ->where('Status', $status)
             ->order('UserId', 'desc')
-            ->group('userid,username,betNoAmt')
+            ->group('userid,username,betNoAmt')  //betNoAmt
             ->field(' betNoAmt,UserName,UserId,sum(bet) Bet,sum(payout) Payout,sum(bet)-sum(payout) as income')
             ->select();
         return $res;

@@ -12,5 +12,5 @@ function get_variable_name(&$var333, $scopeVarArr = NULL) {
 }
 
 $var11=11;
-var_dump(get_variable_name( $var11,get_defined_vars()));
+//var_dump(get_variable_name( $var11,get_defined_vars()));
 

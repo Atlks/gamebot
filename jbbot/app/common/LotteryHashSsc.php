@@ -84,6 +84,8 @@ class LotteryHashSsc extends Lottery
                 $qihao =  $jsonobj['data']['issue'];
                 $GLOBALS['opentime']= $jsonobj['data']['openTime'];
                 $GLOBALS['qihao']= $qihao;
+              // $GLOBALS['kaijtime']=$kaijtime;
+                $GLOBALS['kaijtime']=$jsonobj['data']['closeTime'];
                 //
 //                var_dump($blknum);
 //                // die();

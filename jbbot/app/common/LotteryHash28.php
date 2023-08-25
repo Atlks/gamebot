@@ -114,9 +114,4 @@ class LotteryHash28 extends Lottery
             return false;
         }
     }
-
-
-
-
-    
 }

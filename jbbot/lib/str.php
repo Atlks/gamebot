@@ -1,5 +1,14 @@
 <?php
 
+function str_parseToFunExprs(mixed $funx): array
+{
+    $arr = explode(".", $funx);
+    $classname = $arr[0];
+    $meth = $arr[1];
+
+    $fun123 = array(new $classname(), $meth);
+    return $fun123;
+}
 
 function http_query_toArr($str){
 $arr_ret=[];

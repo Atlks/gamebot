@@ -41,6 +41,9 @@ class Helper
 }
 
     function puturl($url,$data){
+
+        \think\facade\Log::betnotice(__METHOD__.json_encode(func_get_args(),JSON_UNESCAPED_UNICODE));
+
         $data = json_encode($data);
         $ch = curl_init(); //初始化CURL句柄 
         curl_setopt($ch, CURLOPT_URL, $url); //设置请求的URL
@@ -50,6 +53,8 @@ class Helper
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);//设置提交的字符串
         $output = curl_exec($ch);
         curl_close($ch);
+        \think\facade\Log::betnotice(__LINE__.__METHOD__."  rzt=>". $output);
+
         return json_decode($output,true);
     }
 

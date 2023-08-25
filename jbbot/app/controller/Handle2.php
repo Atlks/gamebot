@@ -32,6 +32,65 @@ class Handle2
     public $Bot_Token = "";
 
 
+    public function msgRcv()
+    {
+        require __DIR__."/../../lib/iniAutoload.php";
+        require_once __DIR__."/../../lib/log23.php";
+        $GLOBALS['reqchain']='msgRcv';
+        \log_enterMeth(__METHOD__,func_get_args(),'msgRcv');
+
+
+        $msg_txt=$_GET['msg'];
+        \log23::msgRcv(__LINE__.__METHOD__," GET['msg'] ",$_GET['msg']);
+
+        $json_t = urldecode($msg_txt);
+        //  $json=json_decode( $name);
+        \think\facade\Log::info("---------------- json_t ---------------------------");
+        \think\facade\Log::info($json_t);
+        var_dump($json_t);
+        $json = json_decode($json_t, true);
+
+        $ret = $this->processMessage($json);
+
+        if (!isset($GLOBALS['bet_ret_prm']))
+        {
+            //include_once __DIR__."/../../lib/log23.php";
+            \log23::msgRcv(__LINE__.__METHOD__,"","no set bet ret prm");
+
+            return;
+        }
+
+        \log23::msgRcv(__LINE__.__METHOD__,"GLOBALS['bet_ret_prm']",$GLOBALS['bet_ret_prm']);
+
+        $bet_ret_prmFmt = $GLOBALS['bet_ret_prm'];
+        var_dump($bet_ret_prmFmt);
+        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        \think\facade\Log::info(" bet_ret_prmFmt::");
+
+        \think\facade\Log::info(json_encode($bet_ret_prmFmt, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+
+        $urlprm = http_build_query($GLOBALS['bet_ret_prm']);
+        \log23::msgRcv(__LINE__.__METHOD__,"urlprm",$urlprm);
+
+        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        \think\facade\Log::info($lineNumStr);
+        \think\facade\Log::info(" retRzt urlprm:" . $urlprm);
+
+        require_once(__DIR__ . "/../../lib/tlgrmV2.php");
+        $set = Setting::find(1);
+
+        $GLOBALS['BOT_TOKEN'] = $set->s_value;
+        $r = bot_sendmsg_reply_byQrystr($GLOBALS['BOT_TOKEN'], $urlprm);
+        \log23::msgRcv(__LINE__.__METHOD__," bot_sendmsg_reply_byQrystr rzt",$r);
+        \think\facade\Log::info("  " . $r);
+        \think\facade\Log::info("-------------finish------");
+        //     \think\facade\Log::info(  $ret );
+      //  var_dump("97L");
+die();
+
+    }
+
+
     public function msghdl($frmNet)
     {
         try{
@@ -191,6 +250,7 @@ class Handle2
 
     public function apiRequestWebhook($method, $parameters)
     {
+        log_setReqChainLog_enterMeth(__METHOD__ ,func_get_args());
         \think\facade\Log::noticexx(__METHOD__ . json_encode(func_get_args()));
         if (!is_string($method)) {
             error_log("Method name must be a string\n");
@@ -328,6 +388,10 @@ class Handle2
 
     public function processMessage($message)
     {
+
+        log_setReqChainLog_enterMeth(__METHOD__ ,func_get_args());
+
+
         \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
         \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(),JSON_UNESCAPED_UNICODE));
         //  var_dump(__METHOD__ . json_encode(func_get_args()));
@@ -512,6 +576,7 @@ class Handle2
                     \think\facade\Log::betnotice("at method:" . __CLASS__ . ":" . __FUNCTION__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
                     \think\facade\Log::betnotice("ret params:" . json_encode($params));
                     $GLOBALS['bet_ret_prm'] = $params;
+                  //  var_dump(21844);
                     //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
                     return $this->apiRequestWebhook("sendMessage", $params);
                 }
@@ -567,4 +632,6 @@ class Handle2
         $game = new Game($from);
         return $game->queryRollover();
     }
+
+
 }

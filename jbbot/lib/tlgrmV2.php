@@ -1,7 +1,7 @@
 <?php
 
 
-
+use function libspc\log_err;
 
 function sendmessageBotNConsole($msg)
 {
@@ -115,18 +115,53 @@ function sendmsg_reply($msg, $bot_token, $chat_id)
 
 function bot_sendmsg_reply_byQrystr($bot_token, $Qrystr)
 {
-    //  $rplmsgid = $json['message_id'];
-    // $chat_id = $json['chat']['id'];
-    //   $msg = $msg_tmplt;
-    //   echo $url_tmp;
-    echo PHP_EOL;
-    echo PHP_EOL;
-    //  reply_to_message_id=$rplmsgid&
-    $url_tmp = "https://api.telegram.org/bot$bot_token/sendMessage?" . $Qrystr;
-    echo $url_tmp;
-    echo PHP_EOL;
-    $r = file_get_contents($url_tmp);
-    echo "rzt:".$r;
-    echo PHP_EOL;
-    return $r;
+    log_enterMeth_reqchain(__LINE__ . __METHOD__, func_get_args()); //login to invchain
+    log_enterMethinfo_toLiblog(__LINE__ . __METHOD__, func_get_args(),"tlgrmlib");
+
+    var_dump(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
+
+
+
+    try {
+        //  $rplmsgid = $json['message_id'];
+        // $chat_id = $json['chat']['id'];
+        //   $msg = $msg_tmplt;
+        //   echo $url_tmp;
+        echo PHP_EOL;
+        echo PHP_EOL;
+        //  reply_to_message_id=$rplmsgid&
+        $url_tmp = "https://api.telegram.org/bot$bot_token/sendMessage?" . $Qrystr;
+//        log_info_toReqchain(__LINE__ . __METHOD__,"url_tmp",$url_tmp);
+//        log23::tlgrmlib(__LINE__ . __METHOD__,"url_tmp",$url_tmp);
+//        echo $url_tmp;
+        echo PHP_EOL;
+        require_once __DIR__."/http.php";
+        $r = http_get_curl($url_tmp);
+        echo "rzt:".$r;
+        echo PHP_EOL;
+
+
+        // echo console,,  reqchian log,,,,liblog,, glblog
+        var_dump( $r);;
+
+        log_info_toReqchain(__LINE__ . __METHOD__,"curlrzt", $r);
+        log23::tlgrmlib(__LINE__ . __METHOD__,"curlrzt",$r);
+
+        return $r;
+    } catch (\Throwable $exception) {
+        var_dump($exception);
+        log_err_toReqChainLog($exception, __LINE__ . __METHOD__);
+
+        //log to lib log  nnnn lib errlog
+        log_err_toLibLog(__LINE__ . __METHOD__, $exception, "httplib");
+
+
+        //log to glb err
+        log_e_toGlbLog($exception, __LINE__ . __METHOD__, func_get_args());
+
+
+    }
+
 }
+
+

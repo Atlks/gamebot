@@ -1071,7 +1071,7 @@ class GameLogicSsc
             $player = $v['player'];
             $payout = 0;
 
-            var_dump($income);
+          //  var_dump($income);
             $user = $this->userDb->findByUserId($user_id);
             $player = new \app\common\Player($user);
 
@@ -1168,8 +1168,8 @@ class GameLogicSsc
 
 
             $rows =  \think\facade\Db::name('bet_record')->where('lotteryno', '=', $lotteryno)
-                ->field(' betNoAmt,UserName,UserId,sum(bet) Bet,sum(payout) Payout,sum(bet)-sum(payout) as income')
-                ->group('userid,username,betNoAmt')
+                ->field(' UserName,UserId,sum(bet) Bet,sum(payout) Payout,sum(bet)-sum(payout) as income')
+                ->group('userid,username')  //betNoAmt
                 ->select();
 
 
@@ -1191,10 +1191,11 @@ class GameLogicSsc
                 //  \betstr\format_echo_ex()  ;
 
               //  $bettx
-                $echo =betstrx__format_echo_ex($row['betNoAmt']."99");
-                $betStrNoamt= explode(" ",$echo)[0];
+             //   $echo =betstrx__format_echo_ex($row['betNoAmt']."99");
+            //    $betStrNoamt= explode(" ",$echo)[0];
+//$betStrNoamt
 
-                $txt = "$uname [$uid] $betStrNoamt 下注金额:$betamt 盈亏: $income \r\n";
+                $txt = "$uname [$uid]  下注金额:$betamt 盈亏: $income \r\n";
                 var_dump($txt);
                 $a[] = $txt;
             }
