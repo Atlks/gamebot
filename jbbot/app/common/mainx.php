@@ -55,7 +55,7 @@ class mainx extends Command
         if ($input->getArgument('cfgOpt')) {
             $cfgOpt = trim($input->getArgument('cfgOpt'));
             $cfgOpt = urldecode($cfgOpt);
-            \log23::dbg11(__METHOD__, "cmdopt", $cfgOpt);
+            \log23::zdbg11(__METHOD__, "cmdopt", $cfgOpt);
             $GLOBALS['cfgOpt'] = $cfgOpt;
             //  \think\facade\Log::dbg11("cfgopt=》".$cfgOpt);
         }
@@ -304,7 +304,7 @@ $GLOBALS['alltimeCycle']=120;
 
         $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
         $bot->sendPhoto($GLOBALS['chat_id'], $cfile, $text, null, null, null, false, "MarkdownV2");
-
+  //    $bot->sendMessage(chatid,txt,parsemode,replyMsgID)
         //// 更新状态开放投注
         $set = Setting::find(3);
         $set->value = 0;

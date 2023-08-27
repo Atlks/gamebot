@@ -283,6 +283,7 @@ class Game2handlrLogic
         {
             return "格式错误:".$e->getMessage();
         }
+      log_info_toReqchain(__LINE__.__METHOD__,"bet_str_arr_clr_spltMltSingle",$bet_str_arr_clr_spltMltSingle);
 
    $before_bet = $this->player->getBetRecord($this->lottery_no);
         $bets = array();
@@ -304,9 +305,12 @@ class Game2handlrLogic
             $lineNumStr = " mm:))" . __METHOD__ . "() sa " . __FILE__ . ":" . __LINE__;
             \think\facade\Log::betnotice($lineNumStr);
             \think\facade\Log::betnotice(" forech per betstr :getWefa($bet_nums) ");
+          log_info_toReqchain(__LINE__.__METHOD__,"bet_num",$bet_nums);
 
             $wefa413 =betstrX__parse_getWefa($bet_nums);
-            \think\facade\Log::betnotice("   wefa413 rzt :" .   $wefa413);
+          log_info_toReqchain(__LINE__.__METHOD__,"wefa413",$wefa413);
+
+          \think\facade\Log::betnotice("   wefa413 rzt :" .   $wefa413);
             //  var_dumpx($rows);
             //   var_dumpx($rows[0]['玩法']);
             if ($wefa413 == "") {
@@ -322,7 +326,15 @@ class Game2handlrLogic
             $rows =  \think\facade\Db::name('bet_types')->whereRaw("玩法='" . $wanfa . "'")->select();
             \think\facade\Log::info("262L rows count:" . count($rows));
             if (count($rows) == 0)
-                continue;
+            {
+
+
+              log_e_toReqchain(__LINE__.__METHOD__,"qry Peilv by wefa",$rows);
+
+              continue;
+
+            }
+
             $type = $rows[0];
             //  file_put_contents("351.json",json_encode($rows));
 
@@ -371,6 +383,7 @@ class Game2handlrLogic
         // ----------------------bef bet chk finish
 
         \think\facade\Log::info("305L  ");
+        log_info_toReqchain(__LINE__.__METHOD__,"ched bets arr",$bets);
         if ($total_bet_amount > $this->player->getBalance(false)) {
             return $this->getWords('下注余额不足');
         }
@@ -386,8 +399,10 @@ class Game2handlrLogic
         $bet_amt_total_arr=[];
         foreach ($bets as $key => $value) {
            // str_
+          $formatEchoBet = betstrX__format_echo_ex($value['text']);
+          log_info_toReqchain(__LINE__.__METHOD__,"formatEchoBet",$formatEchoBet);
 
-            array_push($bet_lst_echo_arr, betstrX__format_echo_ex($value['text']));
+          array_push($bet_lst_echo_arr, $formatEchoBet);
 
 
             $bet = $value;

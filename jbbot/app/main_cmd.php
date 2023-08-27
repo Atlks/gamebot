@@ -26,21 +26,8 @@ while (true) {
 
     } catch (\Throwable $exception) {
         var_dump($exception);
-        $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-        //   \think\facade\Log::info($lineNumStr);
-        //  \think\facade\Log::error("----------------errrrr2---------------------------");
-        //  \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
-        //  \think\facade\Log::error("errmsg:" . $exception->getMessage());
-        //  \think\facade\Log::error("errtraceStr:" . $exception->getTraceAsString());
-        //  var_dump($exception);
-        $logf = $errdir . date('Y-m-d H') . "lg142_maincmdExHdlr_.log";
-        $logtxt = "file_linenum:" . $exception->getFile() . ":" . $exception->getLine();
-        file_put_contents($logf,  $logtxt . PHP_EOL, FILE_APPEND);
-        $logtxt = "errmsg:" . $exception->getMessage();
-        file_put_contents($logf,  $logtxt . PHP_EOL, FILE_APPEND);
-        $logtxt = "errtraceStr:" . $exception->getTraceAsString();
-        file_put_contents($logf,  $logtxt . PHP_EOL, FILE_APPEND);
-        throw $exception; // for test
-    }
-    usleep(100*1000);
+
+        \libspc\log_err($exception,__METHOD__,$errdir);
+     }
+    usleep(500*1000);
 }

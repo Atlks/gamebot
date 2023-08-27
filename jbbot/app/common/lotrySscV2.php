@@ -61,7 +61,7 @@ function spltSingleArrFrmTemacyoZuheMod($betstr)
 
 //var_dump(join(" ",getKaijNumArr_hezDasyods("41278") ));
  
-function var_dumpx($o)
+function var_dumpx120($o)
 {
     //var_dump($o);
 }
@@ -127,7 +127,7 @@ function getBetContxEcHo_temacyo_abcFmt($bet_str)
         $GLOBALS['loggerFun'](__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
     }
 
-    var_dumpx($bet_str);
+    var_dumpx120($bet_str);
     if (strstr($bet_str, '/'))
         $cyo_arr = explode("/", $bet_str);
     else
@@ -136,10 +136,10 @@ function getBetContxEcHo_temacyo_abcFmt($bet_str)
     $cyo_idex = $cyo_arr[0];
     $glb['$tozhu_arr'] = $cyo_arr;
     $glb['$cyo_idex'] = $cyo_idex;
-    var_dumpx($glb);
+    var_dumpx120($glb);
 
     $cyoName_arr = ['A', 'b', 'c', 'd', 'e'];
-    var_dumpx($cyo_idex);
+    var_dumpx120($cyo_idex);
     //  $cyoName = $cyoName_arr[$cyo_idex - 1];
     $cyo_num = $cyo_arr[1];
 
@@ -167,16 +167,16 @@ function getBetContxEcHo_temacyo($bet_str)
     if (!preg_match("/^\d.*/iu", $bet_str))
         return getBetContxEcHo_temacyo_abcFmt($bet_str);
 
-    var_dumpx($bet_str);
+    var_dumpx120($bet_str);
     $cyo_arr = explode("/", $bet_str);
     var_dump($cyo_arr);
     $cyo_idex = $cyo_arr[0];
     $glb['$tozhu_arr'] = $cyo_arr;
     $glb['$cyo_idex'] = $cyo_idex;
-    var_dumpx($glb);
+    var_dumpx120($glb);
 
     $cyoName_arr = ['A', 'b', 'c', 'd', 'e'];
-    var_dumpx($cyo_idex);
+    var_dumpx120($cyo_idex);
     $cyoName = $cyoName_arr[$cyo_idex - 1];
     $cyo_num = $cyo_arr[1];
 
@@ -498,7 +498,7 @@ function getKaijNumFromBlkhash($blkHash)
 function getKaijNumArr_cyehose($bonusNum)
 {
     $cye3 = substr($bonusNum, 0, 3);
-    var_dumpx($cye3);
+    var_dumpx120($cye3);
     $jon3 = substr($bonusNum, 1, 3);
     $ho3 = substr($bonusNum, 2, 3);
     if (isBaozi($cye3))
@@ -575,7 +575,7 @@ function isBanShunzi($num)
     $cye2 = substr($num, 0, 2);
     $ho2 = substr($num, 1, 2);
     $jo2 = substr($num, 0, 1) . substr($num, 2, 1);
-    var_dumpx($jo2);
+    var_dumpx120($jo2);
     //   789  290>029  801>018
     $a = ['12', '23', '34', '45', '56', '67', '78', '89', '90', '01', '12', '09'];
     if (in_array($cye2, $a) || in_array($ho2, $a) || in_array($jo2, $a))

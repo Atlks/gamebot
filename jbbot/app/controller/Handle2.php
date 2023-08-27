@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\controller;
 
 use app\common\Player;
+use think\exception\ValidateException;
 use think\Request;
 use app\model\Setting;
 use app\model\BotWords;
@@ -13,6 +14,7 @@ use app\common\Game2handlrLogic as Game;
 use app\model\Test;
 use app\common\Logs;
 use app\common\GameLogic;
+use function libspc\log_err;
 
 function var_dumpx()
 {
@@ -36,6 +38,9 @@ class Handle2
     {
         require __DIR__."/../../lib/iniAutoload.php";
         require_once __DIR__."/../../lib/log23.php";
+        require_once __DIR__."/../../lib/iniTpSqlLsnr.php";
+
+
         $GLOBALS['reqchain']='msgRcv';
         \log_enterMeth(__METHOD__,func_get_args(),'msgRcv');
 
@@ -124,111 +129,104 @@ die();
      *    s=handle/processMessage
      * @return \think\Response
      */
-    public function index()
-    {
-        ob_start();
-        require_once __DIR__ . "/../../lib/logx.php";
-        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  " . PHP_EOL;
-
-        \libspc\log_info_tp("ttt", "noobj", $lineNumStr, "info");
-        $updateId = 0;
-        try {
-
-            //    var_dump(999);die();
-            \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args()));
-
-            //   throw new \Exception("Value must be 1 or below");
-
-            //-----------------------------------store  onece 
-            \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args()));
-            $frmNet = file_get_contents('php://input');$this->msghdl( $frmNet);
-
-         //   msghdl($frmNet);
-            $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_rcv"  . ".json";
-            file_put_contents($logf,  $frmNet);
-
-            \think\facade\Log::betnotice($frmNet);
-            $update = json_decode(file_get_contents('php://input'), true);
-            if (!$update) {
-                return false;
-            }
-            $updateId = $update['update_id'];
-
-            $this->Bot_Token = Setting::find(1)->s_value;
-
-            if (isset($update["message"])) {
-                $msgobj = $update["message"];
-                $msgid =  $msgobj['message_id'];
-                $logf = __DIR__ . "/../../zmsglg/" . date('Y-m-d') . "_" . $msgid . ".json";
-                if (file_exists($logf)) {
-                    file_put_contents($logf, "1123");
-                    \think\facade\Log::warning(" file exist:" . $logf);
-                    //   return;
-                }
-
-                file_put_contents($logf, $frmNet);
-
-                //---------------------start..
-                // echo 11;
-                $ret = $this->processMessage($update["message"]);
-                $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-                \think\facade\Log::info($lineNumStr);
-                //       \think\facade\Log::info( json_encode $ret); //must cant be obj
-                //   var_dump($ret);
-                if(!isset( $GLOBALS['bet_ret_prm']))
-                {
-                    \think\facade\Log::betnotice("no find ret prm,maybe rev by chkbot. so ret");
-                    \libspc\log_info_tp("no find ret prm,maybe rev by chkbot. so ret", "", $lineNumStr, "betnotice");
-                    $GLOBALS['bet_ret_prm']=[]; die();
-                }               
-                $parameters =  $GLOBALS['bet_ret_prm'];
-                $parameters["method"] = "sendMessage";
-                //   $parameters["method"] = $method;
-                $payload = json_encode($parameters);
-
-                ob_end_clean();
-                header('Content-Type: application/json');
-                header('aaa: application/json');
-                header('Content-Length:' . strlen($payload) + 2);
-                echo $payload;
-                global $errdir;
-
-                require_once __DIR__ . "/../../lib/logx.php";
-                $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  " . PHP_EOL;
-
-                \libspc\log_info_tp("bet_ret_prm", $parameters, $lineNumStr, "hdlrRevPayload");
-                die();
-                return;
-            } elseif (isset($update["callback_query"])) {
-                return $this->processCallbackQuery($update["callback_query"]);
-            }
-        } catch (\Throwable $e) {
-
-            //    var_dump(999);die();
-            $data = [
-                'chat_id' => $updateId,
-                'name' => "网络钩子异常",
-                'text' => $e->getFile() . ":" . $e->getLine() . " " . $e->getMessage(),
-            ];
-            Test::create($data);
-            $exception = $e;
+  public function index() {
+    ob_start();
+    require_once __DIR__ . "/../../lib/iniAutoload.php";
+    log_enterMeth_reqchainWzIniLgfilfrg(__METHOD__, func_get_args(), "wbhkReq");
+    $updateId = 0;
+    try {
+      \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args()));
+      $frmNet = file_get_contents('php://input');
 
 
-            global $errdir;
+      if (isset($GLOBALS['testIpt']))
+        $frmNet = $GLOBALS['testIpt'];
 
+      $this->msghdl($frmNet);
 
-            //   \think\facade\Log::error("errtrace:".$exception->getTrace());
+      //   msghdl($frmNet);
+      $msgFil = __DIR__ . "/../../zmsglg/" . date('Y-m-d H-i-s') . "_rcv" . rand() . ".json";
+      file_put_contentsx($msgFil, $frmNet);
+      log_info_toReqchain(__LINE__ . __METHOD__, "php_input", $frmNet);
 
-            require_once __DIR__ . "/../../lib/logx.php";
-            $lineNumStr = " m:" . __METHOD__ . "  " . __FILE__ . ":" . __LINE__    . PHP_EOL;
-            \libspc\log_err($exception, $lineNumStr, $errdir, "emgc");
-            \libspc\log_err_tp($exception, $lineNumStr, "emergency");
+      \think\facade\Log::betnotice($frmNet);
+      $update = json_decode($frmNet, true);
+      if (!$update) {
+        log_info_toReqchain(__LINE__ . __METHOD__, "not updt,decode txt frmNext", $update);
+        return false;
+      }
+      $updateId = $update['update_id'];
+      $this->Bot_Token = Setting::find(1)->s_value;
+      log_info_toReqchain(__LINE__ . __METHOD__, "Bot_Token", $this->Bot_Token);
+
+      if (isset($update["message"])) {
+        $msgobj = $update["message"];
+        $msgid = $msgobj['message_id'];
+        //---------------------start..
+        // echo 11;
+        $ret = $this->processMessage($update["message"]);
+        if (!isset($GLOBALS['bet_ret_prm'])) {
+          log_e_toReqchain(__LINE__ . __METHOD__, "not find ret prm,PHPinpt", $frmNet);
+
+          \think\facade\Log::warning("no find ret prm,maybe rev by chkbot. so ret:".$frmNet);
+          \think\facade\Log::betnotice("no find ret prm,maybe rev by chkbot. so ret:".$frmNet);
+          \libspc\log_info_tp("no find ret prm,maybe rev by chkbot. so ret,oriinput:", $frmNet, __LINE__ . __METHOD__, "betnotice");
+          die();
         }
-    }
+        $parameters = $GLOBALS['bet_ret_prm'];
+        $parameters["method"] = "sendMessage";
+        $payload = json_encode($parameters);
+        log_info_toReqchain(__LINE__ . __METHOD__, "payload", $payload);
+        global $errdir;
+        require_once __DIR__ . "/../../lib/logx.php";
+        \libspc\log_info_tp("bet_ret_prm", $parameters, __LINE__.__METHOD__, "hdlrRevPayload");
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        header('aaa: application/json');
+        header('Content-Length:' . strlen($payload) + 0);
+        echo $payload;
+        die();
+        return;
+      } elseif (isset($update["callback_query"])) {
+        return $this->processCallbackQuery($update["callback_query"]);
+      }
+    } catch (\Throwable $e) {
+
+      try{
+        //    var_dump(999);die();
+        $data = [
+          'chat_id' => $updateId,
+          'name' => "网络钩子异常",
+          'text' => $e->getFile() . ":" . $e->getLine() . " " . $e->getMessage(),
+        ];
+        Test::create($data);
+        $exception = $e;
+        global $errdir;
+        require_once __DIR__ . "/../../lib/logx.php";
+        log_err_toReqChainLog(__FILE__ . __METHOD__, $e);
+        $lineNumStr = " m:" . __METHOD__ . "  " . __FILE__ . ":" . __LINE__ . PHP_EOL;
+        \libspc\log_err($exception, $lineNumStr, $errdir, "emgc");
+        \libspc\log_err_tp($exception, $lineNumStr, "emergency");
+
+      } catch (\Throwable $exception) {
+          log_err($exception,__LINE__.__METHOD__,$GLOBALS['errlog']);
+
+      }
+
+          }
+  }
 
     /**
      * 
-     * 
+     *   $msgFil = __DIR__ . "/../../zmsglg/" . date('Y-m-d') . "_" . $msgid . ".json";
+    if (file_exists($msgFil)) {
+    //  file_put_contents($msgFil, "1123");
+    \think\facade\Log::warning(" file exist:" . $msgFil);
+    //   return;
+    }
+
+    file_put_contents($msgFil, $frmNet);
 
                 //----------------------send msg
                 require_once(__DIR__ . "/../../lib/tlgrmV2.php");
@@ -388,7 +386,8 @@ die();
 
     public function processMessage($message)
     {
-
+        require_once __DIR__."/../../lib/iniTpSqlLsnr.php";
+      require_once __DIR__."/../../lib/iniAutoload.php";
         log_setReqChainLog_enterMeth(__METHOD__ ,func_get_args());
 
 
@@ -446,12 +445,15 @@ die();
             }
         }
 
-        if ($chat_id != Setting::find(2)->value) {
-
+      $grpid_inDb = Setting::find(2)->value;
+      if ($chat_id != $grpid_inDb) {
+            $msg=sprintf("grpid chk fail. curGrpid=%s grpidIndb=%s",$chat_id,$grpid_inDb );
             $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
             \think\facade\Log::info($lineNumStr);
-            \think\facade\Log::info(" chat_id:" . $chat_id . " dbchtid:" . Setting::find(2)->value);
-            \think\facade\Log::error(" grp id chk fail.");
+            \think\facade\Log::info(" chat_id:" . $chat_id . " dbchtid:" . $grpid_inDb);
+            \think\facade\Log::error($msg);
+            throw new ValidateException($msg);
+            return;
             /*
             $token = Setting::find(11)->s_value;
             $bot = new \TelegramBot\Api\BotApi($token);
@@ -464,7 +466,8 @@ die();
             $bot->leaveChat($chat_id);
             */
             //$bot->sendMessage($ci, $text);
-            return;
+
+
         }
 
 
@@ -485,103 +488,109 @@ die();
 
 
         $reply_text = "默认信息";
-        if (isset($message['text'])) {
-            // incoming text message
-            $text = $message['text'];
-            //  $cmd= ' return new '. parse_ini_file(__DIR__."/../../.env")['handle_game'].'();';
-            //  var_dumpx($cmd);
-            //  $game=  eval($cmd);
+        if (!isset($message['text'])) {
+
+          return;
+        }
+        // incoming text message
+        $text = $message['text'];
+        //  $cmd= ' return new '. parse_ini_file(__DIR__."/../../.env")['handle_game'].'();';
+        //  var_dumpx($cmd);
+        //  $game=  eval($cmd);
 
 
-            //  $game   new app\common\GameSsc();
-            var_dumpx($game);
+        //  $game   new app\common\GameSsc();
+        var_dumpx($game);
+        //------------------------crteaty player
+        if (empty($game->getPlayer($user_id))) {
+            $game->createPlayer($user_id, $full_name, $user_name);
+        }
 
-            if (empty($game->getPlayer($user_id))) {
-                $game->createPlayer($user_id, $full_name, $user_name);
-            }
+        try {
+            $GLOBALS['cur_user'] = $game->getPlayer($user_id);
+        } catch (\Exception $e) {
+        }
 
-            try {
-                $GLOBALS['cur_user'] = $game->getPlayer($user_id);
-            } catch (\Exception $e) {
-            }
-
-            $game->receive($message_id);
-            //start bet
-
-
-            //-----------------------这里应该处理其他cmd和bet cmd
-            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-            \think\facade\Log::info($lineNumStr);
-            \think\facade\Log::info(" game->player_exec()");
-            $reply_text =  $game->player_exec($text, Setting::find(3)->value == 1);
-
-            $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-            \think\facade\Log::info($lineNumStr);
-            \think\facade\Log::info(" reply_text ::" . $reply_text);
-            var_dumpx($reply_text);   //"下注命令错误"
+        $game->receive($message_id);
+        //start bet
 
 
-         //---------------这里处理 猴急 后记
-            if (!empty($reply_text)) {
+        //-----------------------这里应该处理其他cmd和bet cmd
+        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        \think\facade\Log::info($lineNumStr);
+        \think\facade\Log::info(" game->player_exec()");
+        $reply_text =  $game->player_exec($text, Setting::find(3)->value == 1);
 
-                if ($game->sendTrend()) {
-                    \think\facade\Log::info("game->sendTrend");
-                    $cfile = new \CURLFile(app()->getRootPath() . "public/trend.jpg");
-                    $params = [
-                        'chat_id' => $chat_id,
-                        'photo' => $cfile,
-                    ];
-                    $bot->sendPhoto($chat_id, $cfile, null, null, $message_id);
-                    //$resp =  $this->apiRequestWebhook("sendPhoto", $params);
-                    //$resp->contentType("multipart/form-data");
-                } else {
-                    \think\facade\Log::info("game->sendTrend else");
-                    $keyboard = null;
-                    if ($game->action()) {
-                        $keyboard_array = json_decode(BotWords::where('Id', 1)->find()->Button_Text);
+        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+        \think\facade\Log::info($lineNumStr);
+        \think\facade\Log::info(" reply_text ::" . $reply_text);
+        var_dumpx($reply_text);   //"下注命令错误"
 
-                        \think\facade\Log::info("345pm");
-                        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-                        \think\facade\Log::info($lineNumStr);
-                        \think\facade\Log::info(json_encode($keyboard_array, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
-                        $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($keyboard_array);
-                    } else if ($game->keyboard) {
-                        \think\facade\Log::info("345pm2");
-                        $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
-                        \think\facade\Log::info($lineNumStr);
-                        \think\facade\Log::info(json_encode($game->keyboard, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-                        $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($game->keyboard);
-                    }
-                    //keyboard just menu list
-                    //    var_dumpx( $keyboard); //null
-                    $params =
-                        [
-                            'chat_id' => $chat_id,
-                            'text' => $reply_text,
-                            //'message_thread_id' => null,
-                            'parse_mode' => is_null($game->parse_mode()) ? "" : $game->parse_mode(),
-                            'disable_web_page_preview' => true,
-                            'reply_to_message_id' => (int)$message_id,
-                            'reply_markup' => is_null($keyboard) ? "" : $keyboard->toJson(),
-                            'disable_notification' => false,
-                        ];
+     //---------------这里处理 猴急 后记
+      // todo 这里貌似哦没用
+        if (empty($reply_text)) {
+          return;
+        }
+        // is have replyb text  then ret
+        if ($game->sendTrend()) :
+                \think\facade\Log::info("game->sendTrend");
+                $cfile = new \CURLFile(app()->getRootPath() . "public/trend.jpg");
+                $params = [
+                    'chat_id' => $chat_id,
+                    'photo' => $cfile,
+                ];
+                $bot->sendPhoto($chat_id, $cfile, null, null, $message_id);
+                //$resp =  $this->apiRequestWebhook("sendPhoto", $params);
+                //$resp->contentType("multipart/form-data");
+             else :
+                \think\facade\Log::info("game->sendTrend else");
+                $keyboard = null;
+                if ($game->action()) {
+                    $keyboard_array = json_decode(BotWords::where('Id', 1)->find()->Button_Text);
 
+                    \think\facade\Log::info("345pm");
                     $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
                     \think\facade\Log::info($lineNumStr);
-                    \think\facade\Log::info(json_encode($params));
+                    \think\facade\Log::info(json_encode($keyboard_array, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 
-                    $curMethod = __CLASS__ . ":" . __FUNCTION__ . json_encode(func_get_args()) . " sa " . __FILE__ . ":" . __LINE__;
-                    \think\facade\Log::betnotice("at file:" . __FILE__ . ":" . __LINE__);
-                    \think\facade\Log::betnotice("at method:" . __CLASS__ . ":" . __FUNCTION__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
-                    \think\facade\Log::betnotice("ret params:" . json_encode($params));
-                    $GLOBALS['bet_ret_prm'] = $params;
-                  //  var_dump(21844);
-                    //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
-                    return $this->apiRequestWebhook("sendMessage", $params);
+                    $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($keyboard_array);
+                } else if ($game->keyboard) {
+                    \think\facade\Log::info("345pm2");
+                    $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+                    \think\facade\Log::info($lineNumStr);
+                    \think\facade\Log::info(json_encode($game->keyboard, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+                    $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($game->keyboard);
                 }
-            }
-        }
+                //keyboard just menu list
+                //    var_dumpx( $keyboard); //null
+                $params =
+                    [
+                        'chat_id' => $chat_id,
+                        'text' => $reply_text,
+                        //'message_thread_id' => null,
+                        'parse_mode' => is_null($game->parse_mode()) ? "" : $game->parse_mode(),
+                        'disable_web_page_preview' => true,
+                        'reply_to_message_id' => (int)$message_id,
+                        'reply_markup' => is_null($keyboard) ? "" : $keyboard->toJson(),
+                        'disable_notification' => false,
+                    ];
+
+                $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
+                \think\facade\Log::info($lineNumStr);
+                \think\facade\Log::info(json_encode($params));
+
+                $curMethod = __CLASS__ . ":" . __FUNCTION__ . json_encode(func_get_args()) . " sa " . __FILE__ . ":" . __LINE__;
+                \think\facade\Log::betnotice("at file:" . __FILE__ . ":" . __LINE__);
+                \think\facade\Log::betnotice("at method:" . __CLASS__ . ":" . __FUNCTION__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
+                \think\facade\Log::betnotice("ret params:" . json_encode($params));
+                $GLOBALS['bet_ret_prm'] = $params;
+              //  var_dump(21844);
+                //$bot->sendMessage($chat_id, $reply_text, $game->parse_mode(), false, null, $message_id, $keyboard);
+                return $this->apiRequestWebhook("sendMessage", $params);
+           endif;
+
+
     }
 
     private function processCallbackQuery($callback_query)

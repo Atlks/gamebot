@@ -17,10 +17,12 @@ function call_user_func_arrayx( $fun123,  $args)
   //log_enterMeth_reqchain(__METHOD__,func_get_args());
   log_enterMeth_reqchain(__METHOD__,func_get_args());
 
-    var_dump(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
-    log23::info(__LINE__ . __METHOD__, "Arg", func_get_args());
+  //  log23::info(__LINE__ . __METHOD__, "Arg", func_get_args());
     try {
-     return   call_user_func_array($fun123, $args);
+      $ret = call_user_func_array($fun123, $args);
+
+      log_info_toReqchain($fun123,"ret",$ret);
+      return $ret;
 
     } catch (\Throwable $exception) {
 

@@ -144,7 +144,7 @@ $split = function () {
 };
 function format_echo_cyehose($betnum)
 {
-    \log23::debug4echo(__METHOD__, "  ", func_get_args());
+    \log23::zdebug4echo(__METHOD__, "  ", func_get_args());
 //    if( class_exists('\think\facade\Log'))
 //        \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
 
@@ -242,8 +242,8 @@ function convert_getBetContxEcHo($bet_str)
    //     require_once __DIR__ . "/../app/common/lotrySscV2.php";    require_once __DIR__ . "/../app/common/betstr.php";
         $rzt =  $bet_str;
       //  if(class_exists('\think\facade\Log'))
-        \log23::debug(__METHOD__,"func_get_args",func_get_args() );
-        \log23::debug4echo(__METHOD__,"func_get_args",func_get_args() );
+        \log23::zdebug(__METHOD__,"func_get_args",func_get_args() );
+        \log23::zdebug4echo(__METHOD__,"func_get_args",func_get_args() );
      //   @\think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
         // \think\facade\Log::betnotice ("at file:". __FILE__ . ":" . __LINE__ );
 

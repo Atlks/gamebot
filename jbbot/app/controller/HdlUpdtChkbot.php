@@ -13,132 +13,77 @@ use TelegramBot\Api\Exception;
 use think\view\driver\Php;
 use function libspc\log_err_tp;
 
-class HandleUpdates2 {
+class HdlUpdtChkbot {
 
 
   public function dbEcatch() {
     //test db err catch
 
-    include_once __DIR__."/../../lib/iniAutoload.php";
-    $rows =dsl__execSql_tp(function () {
+    include_once __DIR__ . "/../../lib/iniAutoload.php";
+    $rows = dsl__execSql_tp(function () {
       return \think\facade\Db::name('aaa')->whereRaw("玩法=12")->select();
     });
 //    $rows=\think\facade\Db::name('aaa')->whereRaw("玩法=12")->select();
-    var_dump( $rows[0]??"");
+    var_dump($rows[0] ?? "");
     var_dump(94752);
 
   }
 
 
-    // $rows=$f();
-    // \think\facade\Log::info("262L rows count:" . count($rows));
+ // public $last_id_offset = 0;
+
+  // $rows=$f();
+  // \think\facade\Log::info("262L rows count:" . count($rows));
 
 
   public function index() {
 
+    $GLOBALS['reqchain']="chkbt";// passroad
+    $GLOBALS['funIvk']="chkbt";
+
+    require_once  __DIR__."/../../lib/iniAutoload.php";
+    require_once  __DIR__."/../../lib/iniTpSqlLsnr.php";
+    global  $last_id_offset;
+    $last_id_offset=0;
     //  echo 999;die();
-    $bot_token = Setting::find(18)->s_value;
-    $bot = new \TelegramBot\Api\BotApi($bot_token);
-    $last_id = 0;
-    while (true) {
+
+
+    while (true) :
       //include_once __DIR__ ."/../../lib/iniAutoload.php";
       //echo  date('Y-m-d H-i-s').PHP_EOL;
       //\libspc\log_info_php(__METHOD__,"", date('Y-m-d H-i-s'),"chkbt_runlog");
       try {
-        $res = $bot->getUpdates($last_id, 100, 10, ["message", "callback_query"]);
-        //var_dump($res);
-        \think\facade\Log::chkbtInfo(date('Y-m-d H-i-s'));
-        \think\facade\Log::chkbtInfo(json_encode($res, JSON_UNESCAPED_UNICODE));
-        foreach ($res as $update) {
 
-          \think\facade\Log::chkbtInfo(json_encode($update, JSON_UNESCAPED_UNICODE));
-          $last_id = $update->getUpdateId();
-          $message = $update->getMessage();
-          $callback_query = $update->getCallbackQuery();
-          $check_id = 0;
-          if ($message) {
-            $check_id = $message->getMessageId();
-          } elseif ($callback_query) {
-            $check_id = $callback_query->getId();
-          }
-
-          $data = Test::where('chat_id', $check_id)
-            ->where('name', "小飞机漏发")
-            ->find();
-          // chk bot alrelady insert  ,,pass
-
-          if ($data) {
-            $last_id += 1;
-            continue;
-          }
-
-
-          //chkbot recv
-          $data = [
-            'chat_id' => $check_id,
-            'name' => "检测程序接收",
-            'text' => $update->toJson(),
-          ];
-          Test::create($data);
-          sleep(1);  //---------chk webhk is rev msg,,wait wbhk to prcs
-          $data = Test::where('chat_id', $check_id)
-            ->where('name', "网络钩子接收")
-            ->find();
-          //如果find ,,webhk already rev process.just continue..beir zoyao process
-          if (empty($data)) {
-            sleep(2);
-            $data = Test::where('chat_id', $check_id)
-              ->where('name', "网络钩子接收")
-              ->find();
-            if (empty($data)) {
-              //sleep(1);
-              // 如果不抛异常就保存    小飞机漏发信息  chkbt recv
-              $data = [
-                'chat_id' => $check_id,
-                'name' => "小飞机漏发信息",
-                'text' => $update->toJson(),
-              ];
-              Test::create($data);
-              \think\facade\Log::chkbtInfo(json_encode($data, JSON_UNESCAPED_UNICODE));
-              //$bot_token = Setting::find(1)->s_value;
-              //$game_bot = new \TelegramBot\Api\BotApi($bot_token);
-              $message = $update->getMessage();
-              $callback_query = $update->getCallbackQuery();
-              if ($message) {
-                $this->processMessage($message, $bot);
-              } elseif ($callback_query) {
-                if ($callback_query->getMessage()) {
-                  $this->processCallbackQuery($callback_query, $bot);
-                }
-              }
-
-            }
-          }
-        }//end foreach
-        $last_id += 1;
+            $this->chkbot_main();
       } catch (\Throwable $e) {
         if ($e->getMessage() == "Connection timed out") {
           \think\facade\Log::chkbtWarn($e->getMessage());
         }
 
-        if ($e->getMessage() !== "Connection timed out" && !preg_match('/^Operation/', $e->getMessage())) {
-          $data = [
-            'chat_id' => $last_id,
-            'name' => "检查循环报错22",
-            'text' => $e->getMessage(),
-          ];
-          Test::create($data);
-          $last_id += 1;
-          // log23::ckbtErr()
-          //\libspc\log_err_tp($e,__METHOD__,"chkbtErr");
-          // \think\facade\Log::ckbtErr(  $e->getMessage() );
+        if ($e->getMessage() == "Connection timed out" || preg_match('/^Operation/', $e->getMessage())) {
+            //when mo msg just zusai l ,jeig err..yaosi hav msg,jo fast ret..
+           \log23::chbtWarning(":connTimeout last_id_offset=$last_id_offset emsg=".$e->getMessage());
+            continue;
         }
 
 
+        $data = [
+          'chat_id' => $last_id_offset,
+          'name' => "检查循环报错22",
+          'text' => $e->getMessage(),
+        ];
+        Test::create($data);
+        $last_id_offset += 1;   //if cant process just next ,so continue
+
+        \libspc\log_err_tp($e,__METHOD__,"chkbtErr");
+
+
+
       }
+      //end whiletrue item
       //usleep(10*1000); // 500ms   not need slpp ,bls long conn is 10s
       //break;
-    }  //finish while
+    endwhile;
   }
 
 
@@ -251,7 +196,7 @@ class HandleUpdates2 {
     return $fullname;
   }
 
-  private function processMessage($message, $bot) {
+  public function processMessage($message, $bot) {
     // process incoming message
     $message_id = $message->getMessageId();
     $chat = $message->getChat();
@@ -312,7 +257,7 @@ class HandleUpdates2 {
     }
   }
 
-  private function processCallbackQuery($callback_query, $bot) {
+  public function processCallbackQuery($callback_query, $bot) {
     $from = $callback_query->getFrom()->getId();
     $func = $callback_query->getData();
     $res = "";
@@ -322,6 +267,98 @@ class HandleUpdates2 {
     if (!empty($res)) {
       $bot->answerCallbackQuery($callback_query->getId(), $res, true);
     }
+  }
+
+  /**
+   * @param \TelegramBot\Api\BotApi $bot
+   * @param int $last_id_offset
+   * @return array
+   * @throws Exception
+   * @throws \TelegramBot\Api\InvalidArgumentException
+   */
+  public function chkbot_main() {
+   global $last_id_offset;
+   log_info_toReqchain("","","\r\n\r\n\r\n\r\n");
+    log_enterMeth_reqchainWzIniLgfilfrg(__METHOD__,func_get_args(),"chkbt");
+    $bot_token = Setting::find(18)->s_value;
+    $bot = new \TelegramBot\Api\BotApi($bot_token);
+
+    //here catn call fun ,bcs throw ex is impt for outer
+    $res = $bot->getUpdates($last_id_offset, 100, 10, ["message", "callback_query"]);
+   // call_user_func_arrayx(array(),array());
+    log_info_toReqchain("bot->getUpdates[]","bef foreach last_id_offset",$last_id_offset);
+  //   var_dumpx($last_id_offset,__LINE__.__METHOD__);
+
+     foreach ($res as $update) :
+       $GLOBALS['reqid']=date('Ymd_His')."_".rand();
+       log_info_toReqchain(">>>>>>".__LINE__.__METHOD__,"foreach perUpdtmst",$update);
+       log_info_toReqchain("".__LINE__.__METHOD__,"msg_txt",$update->getMessage()->getText());
+
+
+       \think\facade\Log::chkbtInfo(json_encode($update, JSON_UNESCAPED_UNICODE));
+      $last_id_offset = $update->getUpdateId();
+      log_info_toReqchain(__LINE__.__METHOD__,"cur last_id_offset=update->getUpdateId",$last_id_offset);
+      $message = $update->getMessage();
+      $callback_query = $update->getCallbackQuery();
+      $check_id_msgid = 0;
+      if ($message) {
+        $check_id_msgid = $message->getMessageId();
+      } elseif ($callback_query) {
+        $check_id_msgid = $callback_query->getId();
+      }
+
+
+     $boolRzt= dsl__callFun(array($this,"is_chkbotProcessed"),array($check_id_msgid));
+      if ($boolRzt) {
+        $last_id_offset += 1;
+        continue;
+      }
+
+
+      //chkbot recv
+      $data = [
+        'chat_id' => $check_id_msgid,
+        'name' => "检测程序接收",
+        'text' => $update->toJson(),
+      ];
+      Test::create($data);
+
+      ;
+      if (dsl__callFun(array($this,"isWebhkRecv"),array($check_id_msgid))) :
+        $last_id_offset += 1;
+        continue;
+      endif;
+
+       //-------------chbot start process
+      $data = [
+        'chat_id' => $check_id_msgid,
+        'name' => "小飞机漏发信息",
+        'text' => $update->toJson(),
+      ];
+      Test::create($data);
+      \think\facade\Log::chkbtInfo(json_encode($data, JSON_UNESCAPED_UNICODE));
+      //$bot_token = Setting::find(1)->s_value;
+      //$game_bot = new \TelegramBot\Api\BotApi($bot_token);
+      $message = $update->getMessage();
+      $callback_query = $update->getCallbackQuery();
+      if ($message) {
+        dsl__callFun(array($this,"processMessage"),array($message, $bot));
+       // $this->processMessage($message, $bot);
+      } elseif ($callback_query) {
+        if ($callback_query->getMessage()) {
+         // $this->processCallbackQuery($callback_query, $bot);
+          dsl__callFun(array($this,"processCallbackQuery"),array($callback_query, $bot));
+        }
+      }
+      //-------------------chbot proces  finish
+
+
+      $last_id_offset += 1;
+       log_info_toReqchain(__LINE__.__METHOD__,"last_id_offset",$last_id_offset);
+      \think\facade\Db::close();
+       log_info_toReqchain(">>>>".__LINE__.__METHOD__,">>>>endforeach",";;");
+    endforeach;;
+
   }
 
   private function query_balance($from) {
@@ -339,5 +376,40 @@ class HandleUpdates2 {
     return $game->queryRollover();
   }
 
+  public function is_chkbotProcessed(  $check_id) {
 
+
+    $data = Test::where('chat_id', $check_id)
+      ->where('name', "小飞机漏发信息")
+      ->find();
+   //SELECT * FROM `test` WHERE  `chat_id` = 36895  AND `name` = '小飞机漏发' LIMIT 1
+    $sql = Test::getLastSql();
+   // log_info_toReqchain(__METHOD__,"sql", $sql);
+
+    if ($data)
+      return true; else return false;
+    // chk bot alrelady insert  ,,pass
+  }
+
+  public function isWebhkRecv(float|int|string $check_id) {
+
+    sleep(1);  //---------chk webhk is rev msg,,wait wbhk to prcs
+    $data = Test::where('chat_id', $check_id)
+      ->where('name', "网络钩子接收")
+      ->find();
+    //如果find ,,webhk already rev process.just continue..beir zoyao process
+    if (empty($data)) {
+      sleep(2);
+      $data = Test::where('chat_id', $check_id)
+        ->where('name', "网络钩子接收")
+        ->find();
+      if (empty($data)) {
+        return false;
+      }
+    }
+
+    //webhk recv
+    return true;
+
+  }
 }

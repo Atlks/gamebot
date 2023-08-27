@@ -37,7 +37,7 @@ class ExceptionHandle extends Handle
     public function report(Throwable $exception): void
     {
         // 使用内置的方式记录异常日志
-        parent::report($exception);
+        parent::report($exception);  //log recode err info to log...or trace log
         $errdir="";
         $j=json_encode($exception,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
       //  $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
@@ -50,7 +50,7 @@ class ExceptionHandle extends Handle
         \think\facade\Log::error("----------------errrrrx_tp_ex_cathr---------------------------");
         \think\facade\Log::error("file_linenum:".$exception->getFile().":".$exception->getLine());
         \think\facade\Log::error("errmsg:".$exception->getMessage());
-     //   \think\facade\Log::error("errtrace:".$exception->getTrace());
+
         \think\facade\Log::error("errtraceStr:".$exception->getTraceAsString());
         \think\facade\Log::error("----------------errrrr finish---------------------------");
 

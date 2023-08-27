@@ -66,7 +66,7 @@ class echoCls
             $GLOBALS['loggerFun'](__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
         }
 
-        var_dumpx($bet_str);
+        var_dumpx120($bet_str);
         if (strstr($bet_str, '/'))
             $cyo_arr = explode("/", $bet_str);
         else
@@ -75,10 +75,10 @@ class echoCls
         $cyo_idex = $cyo_arr[0];
         $glb['$tozhu_arr'] = $cyo_arr;
         $glb['$cyo_idex'] = $cyo_idex;
-        var_dumpx($glb);
+        var_dumpx120($glb);
 
         $cyoName_arr = ['A', 'b', 'c', 'd', 'e'];
-        var_dumpx($cyo_idex);
+        var_dumpx120($cyo_idex);
         //  $cyoName = $cyoName_arr[$cyo_idex - 1];
         $cyo_num = $cyo_arr[1];
 

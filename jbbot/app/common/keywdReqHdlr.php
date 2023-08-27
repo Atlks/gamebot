@@ -41,9 +41,9 @@ class keywdReqHdlr extends Command
             $GLOBALS['BOT_TOKEN']= $set->s_value ;
             //  C:\phpstudy_pro\Extensions\php\php8.0.2nts\php.exe C:\modyfing\jbbot\think reqHdlr
             // 指令输出
-            $name = trim($input->getArgument('argsx'));
-            $output->writeln('cmd reqhdl' . $name);
-            $json_t = urldecode($name);
+            $msgtxt = trim($input->getArgument('argsx'));
+            $output->writeln('》》cmd reqhdl' . $msgtxt);
+            $json_t = urldecode($msgtxt);
             //  $json=json_decode( $name);
             \think\facade\Log::info("---------------- json_t ---------------------------");
             \think\facade\Log::info(  $json_t );
@@ -68,13 +68,13 @@ class keywdReqHdlr extends Command
             if (file_exists($logf)) {
                 file_put_contents($logf, "1123");
                 \think\facade\Log::warning(__METHOD__);
-                \think\facade\Log::warning(" file exist:" . $logf);
-                 return;
+                \think\facade\Log::warning(" file exist then exit:" . $logf);
+               //  return;
             }
 
             file_put_contents($logf, $json_t);
 
-
+          $GLOBALS['reqchain']="wbhk_js";
             //--------process msgt
             $ret =   $hdr->processMessage($json);
             $lineNumStr = "  " . __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
