@@ -34,6 +34,9 @@ connection.query('SELECT  * from setting where id=18  ', function(error, results
     token = results[0].s_value
     console.log('The solution is: ', results[0].s_value);
 
+
+    //test
+   // token="6193061603:AAGuHLcUR0-pjiIRFc9wfYglsvhae61ZEqA";
     invoke_bot(token);
 });
 connection.end(); //要加不然唱起了回报个 conn close err。。。must add beir longt time

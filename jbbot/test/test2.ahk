@@ -6,7 +6,7 @@
 ; "C:\Program Files\AutoHotkey\AutoHotkey.exe" test/test2.ahk
 bet_type := ["单", "双", "大", "小"] ;,"大单", "大双", "小单", "小双"]
 command := ["余额","流水","反水","历史","上分"]
-amount := 10
+amount := 20
 
 stop := false
 
@@ -25,7 +25,7 @@ stop := false
 			  SendInput a大小100{enter}
 
             ; slp20ms
-			Sleep 500
+			Sleep 100
 
 		amount-= 1
        ; msgbox %amount%

@@ -20,7 +20,7 @@ var lines = data.split(/\r\n/);
 
 import fetch from "node-fetch"; //es6 mode
 
-import pkg from './../lib/http.js';
+import pkg from '../lib/http.js';
 
 const {http_get239} = pkg;
 

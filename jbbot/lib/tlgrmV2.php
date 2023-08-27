@@ -15,6 +15,7 @@ function sendmessageBotNConsole($msg)
     //global $bot_token, $chat_id;
     bot_sendMsg($msg, $GLOBALS['BOT_TOKEN'], $GLOBALS['chat_id']);
 }
+
 function bot_sendMsgTxtMode($msg, $bot_token, $chat_id)
 {
     \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
@@ -31,7 +32,8 @@ function bot_sendMsgTxtMode($msg, $bot_token, $chat_id)
     echo $url_tmp;
     echo PHP_EOL;
     echo PHP_EOL;
-    echo file_get_contents($url_tmp);
+    require_once  __DIR__ . "/iniAutoload.php";
+    echo http_get_curl($url_tmp);
     echo PHP_EOL;
 }
 
@@ -39,6 +41,7 @@ function bot_sendMsgTxtMode($msg, $bot_token, $chat_id)
 // mkdown must encode some zhuanyiu. char
 function bot_sendMsg($msg, $bot_token, $chat_id)
 {
+    require_once  __DIR__ . "/iniAutoload.php";
     //  $rplmsgid = $json['message_id'];
     // $chat_id = $json['chat']['id'];
     //   $msg = $msg_tmplt;
@@ -50,9 +53,9 @@ function bot_sendMsg($msg, $bot_token, $chat_id)
     //  reply_to_message_id=$rplmsgid&
     //   urlencode  GBK与UTF-8之间的相互转码：iconv("gbk","utf-8","php中文待转字符");//把中文gbk编码转为utf8
     require_once __DIR__ . "/../app/common/helper.php";
-    
-    
-  $msg=str_replace("+","\+",$msg);
+
+
+    $msg = str_replace("+", "\+", $msg);
     try {
         $msg = app\common\Helper::replace_markdown($msg);
     } catch (\Throwable $exception) {
@@ -61,21 +64,20 @@ function bot_sendMsg($msg, $bot_token, $chat_id)
         $linenum = "file_linenum:" . $exception->getFile() . ":" . $exception->getLine();
         $errmsg = "errmsg:" . $exception->getMessage();
         $errtraceStr = "errtraceStr:" . $exception->getTraceAsString();
-        file_put_contents($GLOBALS['errdir'] . date('Y-m-d H') . "_lg142_tlgrmeHdlr_.log",  $linenum . PHP_EOL, FILE_APPEND);
-        file_put_contents($GLOBALS['errdir'] . date('Y-m-d H') . "_lg142_tlgrmeHdlr_.log",  $errmsg . PHP_EOL, FILE_APPEND);
-        file_put_contents($GLOBALS['errdir'] . date('Y-m-d H') . "_lg142_tlgrmeHdlr_.log",  $errtraceStr . PHP_EOL, FILE_APPEND);
-
+        file_put_contents($GLOBALS['errdir'] . date('Y-m-d H') . "_lg142_tlgrmeHdlr_.log", $linenum . PHP_EOL, FILE_APPEND);
+        file_put_contents($GLOBALS['errdir'] . date('Y-m-d H') . "_lg142_tlgrmeHdlr_.log", $errmsg . PHP_EOL, FILE_APPEND);
+        file_put_contents($GLOBALS['errdir'] . date('Y-m-d H') . "_lg142_tlgrmeHdlr_.log", $errtraceStr . PHP_EOL, FILE_APPEND);
 
 
         //   $errdir = '/www/wwwroot/ssc.521ck.vip/app/controller/';
     }
-    $msg=str_replace("+","\+",$msg);
+    $msg = str_replace("+", "\+", $msg);
 
     $url_tmp = "https://api.telegram.org/bot$bot_token/sendMessage?parse_mode=MarkdownV2&chat_id=$chat_id&text=" . rawurlencode($msg);
     echo $url_tmp;
     echo PHP_EOL;
     echo PHP_EOL;
-    echo file_get_contents($url_tmp);
+    echo http_get_curl($url_tmp);
     echo PHP_EOL;
 }
 
@@ -116,10 +118,9 @@ function sendmsg_reply($msg, $bot_token, $chat_id)
 function bot_sendmsg_reply_byQrystr($bot_token, $Qrystr)
 {
     log_enterMeth_reqchain(__LINE__ . __METHOD__, func_get_args()); //login to invchain
-    log_enterMethinfo_toLiblog(__LINE__ . __METHOD__, func_get_args(),"tlgrmlib");
+    log_enterMethinfo_toLiblog(__LINE__ . __METHOD__, func_get_args(), "tlgrmlib");
 
     var_dump(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
-
 
 
     try {
@@ -135,17 +136,17 @@ function bot_sendmsg_reply_byQrystr($bot_token, $Qrystr)
 //        log23::tlgrmlib(__LINE__ . __METHOD__,"url_tmp",$url_tmp);
 //        echo $url_tmp;
         echo PHP_EOL;
-        require_once __DIR__."/http.php";
+        require_once __DIR__ . "/http.php";
         $r = http_get_curl($url_tmp);
-        echo "rzt:".$r;
+        echo "rzt:" . $r;
         echo PHP_EOL;
 
 
         // echo console,,  reqchian log,,,,liblog,, glblog
-        var_dump( $r);;
+        var_dump($r);;
 
-        log_info_toReqchain(__LINE__ . __METHOD__,"curlrzt", $r);
-        log23::tlgrmlib(__LINE__ . __METHOD__,"curlrzt",$r);
+        log_info_toReqchain(__LINE__ . __METHOD__, "curlrzt", $r);
+        log23::tlgrmlib(__LINE__ . __METHOD__, "curlrzt", $r);
 
         return $r;
     } catch (\Throwable $exception) {

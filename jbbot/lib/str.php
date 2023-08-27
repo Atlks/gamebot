@@ -10,6 +10,23 @@ function str_parseToFunExprs(mixed $funx): array
     return $fun123;
 }
 
+
+function urlQrystrToArr($str){
+  $arr_ret=[];
+  $arr=explode("&",$str);
+  foreach ($arr as $item)
+  {
+    $arr311=explode("=",$item);
+    $key=$arr311[0];
+    $key=trim($key);
+    $v=$arr311[1];
+    $v=trim($v);
+    $arr_ret[$key]= $v;
+    //array($key=> $v) ;
+  }
+  return $arr_ret;
+}
+
 function http_query_toArr($str){
 $arr_ret=[];
     $arr=explode("&",$str);
@@ -53,7 +70,7 @@ function str_splitX($str)
 //echo " str ddl:".str_delNum("后顺333");
 function str_delNum($str)
 {
-    \log23::debug(__METHOD__,"func_get_args",func_get_args() );
+    \log23::zdebug(__METHOD__,"func_get_args",func_get_args() );
 //    if( class_exists('\think\facade\Log'))
 //    \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
     return preg_replace('/[\d]/', '', $str);
@@ -61,7 +78,7 @@ function str_delNum($str)
 
 function str_delLastNum($str)
 {
-    \log23::debug(__METHOD__,"func_get_args",func_get_args() );
+    \log23::zdebug(__METHOD__,"func_get_args",func_get_args() );
 //    if( class_exists('\think\facade\Log'))
 //    \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
     return preg_replace('/(\d+)$/iu', '', $str);
@@ -73,7 +90,7 @@ $adaf=1;
 function str_delLastNumX($str)
 {
     if(class_exists("\log23"))
-    \log23::debug(__METHOD__, "func_get_args", func_get_args());
+    \log23::zdebug(__METHOD__, "func_get_args", func_get_args());
 //    if( class_exists('\think\facade\Log'))
 //    \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
 

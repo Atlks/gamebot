@@ -39,7 +39,7 @@ function iniAutoload820($libnames)
 //require_once __DIR__."/../app/common/betstr.php";
 //------------------auto load functions
     require_once __DIR__ . "/../app/common/betstr.php";
-    $dirs307 = '/../../lib/,/../lib/,/lib/,/';
+    $dirs307 = '/';    //   /../../lib/,/../lib/,/lib/,
     $arr_dirs = explode(",", $dirs307);
 
     $arr_libs307 = explode(",", $libnames);
@@ -59,19 +59,45 @@ function iniAutoload820($libnames)
             if (!file_exists($fname))
                 continue;
 
-            //che  xunhwe ref
-            if (!InIncFiles($fname)) {
-               // log23::autoload4(__METHOD__, "", $fname);
+            require_once $fname;
+         //  log23::autoload4(__METHOD__,"loadFile",$fname);
 
-                require_once $fname;
-                $get_included_files553 = get_included_files();
-            } else {
-              //  log23::autoload4(__METHOD__, " exist file inc:", $fname);
-            }
+            //log23::autoload4(__METHOD__, " exist file inc:", $fname);
+
+//            //che  xunhwe ref
+//            if (!InIncFiles($fname)) {
+//               // log23::autoload4(__METHOD__, "", $fname);
+//
+//
+//                $get_included_files553 = get_included_files();
+//            } else {
+//              //
+//            }
 
 
         }
     }
+
+
+    spl_autoload_register(function ($class_name) {
+        // var_dump($class_name);  //"ltrx"
+        ob_start();
+        if (file_exists(__DIR__ . "/../../lib/" . $class_name . '.php'))
+            require_once __DIR__ . "/../../lib/" . $class_name . '.php';
+
+        else if (file_exists(__DIR__ . "/../lib/" . $class_name . '.php'))
+            require_once __DIR__ . "/../lib/" . $class_name . '.php';
+        else if (file_exists(__DIR__ . "/lib/" . $class_name . '.php'))
+            require_once __DIR__ . "/lib/" . $class_name . '.php';
+        else if (file_exists(__DIR__ . "/" . $class_name . '.php'))
+            require_once __DIR__ . "/" . $class_name . '.php';
+
+        ob_end_clean();
+
+    });
+
+
+
     ob_end_clean();
 
 }

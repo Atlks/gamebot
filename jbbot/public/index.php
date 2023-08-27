@@ -15,8 +15,9 @@ namespace think;
 require __DIR__ . '/../vendor/autoload.php';
 
 global $errdir;
-$GLOBALS['$errdir']='/www/wwwroot/game.gq1sx.cc/runtime/log/';
-$errdir='/www/wwwroot/game.gq1sx.cc/runtime/log/';
+$errdir=__DIR__.'/../runtime/';
+$GLOBALS['$errdir']=$errdir;
+
 
 ini_set('display_errors', 'on');
 error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));

@@ -25,5 +25,5 @@ function  exec_console ($cmd)
 
 
 
-exec_console("php task1.php > o2223.log  ");
+//exec_console("php task1.php > o2223.log  ");
  //   echo 999;

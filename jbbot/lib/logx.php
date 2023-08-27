@@ -141,13 +141,13 @@ namespace libspc {
 
     }
 
-    function log_info_tp($msg, $obj, $linenum, $lev = "info")
+    function log_info_tp($var, $obj, $linenum, $fileFrg = "info")
     {
 
         try {
             if (class_exists('\think\facade\Log')) {
-                \think\facade\Log::$lev($linenum);
-                \think\facade\Log::$lev($msg . " is : " . json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+                \think\facade\Log::$fileFrg($linenum);
+                \think\facade\Log::$fileFrg($var . " is : " . json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
             }
 
 
@@ -157,20 +157,26 @@ namespace libspc {
 
     }
 
-    function log_err($exception, $hdrName_method_linenum, $logdir, $lev = "err")
+    function log_err($exception, $hdrName_method_linenum, $logdir=__DIR__."/../runtime/", $lev = "err")
     {
         try {
+             if(!file_exists($logdir) )
+               $logdir=__DIR__."/../runtime/";
+
             $logf = $logdir . date('Y-m-d H') . "_$lev.log";
-            $logtxt = "----------------Hdrname:$hdrName_method_linenum ex_cathr---------------------------";
+            $timestmpt=date('mdHis');
+            $logtxt = $timestmpt."----------------Hdrname:$hdrName_method_linenum ex_cathr---------------------------";
+
+       //   $logtxt = sprintf("%s [%s] %s=>%s", date('mdHis'), $meth, $varname, $varobj);
 
             file_put_contents($logf, $logtxt . PHP_EOL, FILE_APPEND);
             //   file_put_contents($logf,   $linenum_magicNum . PHP_EOL, FILE_APPEND);
-            $logtxt = "errmsg:" . $exception->getMessage();
+            $logtxt = $timestmpt."errmsg:" . $exception->getMessage();
             file_put_contents($logf, $logtxt . PHP_EOL, FILE_APPEND);
-            $logtxt = "ex file_linenum:" . $exception->getFile() . ":" . $exception->getLine();
+            $logtxt = $timestmpt."ex file_linenum:" . $exception->getFile() . ":" . $exception->getLine();
             file_put_contents($logf, $logtxt . PHP_EOL, FILE_APPEND);
 
-            $logtxt = "errtraceStr:" . $exception->getTraceAsString();
+            $logtxt = $timestmpt."errtraceStr:" . $exception->getTraceAsString();
             file_put_contents($logf, $logtxt . PHP_EOL, FILE_APPEND);
 
         } catch (\Throwable $e) {
@@ -212,12 +218,49 @@ namespace libspc {
 namespace {
 
 
-    function log_info_toReqchain(  $meth,   $varname,   $varobj)
+  function log_e_toReqchain(  $meth,   $varname,   $varobj)
+  {
+
+    try {
+      //also log info reqchn
+      log_info_toReqchain($meth,   $varname,   $varobj);
+      $filFrg =isset( $GLOBALS['reqchain'])?$GLOBALS['reqchain']:"defchain";
+      $filFrg=$filFrg."_ERR";
+      if (isset($filFrg)) {
+
+//        if (is_object($varobj) && get_class($varobj) == "Exception") {
+//          log_err($varobj, $meth, $filFrg);
+//          return;
+//        }
+        if (is_object($varobj) || is_array($varobj))
+          $varobj = json_encode($varobj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        if (is_bool($varobj))
+          $varobj = $varobj ? "TRUE" : "FALSE";
+        $logf = __DIR__ . "/../runtime/" . date('Y-m-d') . "_$filFrg.log";
+        $logtxt = sprintf("%s [%s] %s=>%s", date('mdHis'), $meth, $varname, $varobj);
+        //  file_put_contents($logf, $logtxt . PHP_EOL, FILE_APPEND);
+
+        $logf = __DIR__ . "/../runtime/" . date('Y-m-d') . "_$filFrg.log";
+        error_log($logtxt . PHP_EOL, 3, $logf);
+      }
+
+    } catch (\Throwable $exception) {
+
+      var_dump($exception);
+
+      //  \think\facade\Log::$GLOBALS['reqchain'](__METHOD__ .);
+
+
+    }
+  }
+
+
+  function log_info_toReqchain(  $meth,   $varname,   $varobj)
     {
 
         try {
 
-            $filFrg = $GLOBALS['reqchain'];
+            $filFrg =isset( $GLOBALS['reqchain'])?$GLOBALS['reqchain']:"defchain";
             if (isset($filFrg)) {
 
                 if (is_object($varobj) && get_class($varobj) == "Exception") {
@@ -265,6 +308,13 @@ namespace {
 
     }
 
+  function log_ex_toLibLog(string $meth, Throwable|Exception $exception, $filFrg_libname)
+  {
+    log23::$filFrg_libname($meth, "e", $exception);
+    $errFlg = $filFrg_libname . " ERR";
+    log23::$errFlg($meth, "e", $exception);
+  }
+
     function log_err_toLibLog(string $meth, Throwable|Exception $exception, $filFrg)
     {
         log23::$filFrg($meth, "e", $exception);
@@ -275,6 +325,19 @@ namespace {
 
     function log_enterMeth_reqchain(string $meth, $args, $logf_flag = "info")
     {
+       // if($GLOBALS['reqchain'])
+
+        if ($logf_flag != "info")
+            $GLOBALS['reqchain'] = $logf_flag;
+
+        log_setReqChainLog_enterMeth($meth, $args);
+
+    }
+
+
+    function log_enterMeth_reqchainWzIniLgfilfrg(string $meth, $args, $logf_flag )
+    {
+      //    if(isset($GLOBALS['reqchain']) )
 
         if ($logf_flag != "info")
             $GLOBALS['reqchain'] = $logf_flag;
@@ -293,13 +356,46 @@ namespace {
 
     }
 
-    function log_err_toReqChainLog(string $meth, $ex)
+  function log_ex_toReqChainLog(string $meth, $ex)
+  {
+    try {
+      if (!set($GLOBALS['logdir']))
+        $GLOBALS['logdir'] = __DIR__ . "/../runtime/";
+
+      if (!set($GLOBALS['reqchain']))
+        $reqchainName = "defReqChain";
+      else
+        $reqchainName = $GLOBALS['reqchain'];
+
+      // to reqchain log,,and regcvhaing err log
+      \libspc\log_err($ex, $meth, $GLOBALS['logdir'], $reqchainName);
+      \libspc\log_err($ex, $meth, $GLOBALS['logdir'], $reqchainName . " ERR");
+
+    } catch (\Throwable $exception) {
+
+      var_dump($exception);
+
+      //  \think\facade\Log::$GLOBALS['reqchain'](__METHOD__ .);
+
+
+    }
+
+
+  }
+
+
+  function log_err_toReqChainLog(string $meth, $ex)
     {
         try {
-            if (!set($GLOBALS['logdir']))
-                $GLOBALS['logdir'] = __DIR__ . "../runtime/";
 
-            if (!set($GLOBALS['reqchain']))
+
+            if (!isset($GLOBALS['logdir']))
+                $GLOBALS['logdir'] = __DIR__ . "/../runtime/";
+
+            if(!file_exists( $GLOBALS['logdir']))
+              $GLOBALS['logdir'] = __DIR__ . "/../runtime/";
+
+            if (!isset($GLOBALS['reqchain']))
                 $reqchainName = "defReqChain";
             else
                 $reqchainName = $GLOBALS['reqchain'];
@@ -343,7 +439,7 @@ namespace {
 
         try {
 
-            $reqchain = $GLOBALS['reqchain'];
+            $reqchain = isset($GLOBALS['reqchain'])?$GLOBALS['reqchain']:"defReqChain";
             if (isset($reqchain)) {
                 $args_txt = json_encode($args, JSON_UNESCAPED_UNICODE);
                 $msg = $meth . $args_txt;

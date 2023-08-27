@@ -45,7 +45,7 @@ function tmqwfzhms_msghdl($betstr)
     $betNumaArr = str_split($bet_nums);
     foreach ($betNumaArr as $betnum) {
 
-        $a[] = $cyoNam . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr($betstr);
+        $a[] = $cyoNam . "/" . $betnum . "/" . \ltrx::getAmt_frmBetStr341($betstr);
     }
 
     //chick chongfu
@@ -207,7 +207,7 @@ function tmqwfabczhms_msghdl($betstr)
     $betNumaArr = str_split($bet_nums);
     foreach ($betNumaArr as $betnum) {
 
-        $a[] = $betnum . "" .  $dasyaodeshwo . "" . getAmt_frmBetStr($betstr);
+        $a[] = $betnum . "" .  $dasyaodeshwo . "" . getAmt_frmBetStr340($betstr);
     }
     //  var_dump(\xdebug_get_declared_vars());
     return $a;

@@ -57,7 +57,7 @@ function spltSingleArrFrmTemacyoZuheMod($betstr)
     $betNumaArr = str_split($bet_nums);
     foreach ($betNumaArr as $betnum) {
 
-        $a[] = $cyoNam . "/" . $betnum . "/" . getAmt_frmBetStr($betstr);
+        $a[] = $cyoNam . "/" . $betnum . "/" . getAmt_frmBetStr340($betstr);
     }
     return $a;
 }
@@ -198,7 +198,7 @@ function getBetContxEcHo_temacyo_abcFmt($bet_str)
 
 
     $cyoName = $cyo_arr[0];
-    $money = GetAmt_frmBetStr($bet_str);
+    $money = getAmt_frmBetStr340($bet_str);
     return     $cyoName . "球" . $cyo_num_rply . "  " .  $money  . ".00";
 }
 

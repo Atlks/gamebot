@@ -11,38 +11,23 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-//    php public/HandleUpdates_core.php
-//    php public/HandleUpdates.php
+
 // [ 应用入口文件 ]  HandleUpdates/index
 namespace think;
 
-use function libspc\log_err;
-
 require __DIR__ . '/../vendor/autoload.php';
 
+$_GET['s']='HandleUpdates2/dbEcatch';
+$GLOBALS['testIpt']=file_get_contents(__DIR__."/../test/wbhk.json");
 
-require_once __DIR__."/../lib/iniAutoload.php";
+global $errdir;
+$errdir=__DIR__."/../runtime/";
 
+// 执行HTTP应用并响应
+$http = (new App())->http;
 
-while (true) {
-    try {
+$response = $http->run();
 
+$response->send();
 
-        $filename = __DIR__ . "/HandleUpdates_core.php";
-
-        $cmd =  "php " . $filename . "       ";
-        var_dump($cmd);
-        //  exec($cmd);
-        system($cmd);
-        // echo   iconv("gbk","utf-8","php中文待转字符");//把中文gbk编码转为utf8
-        //main_process();
-    } catch (\Throwable $exception) {
-        var_dump($exception);
-        log_err($exception,__LINE__.__METHOD__);
-
-    }
-    usleep(300*1000);
-}
-
-
-
+$http->end($response);
