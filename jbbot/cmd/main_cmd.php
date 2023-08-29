@@ -1,8 +1,10 @@
 <?php
 
-$prm = $_SERVER['argv'][1];
-$cfgOptx = urldecode($prm);
-$GLOBALS['cfgOpt']=$cfgOptx;
+//$prm = $_SERVER['argv'][1];
+//$cfgOptx = urldecode($prm);
+//$GLOBALS['cfgOpt']=$cfgOptx;
+
+
 //  php app/main_cmd.php
 global $errdir;
 $errdir = __DIR__."/../runtime"; $GLOBALS['errdir']=$errdir;
@@ -16,7 +18,7 @@ while (true) {
         // $tlghr_msg_hdl = " C:\\w\\jbbot\\tlgrmHdl_temacyo.php ";
         $filename = __DIR__ . "/../think";
         //$filename = __DIR__ . "/ech.php";
-        $cmd = $phpexe . " " . $filename . "    swoole2  $prm";
+        $cmd = $phpexe . " " . $filename . "    swoole2  ";  //$prm
         var_dump($cmd);
       //  exec($cmd);
         log23::zdbg11(__METHOD__,"cmd",$cmd);

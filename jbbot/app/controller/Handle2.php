@@ -137,7 +137,7 @@ die();
     try {
       \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args()));
       $frmNet = file_get_contents('php://input');
-
+    $GLOBALS['phpinput1245']=$frmNet;
 
       if (isset($GLOBALS['testIpt']))
         $frmNet = $GLOBALS['testIpt'];
@@ -390,7 +390,7 @@ die();
       require_once __DIR__."/../../lib/iniAutoload.php";
         log_setReqChainLog_enterMeth(__METHOD__ ,func_get_args());
 
-
+\log23::tlgrmlib(json_encode($message) );
         \think\facade\Log::betnotice(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
         \think\facade\Log::debug(__METHOD__ . json_encode(func_get_args(),JSON_UNESCAPED_UNICODE));
         //  var_dump(__METHOD__ . json_encode(func_get_args()));
@@ -414,7 +414,8 @@ die();
         $data = [
             'chat_id' => $message_id,
             'name' => "网络钩子接收",
-            'text' => file_get_contents('php://input'),
+            'text' =>  $GLOBALS['phpinput1245']
+        //file_get_contents('php://input'),
         ];
         Test::create($data);
         $user_name = '';

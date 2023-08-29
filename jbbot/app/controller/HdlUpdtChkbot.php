@@ -43,6 +43,7 @@ class HdlUpdtChkbot {
 
     require_once  __DIR__."/../../lib/iniAutoload.php";
     require_once  __DIR__."/../../lib/iniTpSqlLsnr.php";
+    require_once  __DIR__."/../../lib/log23.php";
     global  $last_id_offset;
     $last_id_offset=0;
     //  echo 999;die();
@@ -58,11 +59,14 @@ class HdlUpdtChkbot {
       } catch (\Throwable $e) {
         if ($e->getMessage() == "Connection timed out") {
           \think\facade\Log::chkbtWarn($e->getMessage());
+
         }
 
         if ($e->getMessage() == "Connection timed out" || preg_match('/^Operation/', $e->getMessage())) {
             //when mo msg just zusai l ,jeig err..yaosi hav msg,jo fast ret..
            \log23::chbtWarning(":connTimeout last_id_offset=$last_id_offset emsg=".$e->getMessage());
+            die("break..");
+            break;
             continue;
         }
 
@@ -74,14 +78,14 @@ class HdlUpdtChkbot {
         ];
         Test::create($data);
         $last_id_offset += 1;   //if cant process just next ,so continue
-
+        \log23::err(__METHOD__,"e",$e);
         \libspc\log_err_tp($e,__METHOD__,"chkbtErr");
 
 
 
       }
       //end whiletrue item
-      //usleep(10*1000); // 500ms   not need slpp ,bls long conn is 10s
+      usleep(200*1000); // 500ms   not need slpp ,bls long conn is 10s
       //break;
     endwhile;
   }

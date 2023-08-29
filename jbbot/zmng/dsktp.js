@@ -39,6 +39,7 @@ const {
 function createWindow() {
     // 创建浏览器窗口
     const win = new BrowserWindow({
+        icon:"icon.jpg",
         width: 800,
         height: 600,
         webPreferences: {
@@ -91,7 +92,7 @@ function creatTray() {
         }
     ];
     //系统托盘图标
-    appTray = new Tray('qqb.icon')
+    appTray = new Tray('icon.jpg')
     //图标的上下文菜单
     const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
     //设置此托盘图标的悬停提示内容

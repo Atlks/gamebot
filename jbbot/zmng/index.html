@@ -18,6 +18,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"></script>
 
 
     <title>Hel!</title>
@@ -25,11 +29,11 @@
 <body style="padding: 20px">
 
 
-<button type="button" class="btn btn-primary">首页</button>
-<button type="button" class="btn btn-success">上下分管理</button>
-<button type="button" class="btn btn-danger">群管家设置</button>
-<button type="button" class="btn btn-warning">上下分群设置</button>
-<button type="button" class="btn btn-info">日志</button>
+<button   type="button" class="btn btn-primary">首页</button>
+<button   type="button" class="btn btn-success">上下分管理</button>
+<button onclick="clk()" type="button" class="btn btn-danger">群管家设置</button>
+<button    type="button" class="btn btn-warning">上下分群设置</button>
+<button   type="button" class="btn btn-info">日志</button>
 
 
 
@@ -41,9 +45,53 @@
 用户名:<input type="text" id="fname" name="fname"><br><br>
 密  码：<input type="password" id="fname" name="fname"><br>
 <p></p>
-<button onclick="clk()" type="button" class="btn btn-primary" style="width: 100%">登录</button>
+<script src="libx/php.js"></script>
+<script000 src="libBiz/api.js"></script000>
+<button onclick="clk()" id="btnLg" type="button" class="btn btn-primary" style="width00: 100%">登录</button>
 
 <script src="ctrl.js"></script>
+
+<scriptx src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></scriptx>
+
+<script>
+  //  var db = new PouchDB('my_database');
+</script>
+
+
+<script>
+    $(function(){
+
+
+        setInterval(function (){
+            rdmX= Math.round(Math.random() * 1000);console.log(rdmX)
+            img=$("<img src='coin.png'  width='50' height='50' style='position: absolute;top:0' >");
+            img.css("left",rdmX)
+            $(img).animate({ top:555},{ duration: 5000, queue: false });
+
+            $("body").append(img)
+
+        },10000);
+
+        //sametime run 同时运行 效果动画
+        setTimeout(function(){
+            $("#btnLg").animate({width:'100%'},{ duration: 3000, queue: false });
+        },0)
+
+        $("#btnLg").fadeOut(500).fadeIn(3000);
+        console.log(999)
+
+        // $("#btnLg").click(function(){
+        //
+        //     $("#div3").fadeIn(3000).fadeOut(3000);
+        // });
+
+
+
+
+
+
+    });
+</script>
 
 </body>
 </html>

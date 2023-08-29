@@ -44,6 +44,7 @@ class keywdReqHdlr extends Command
             $msgtxt = trim($input->getArgument('argsx'));
             $output->writeln('》》cmd reqhdl' . $msgtxt);
             $json_t = urldecode($msgtxt);
+          $GLOBALS['phpinput1245']=$json_t;
             //  $json=json_decode( $name);
             \think\facade\Log::info("---------------- json_t ---------------------------");
             \think\facade\Log::info(  $json_t );

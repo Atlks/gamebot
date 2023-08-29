@@ -39,6 +39,9 @@ namespace libspc {
         $varobj = json_encode($varobj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
       if (is_bool($varobj))
         $varobj = $varobj ? "TRUE" : "FALSE";
+
+      if (is_null($varobj))
+        $varobj = "@@@null";
       $logf = __DIR__ . "/../runtime/" . date('Y-m-d') . "_$filFrg.log";
       $logtxt = sprintf("%s [%s] %s=>%s", date('mdHis'), $method_linenum, $varname, $varobj);
       file_put_contents($logf, $logtxt . PHP_EOL, FILE_APPEND);
@@ -462,6 +465,7 @@ namespace {
 
 
   function log_setReqChainLog_enterMeth($LineFun, $args) {
+
 
     try {
      if(is_array($LineFun))

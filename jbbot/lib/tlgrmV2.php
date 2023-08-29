@@ -120,6 +120,11 @@ function bot_sendmsg_reply_byQrystr($bot_token, $Qrystr)
     log_enterMeth_reqchain(__LINE__ . __METHOD__, func_get_args()); //login to invchain
     log_enterMethinfo_toLiblog(__LINE__ . __METHOD__, func_get_args(), "tlgrmlib");
 
+     $QrystrDecode=url_qrystrDecode($Qrystr);
+  log_info_toLiblog(__LINE__ . __METHOD__,"QrystrDecode", $QrystrDecode,"tlgrmlib");
+
+
+
     var_dump(__METHOD__ . json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
 
 
@@ -138,6 +143,7 @@ function bot_sendmsg_reply_byQrystr($bot_token, $Qrystr)
         echo PHP_EOL;
         require_once __DIR__ . "/http.php";
         $r = http_get_curl($url_tmp);
+         $r=decodeUnicode($r);
         echo "rzt:" . $r;
         echo PHP_EOL;
 
@@ -146,7 +152,7 @@ function bot_sendmsg_reply_byQrystr($bot_token, $Qrystr)
         var_dump($r);;
 
         log_info_toReqchain(__LINE__ . __METHOD__, "curlrzt", $r);
-        log23::tlgrmlib(__LINE__ . __METHOD__, "curlrzt", $r);
+        log23::tlgrmlib(__LINE__ . __METHOD__, ">>>ret", $r);
 
         return $r;
     } catch (\Throwable $exception) {
@@ -164,5 +170,6 @@ function bot_sendmsg_reply_byQrystr($bot_token, $Qrystr)
     }
 
 }
+
 
 
