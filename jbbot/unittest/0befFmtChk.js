@@ -19,7 +19,7 @@ lines.forEach((line) => {
 
 
 
-    cmd = "php   C:\\modyfing\\jbbot\\test/betFmtChk.php " + encodeURIComponent(betnum) + " " ;
+    cmd = "php   C:\\modyfing\\jbbot\\unittest/betFmtChk.php " + encodeURIComponent(betnum) + " " ;
     console.log(cmd)
     rzt=execSync(cmd).toString();
     rzt=rzt.split("\r\n").pop();

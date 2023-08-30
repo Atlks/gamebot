@@ -1,20 +1,27 @@
+function getLibdir() {
+    // _file=>C:\modyfing\jbbot\zmng\shangxiafen.htm
+    // if embed in htm...filename just htm path
+    console.log("_file=>"+__filename)  //if in html file ,...just for html file path
+    console.log("__dirname=>"+__dirname)
 
-
-console.log(__filename)  //if in html file ,...just for html file path
-console.log(__dirname)
-libdir=__dirname+'/../libx/'
+    //   console.log(__dirname)
+ let   libdir = __dirname + '/../libx/'
 // C:\modyfing\jbbot\zmng/../lib/
-console.log(libdir)
+    console.log(libdir)
 
-const fs = require('fs');
+    const fs = require('fs');
 
-console.log("exist dir:=>"+fs.existsSync(libdir))
+    console.log("exist dir:=>" + fs.existsSync(libdir))
 
-if (!fs.existsSync(libdir)) {
-    console.log(libdir +" not exist")
-    libdir=__dirname+'/libx/'
+    if (!fs.existsSync(libdir)) {
+        console.log(libdir + " not exist")
+        libdir = __dirname + '/libx/'
+    }
+    console.log("libdir=>"+libdir)
+    return libdir;
 }
-console.log(libdir)
+
+let libdir = getLibdir();
 
 var {
     isset,call_user_func,
@@ -49,8 +56,9 @@ apitype_regLogin = 0;  //注册/登录接口
 apitype_kexiafen = 1;//	查询玩家可下分接口
 apitype_shangfen = 2;// 2	玩家上分
 apitype_xiafen = 3;//3	玩家下分
-
-
+apitype_orderQryShagnxiafen = 4;//// 4	玩家上下分订单查询
+apitype_PlayerScore = 7;// 玩家总分查询
+apitype_playerStat = 5;//玩家状态查询
 // apitype=
 //
 // 1	查询玩家可下分接口
@@ -66,8 +74,25 @@ apitype_xiafen = 3;//3	玩家下分
 // 41	玩家上下分订单查询（集合）
 
 module.exports = {reg,login}
-function login(uname, pwd)
-{
+global["playerStat"]=playerStat;
+async function playerStat(uname) {
+    timestamp = time();
+    _paraValue = sprintf("account=%s", uname);
+    //  orderid = sprintf("%s%s%s", agentid, timestamp, uname)
+    //   _paraValue = sprintf(_paraValue, uname, score, orderid);
+
+    let url = buildUrlNget(_paraValue, timestamp);
+    return (await http_get(url));
+
+}
+async function login(uname, pwd) {
+    timestamp = time();
+    _paraValue = "account=%s&score=%s&orderid=%s";
+    orderid = sprintf("%s%s%s", agentid, timestamp, uname)
+    _paraValue = sprintf(_paraValue, uname, score, orderid);
+
+    let url = buildUrlNget(_paraValue, timestamp);
+    return (await http_get(url));
 
 }
 async function reg(uname, pwd, nickname) {
@@ -91,6 +116,37 @@ async function reg(uname, pwd, nickname) {
 
 }
 global["reg"]=reg;
+global["shangfen"]=shangfen;
+
+
+
+async function shangfen(uname, score) {
+
+
+
+
+    timestamp = time();
+    _paraValue = "account=%s&score=%s&orderid=%s";
+    orderid=sprintf("%s%s%s",agentid,timestamp,uname)
+    _paraValue = sprintf(_paraValue, uname, score,orderid);
+
+    let url =   buildUrlNget(_paraValue,timestamp);
+    return  (await http_get( url));
+
+}
+
+
+  function buildUrlNget(_paraValue,timestamp) {
+    paraValue = aes_encrypt(aes_mode_ECB(), _paraValue, desCode);
+    md5key = md5(sprintf("%s%s%s", agentid, timestamp, md5Code));
+
+
+    $url_tpmplt = "https://ng.mqbsx.com/GameHandle?agentid=%s&timestamp=%s&type=%s&paraValue=%s&key=%s";
+    $url = sprintf($url_tpmplt, agentid, timestamp, apitype_shangfen, urlencode(paraValue), md5key);
+
+
+    return $url;
+}
 
 
 

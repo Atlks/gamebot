@@ -39,7 +39,7 @@ const {
 function createWindow() {
     // 创建浏览器窗口
     const win = new BrowserWindow({
-        icon:"icon.jpg",
+        icon:"res/icon.jpg",
         width: 800,
         height: 600,
         webPreferences: {
@@ -51,8 +51,16 @@ function createWindow() {
 
     // 并且为你的应用加载index.html
     win.loadFile('index.html')
-    // win.openDevTools();
+     win.openDevTools();
     creatTray();
+
+    // setTimeout(function (){
+    //
+    //
+    //     app.quit();
+    //     app.quit();
+    //     app.exit()
+    // },5000)
 
 }
 
@@ -92,7 +100,7 @@ function creatTray() {
         }
     ];
     //系统托盘图标
-    appTray = new Tray('icon.jpg')
+    appTray = new Tray('res/icon.jpg')
     //图标的上下文菜单
     const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
     //设置此托盘图标的悬停提示内容
@@ -101,7 +109,7 @@ function creatTray() {
     appTray.setContextMenu(contextMenu);
     //单击右下角小图标显示应用左键
     appTray.on('click', function () {
-        mainWindow.show();
+       // mainWindow.show();
     })
     //右键
     appTray.on('right-click', () => {

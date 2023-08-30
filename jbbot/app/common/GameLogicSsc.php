@@ -1102,8 +1102,14 @@ class GameLogicSsc
                 var_dump($user);
                 \think\facade\Db::name('bet_record')
                     ->where('userid', $user_id)->where('id', $record_id)
-                    ->update(['Payout' => $payout]);
+                    ->update(['Payout' => $payout,"Status"=>1]);
             }
+
+
+            //关闭注单状态完成周期
+             \think\facade\Db::name('bet_record')
+            ->where('userid', $user_id)->where('id', $record_id)
+            ->update(["Status"=>1]);
 
             //  win （betAmt,PaybackAmt,IncomeAmt
             //不管输赢都要计算流水
@@ -1113,9 +1119,6 @@ class GameLogicSsc
 
 
             ////======-------------================= 回显榜单 zhun背
-            // Rebate还没有计算过,暂时搁浅
-            //   $user_id=12;
-            //    array_push($temp_arr, array('player' => $player, 'income' => $income));
 
             $total_payout += $payout;
         endforeach;

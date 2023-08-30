@@ -13,7 +13,7 @@ lines.forEach((line) => {
     arr = line.split(",");
     betnum = arr[0];
     kaijnum = arr[1]; //encodeURIComponent
-    cmd = "php   C:\\modyfing\\jbbot\\test/dwijyo.php " + (betnum) + " " + kaijnum;
+    cmd = "php   C:\\modyfing\\jbbot\\unittest/dwijyo.php " + (betnum) + " " + kaijnum;
     console.log(cmd)
     rzt = execSync(cmd).toString();
     rzt = rzt.split("\r\n").pop();
@@ -43,7 +43,7 @@ lines.forEach((line2) => {
     arr = line.split(",");
     betnum = arr[0];
     kaijnum = arr[1]; //encodeURIComponent
-    cmd = "php   C:\\modyfing\\jbbot\\test/dwijyo.php " + (betnum) + " " + kaijnum;
+    cmd = "php   C:\\modyfing\\jbbot\\unittest/dwijyo.php " + (betnum) + " " + kaijnum;
     console.log(cmd)
     rzt = execSync(cmd).toString();
     console.log(rzt)

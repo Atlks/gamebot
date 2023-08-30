@@ -103,6 +103,31 @@ function iniAutoload820($libnames)
 }
 
 
+
+function iniAutoload3($libnames)
+{
+  ob_start();
+  $logdir = __DIR__ . "/../../runtime/";
+  $GLOBALS['logdir'] = $logdir;
+  require_once __DIR__ . "/../app/common/betstr.php";
+  $dirs307 = '/';    //   /../../lib/,/../lib/,/lib/,
+  $arr_dirs = explode(",", $dirs307);
+  $arr_libs307 = explode(",", $libnames);
+//  $get_included_files553 = get_included_files();
+  require_once __DIR__ . "/autoloadx.php";   require_once __DIR__ . "/log23.php";
+  foreach ($arr_dirs as $dir) {
+    foreach ($arr_libs307 as $libnm) {
+      $fname = __DIR__ . $dir . $libnm . '.php';
+      if (!file_exists($fname))
+        continue;
+      require_once $fname;
+    }
+  }
+  ob_end_clean();
+}
+
+
+
 function ini_autoload820xx($libnames)
 {
 
