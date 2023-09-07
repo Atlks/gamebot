@@ -3,72 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-  <meta name="viewport"
-        content="width=device-width,initial-scale=1.0,maximum-scale=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-          integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-          crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-          integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-          crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-          integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-          crossorigin="anonymous"></script>
-  <script
-          src="https://code.jquery.com/jquery-3.7.0.js"
-          integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
-          crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="res/style.css">
-    <script src="libBiz/api.js"></script>
-    <script src="libx/php.js"></script>
-    <script src="libx/dsl.js"></script>
 
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="node_modules/api2023jb.js"></script>
+    <script src="node_modules/fp_ati1990.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css"/>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+    <script type="module" src="libx/ui.js"></script>
+    <script src="node_modules/jq.js"></script>
+    <script src="node_modules/logger.js"></script>
 </head>
 <body>
 
-<a href="index.html" target="_top"> <<<< </a><p></p>
 
-用户名：<input type="text" value="uname1" id="uname" name="fname"><br><br>
-上下分：<input type="text"  value="200" id="score" name="fname"><br>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
 
-<button onclick="shangfen1236()"   type="button" class="btn btn-primary" style="width00: 100%">上分</button>
-<button onclick="clk()"   type="button" class="btn btn-primary" style="width00: 100%">下分</button>
-<button onclick="playerStat237()"   type="button" class="btn btn-primary" style="width00: 100%">查询上下分</button>
+        <li class="breadcrumb-item"><a href="index.html" target="_top"> home </a></li>
+
+        <li class="breadcrumb-item"><a href="shangxiafen.htm">上下分管理</a></li>
+        <li class="breadcrumb-item"><a href="user.htm">用户管理</a></li>
+        <li class="breadcrumb-item"><a href="oplog.htm">日志</a></li>
 
 
+    </ol>
+</nav>
+
+
+
+<p></p>
+
+用户名：<input type="text" value="uname1" id="uname" name="fname" style="width: 100px">
+上下分：<input type="text" value="200" id="score" name="fname" style="width: 80px"><br>
+<button onclick="playerStat237()" type="button" class="btn btn-success" style="width00: 100%">搜索</button>
+<button onclick="shangfen1236()" type="button" class="btn btn-primary" style="width00: 100%">上分</button>
+<button onclick="xiafen745()" type="button" class="btn btn-primary" style="width00: 100%">下分</button>
+
+<button class="btn btn-primary" disabled id="loaddiv" style="xdisplay:none ">
+    <span class="spinner-border spinner-border-sm"></span>
+    Loading..
+</button>
+
+
+<button onclick="orderQryShagnxiafen415()" type="button" class="btn btn-primary" style="width00: 100%">查询上下分
+</button>
+
+
+<button onclick="PlayerKexiafenBal638()" type="button" class="btn btn-primary" style="width00: 100%">查询可下分</button>
+<button onclick="playerStatV2()" type="button" class="btn btn-success" style="width00: 100%">玩家状态查询</button>
+
+<button class="btn btn-primary" disabled id="loaddiv2" style="xdisplay:none ">
+    <span class="spinner-border spinner-border-sm"></span>
+    Loading..
+</button>
+
+
+<button onclick="player_kickInform()" type="button" class="btn btn-danger" style="width00: 100%">踢玩家下线
+</button>
+
+<p></p>
+
+
+<div class="card">
+    <div class="card-header">
+        玩家管理
+    </div>
+    <div class="card-body">
+
+
+        <table class="table" id="app3">
+            <tr>
+                <td>玩家id</td>
+                <td>昵称</td>
+                <td>余额</td>
+                <td>类型</td>
+                <td>玩家状态</td>
+            </tr>
+
+
+            <tr v-for="item in items" class="hid" style="display: none">
+
+                <td>{{ item.userid }} </td>
+                <td>{{ item.account }}</td>
+                <td> {{ item.totalScore }}</td>
+                <td></td>
+                <td>{{ item.status }}</td>
+            </tr>
+
+
+        </table>
+    </div>
+</div>
+
+<script  type="module" src="https://unpkg.com/vue@3/dist/vue.esm-browser.js"></script>
+<!--
+<div id="app">{{ message }}</div>
+
+
+<ul id="app2">
+  <li v-for="item in items">
+    {{ item.message }}
+  </li>
+
+</ul>
+
+
+ const app1 = createApp({
+    setup() {
+      const message = ref('Hello Vue!')
+      return {
+        message
+      }
+    }
+  }).mount('#app')
+
+
+
+  const app2 = createApp({
+    setup() {
+      const message = ref('Hello Vue!')
+      const items = ref([{ message: 'Foo' }, { message: 'Bar' }])
+      return {
+        items,message
+      }
+    }
+  }).mount('#app2')
+-->
+
+<script type="module">
+
+
+
+
+</script>
+
+<script defer type="module">
+    //defer not take effect ..must type module,then can invk behide the bindJsonToTable
+    var json514 = {
+        "maintype": "/GameHandle",
+        "type": 7,
+        "data": {
+            "code": 0,
+            "agentid": 111356,
+            "linecode": "10001_1",
+            "status": 0,
+            "userid": 32076939,
+            "account": "uname1",
+            "totalScore": 300.0,
+            "integralvalue": 6.0,
+            "addscore": 300.0,
+            "subscore": 0.0,
+            "addscoretimes": 2,
+            "subscoretimes": 0,
+            "totalwinlose": 0.0,
+            "totalrevenue": 0.0
+        }
+    };
+    //console.log( window['bindJsonToTable']) //all undef
+    //console.log( global['bindJsonToTable'])
+    // window['bindJsonToTable'](json514)
+
+
+</script>
+<!--
+ <ul id="app">
+<li v-for="item in items">
+  {{ item.message }}
+</li>
+
+ </ul>
+<script>
+  const { createApp, ref } = Vue
+
+  const app1 = createApp({
+    /* ... */
+  })
+  app1.mount('#app')
+
+  createApp({
+    setup() {
+      const message = ref('Hello vue!')
+      const items = ref([{ message: 'Foo' }, { message: 'Bar' }])
+      return {
+        message
+      }
+    }
+  }).mount('#app')
+</script>
+
+-->
+
+
+<p></p>
+
+<div class="card" id="app_sxfV2">
+    <div class="card-header">
+        上下分记录
+    </div>
+    <div class="card-body">
+
+
+        <table class="table" id="tab_sxf">
+            <thead>
+            <tr>
+                <td>玩家id</td>
+                <td></td>
+                <td>分数</td>
+                <td>时间</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="item in items" style="display: none ">
+
+                <td> {{ item.uname }}</td>
+                <td>{{ item.类型 }}</td>
+                <td> {{ item.score }}</td>
+                <td>{{ item.time }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<p></p>
+
+
+<div class="card" style="display: none">
+    <div class="card-header">
+        下分记录
+    </div>
+    <div class="card-body">
+
+
+        <table class="table">
+            <tr>
+                <td>玩家id</td>
+                <td>昵称</td>
+                <td>分数</td>
+                <td>所属群</td>
+            </tr>
+
+        </table>
+    </div>
+</div>
 <script>
 
-  function  playerStat237()
-  {
 
-    var funname = arguments.callee.name;
-    // arguments.callee.name
-    arg = JSON.stringify(arguments);
-    console.log("*********=>" + funname + arg);
+    $("#loaddiv").hide();   $("#loaddiv2").hide();
+</script>
 
-
-
-    rzt=  dsl_callFunCmdMode("playerStat",$("#uname").val() )
-
-    console.log("[playerStat237] rzt=>" + rzt)
-  }
-  function  shangfen1236()
-  {
-
-    var funname = arguments.callee.name;
-    // arguments.callee.name
-    arg = JSON.stringify(arguments);
-    console.log("*********=>" + funname + arg);
-
-
-
-       rzt=  dsl_callFunCmdMode("shangfen",$("#uname").val(),$("#score").val())
-
-      console.log("[shangfen1236] rzt=>" + rzt)
-  }
+<script src="shangxiafen.js">
 
 
 </script>

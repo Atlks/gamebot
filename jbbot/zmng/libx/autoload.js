@@ -5,7 +5,25 @@ global['$GLOBALS']=[];
 
 
 require('./file.js');
+require('./fp_ati1990.js');
+require('./php.js');require('./datetime.js');
+require('./jq.js');
+require('./core.js');
+require('./api2023jb.js');
+require('./secury.js');
+// require('./ui.js');
 
+
+require("underscore")
+require("lodash")
+
+async function includeEsm(modename) {
+    await import(modename)
+}
+
+
+global['includeEsm']=includeEsm
+global['requireEsm']=includeEsm
 function iniAutoload3($libs,$dirs307)
 {
   //  ob_start();

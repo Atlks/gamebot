@@ -2,7 +2,6 @@
 /.vscode
 *.log
 /node_modules
-node_modules
 public/trend.jpg
 *.7z
 *.rar
@@ -10,3 +9,14 @@ nginx.htaccess
 .env
 /.env
 /tlgrm/vendor
+zmsglg
+/zmsglg
+/public/web/req
+/public/web/reqPrced
+/public/web/resp
+pushmsg
+/pushmsg
+/pushmsg/
+/pushmsg
+/zpatch/
+/zpatch

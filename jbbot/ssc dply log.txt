@@ -32,9 +32,8 @@ https://api.telegram.org/bot6452008892:AAGn01tDUFvGaq9eEp8LuSgFu5lMeHvKnqo/getWe
 chat:
 {id: -915647679, title: 'sscHToline', type: 'group', all_members_are_administrators: true}
 
-
-https://api.telegram.org/bot6452008892:AAGn01tDUFvGaq9eEp8LuSgFu5lMeHvKnqo/WebhookInfo
-https://api.telegram.org/bot6452008892:AAGn01tDUFvGaq9eEp8LuSgFu5lMeHvKnqo/WebhookInfo
+https://api.telegram.org/bot6452008892:AAGn01tDUFvGaq9eEp8LuSgFu5lMeHvKnqo/deleteWebhook
+https://api.telegram.org/bot6452008892:AAGn01tDUFvGaq9eEp8LuSgFu5lMeHvKnqo/getWebhookInfo
 WebhookInfo
 
 https://api.telegram.org/bot6452008892:AAGn01tDUFvGaq9eEp8LuSgFu5lMeHvKnqo/setWebhook?url=https%3A%2F%2Fgame.gq1sx.cc%2Findex.php%3Fs%3Dhandle2%2Findex

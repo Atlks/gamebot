@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"></script>
+
+
+    <link rel="stylesheet" href="res/style.css">
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="node_modules/api2023jb.js"></script>
+    <script src="node_modules/fp_ati1990.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css"/>
+
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+    <script type="module" src="libx/ui.js"></script>
+</head>
+<body>
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+
+        <li class="breadcrumb-item"><a href="index.html" target="_top"> home </a></li>
+
+        <li class="breadcrumb-item"><a href="shangxiafen.htm">上下分管理</a></li>
+        <li class="breadcrumb-item"><a href="#">群管理</a></li>
+        <li class="breadcrumb-item"><a href="oplog.htm">日志</a></li>
+
+
+    </ol>
+</nav>
+
+
+
+
+
+<script  type="module" src="https://unpkg.com/vue@3/dist/vue.esm-browser.js"></script>
+<!--
+<div id="app">{{ message }}</div>
+
+
+<ul id="app2">
+  <li v-for="item in items">
+    {{ item.message }}
+  </li>
+
+</ul>
+
+
+ const app1 = createApp({
+    setup() {
+      const message = ref('Hello Vue!')
+      return {
+        message
+      }
+    }
+  }).mount('#app')
+
+
+
+  const app2 = createApp({
+    setup() {
+      const message = ref('Hello Vue!')
+      const items = ref([{ message: 'Foo' }, { message: 'Bar' }])
+      return {
+        items,message
+      }
+    }
+  }).mount('#app2')
+-->
+
+<script type="module">
+
+
+
+
+</script>
+
+<script defer type="module">
+    //defer not take effect ..must type module,then can invk behide the bindJsonToTable
+    var json514 = {
+        "maintype": "/GameHandle",
+        "type": 7,
+        "data": {
+            "code": 0,
+            "agentid": 111356,
+            "linecode": "10001_1",
+            "status": 0,
+            "userid": 32076939,
+            "account": "uname1",
+            "totalScore": 300.0,
+            "integralvalue": 6.0,
+            "addscore": 300.0,
+            "subscore": 0.0,
+            "addscoretimes": 2,
+            "subscoretimes": 0,
+            "totalwinlose": 0.0,
+            "totalrevenue": 0.0
+        }
+    };
+    //console.log( window['bindJsonToTable']) //all undef
+    //console.log( global['bindJsonToTable'])
+    // window['bindJsonToTable'](json514)
+
+
+</script>
+<!--
+ <ul id="app">
+<li v-for="item in items">
+  {{ item.message }}
+</li>
+
+ </ul>
+<script>
+  const { createApp, ref } = Vue
+
+  const app1 = createApp({
+    /* ... */
+  })
+  app1.mount('#app')
+
+  createApp({
+    setup() {
+      const message = ref('Hello vue!')
+      const items = ref([{ message: 'Foo' }, { message: 'Bar' }])
+      return {
+        message
+      }
+    }
+  }).mount('#app')
+</script>
+
+-->
+
+
+<p></p>
+<div class="card" id="app_oplog">
+    <div class="card-header">
+        操作记录
+    </div>
+    <div class="card-body">
+
+
+        <table class="table" id="tab_oplog">
+            <thead>
+            <tr>
+                <td>操作</td>
+                <td>玩家id</td>
+
+                <td></td>
+                <td>操作时间</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="item in items" style="display: none00 ">
+                <td>{{ item.op }}</td>
+                <td> {{ item.uname }}</td>
+
+                <td> {{  }}</td>
+                <td>{{ item.time }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<p></p>
+
+
+
+
+<script defer >
+
+    require("./libx/autoload")
+
+    // var funname = arguments.callee.name;
+    // // arguments.callee.name
+    // arg = JSON.stringify(arguments);
+    // console.log("*********=>" + funname + arg);
+
+    //或者下面这个方法，jQuer的默认参数是：“document”；
+    $().ready(function(){
+        //do something
+      let  rzt=  dsl_callFunCmdMode("oplog_qry"  )
+
+        console.log(" rzt json str is :"+rzt)
+        loadToTableVue( json_decode (rzt),"app_oplog" )
+    });
+
+
+
+    // let dbfile = __dirname + "/../db/opLogColl.json";
+    //
+    // console.log("dbfile=>"+dbfile)
+    // //  pdo_exec_insert()
+    //
+    //
+    // let _= require('lodash') ;
+    // rzt =pdo_query({},dbfile);
+
+
+
+
+    // console.log("[playerStat237] rzt=>" + rzt)
+
+    // $("#app2 tr").each( (idx,item)=>{
+    //     // item.show();  item.css("display","");
+    //     //  alert(item)
+    //     //  alert($(item)[0])
+    //     $(item).css("display","");
+    //     $(item).show();
+    // })
+
+
+</script>
+</body>
+</html>

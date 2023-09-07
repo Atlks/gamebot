@@ -1,0 +1,52 @@
+
+####   从 CJS 导入 ESM 模块
+当我们想在现有 CJS 代码中使用新的 ESM 模块时，事情会变得更加棘手。 我们不能在 CJS 文件中使用 import 语句。 然而动态 import() 语法确实有效，并且可以与 await 配合从而相对方便地访问模块：
+
+
+ ESM 的异步特性也导致了它在 CJS 代码中的使用限制。 CJS 文件不支持顶级 await，因此我们不能单独使用 import：
+
+// this...
+import component from "component.mjs";
+
+// ...可以看成等价于这个...
+const component = await import("component.mjs");
+
+// ...但是 CJS 中没有顶级“ await”
+
+因此，我们必须在异步函数中使用动态 import() 结构。
+
+
+
+CommonJS 引用 ESM
+
+ES Modules 的设计主要考虑能够引用旧的 CommonJS，而且为了更大程度的兼容 ES Modules 一般会在发布前编译到 CommonJS。 因此 CommonJS 直接引用 ES Modules 的情况比较少。但如果真的存在这种情况，需要使用 import API：
+
+const foo = await import('./foo.mjs')
+
+
+    await import("../lowdbx/lowdbX.js")
+
+
+
+##           *****   ESM 引用 CommonJS
+
+  总之 Node.js 支持在 ESM 中可以直接使用 import 语句来引入 CommonJS 模块：
+
+
+
+  import =
+
+  这是一个非标准的例子，通过 import = + require 的方式来引用 CommonJS 模块：
+
+  import a = require('./a.js')
+  console.log(a)  // prints {foo: "foo"}
+
+  因为这一语法在 Babel 和 TypeScript 中都支持， 而且非常方便从 ES5 的 const a = require('./a.js') 语法迁移代码。 因此这种使用方式非常流行。 尽管如此，它没有定义在 ES Modules 标准中，也就是说 import = 是不标准的。
+
+
+
+
+
+ESM 模块可以 import CJS 模块，但是只能通过“默认导入”的模式，比如 import _ from 'lodash'，而不支持“命名导入”，比如 import {shuffle} from 'lodash'。
+ESM 模块可以 require() CJS 模块，包括“命名导出”的，但是依然会有很多问题，类似 Webpack 或者 Rollup 这样的工具甚至不知道该怎么出处理 ESM 里的 require() 代码。
+Node 默认支持的还是 CJS 规范，你需要选择用 .mjs 这样的后缀，或者在 package.json 里设置 "type": "module" 才能开启 ESM 模式。通过 package.json 开启的话，如果有 CJS 规范的文件，就得相反将后缀改成 .cjs。

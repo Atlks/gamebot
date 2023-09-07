@@ -1,0 +1,7 @@
+  var rcd = {"uname": uname, "score": score, "类型": "下分", "time": curDateTime()}
+      dbfile = __dirname + "/../scoreLogColl.json";
+    await pdo_exec_inse  var rcd = {"uname": uname, "score": score, "类型": "下分", "time": curDateTime()}
+                             dbfile = __dirname + "/../scoreLogColl.json";
+              var rcd = {"uname": uname, "score": score, "类型": "下分", "time": curDateTime()}
+                  dbfile = __dirname + "/../scoreLogColl.json";
+                await pdo_exec_insert(rcd, dbfile);               await pdo_exec_insert(rcd, dbfile);rt(rcd, dbfile);

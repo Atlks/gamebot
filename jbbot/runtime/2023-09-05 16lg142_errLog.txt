@@ -1,0 +1,110 @@
+[05-Sep-2023 16:27:31 Asia/Shanghai] PHP Fatal error:  Uncaught think\exception\HttpException: method not exists:app\controller\Index->index() in C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php:107
+Stack trace:
+#0 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(59): think\route\dispatch\Controller->think\route\dispatch\{closure}()
+#1 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(66): think\Pipeline->think\{closure}()
+#2 C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php(113): think\Pipeline->then()
+#3 C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\Dispatch.php(90): think\route\dispatch\Controller->exec()
+#4 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Route.php(785): think\route\Dispatch->run()
+#5 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(59): think\Route->think\{closure}()
+#6 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(66): think\Pipeline->think\{closure}()
+#7 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Route.php(786): think\Pipeline->then()
+#8 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(216): think\Route->dispatch()
+#9 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(206): think\Http->dispatchToRoute()
+#10 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(59): think\Http->think\{closure}()
+#11 C:\modyfing\jbbot\vendor\topthink\framework\src\think\middleware\AllowCrossDomain.php(61): think\Pipeline->think\{closure}()
+#12 [internal function]: think\middleware\AllowCrossDomain->handle()
+#13 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Middleware.php(142): call_user_func()
+#14 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(85): think\Middleware->think\{closure}()
+#15 C:\modyfing\jbbot\vendor\topthink\think-trace\src\TraceDebug.php(71): think\Pipeline->think\{closure}()
+#16 [internal function]: think\trace\TraceDebug->handle()
+#17 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Middleware.php(142): call_user_func()
+#18 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(85): think\Middleware->think\{closure}()
+#19 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(66): think\Pipeline->think\{closure}()
+#20 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(207): think\Pipeline->then()
+#21 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(170): think\Http->runWithRequest()
+#22 C:\modyfing\jbbot\public\index.php(73): think\Http->run()
+#23 {main}
+  thrown in C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php on line 107
+[05-Sep-2023 16:27:31 Asia/Shanghai] PHP Fatal error:  Uncaught think\exception\ErrorException: Uncaught think\exception\HttpException: method not exists:app\controller\Index->index() in C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php:107
+Stack trace:
+#0 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(59): think\route\dispatch\Controller->think\route\dispatch\{closure}()
+#1 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(66): think\Pipeline->think\{closure}()
+#2 C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php(113): think\Pipeline->then()
+#3 C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\Dispatch.php(90): think\route\dispatch\Controller->exec()
+#4 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Route.php(785): think\route\Dispatch->run()
+#5 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(59): think\Route->think\{closure}()
+#6 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(66): think\Pipeline->think\{closure}()
+#7 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Route.php(786): think\Pipeline->then()
+#8 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(216): think\Route->dispatch()
+#9 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(206): think\Http->dispatchToRoute()
+#10 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(59): think\Http->think\{closure}()
+#11 C:\modyfing\jbbot\vendor\topthink\framework\src\think\middleware\AllowCrossDomain.php(61): think\Pipeline->think\{closure}()
+#12 [internal function]: think\middleware\AllowCrossDomain->handle()
+#13 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Middleware.php(142): call_user_func()
+#14 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(85): think\Middleware->think\{closure}()
+#15 C:\modyfing\jbbot\vendor\topthink\think-trace\src\TraceDebug.php(71): think\Pipeline->think\{closure}()
+#16 [internal function]: think\trace\TraceDebug->handle()
+#17 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Middleware.php(142): call_user_func()
+#18 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(85): think\Middleware->think\{closure}()
+#19 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(66): think\Pipeline->think\{closure}()
+#20 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(207): think\Pipeline->then()
+#21 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(170): think\Http->runWithRequest()
+#22 C:\modyfing\jbbot\public\index.php(73): think\Http->run()
+#23 {main}
+  thrown in C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php:107
+Stack trace:
+#0 [internal function]: think\initializer\Error->appShutdown()
+#1 {main}
+  thrown in C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php on line 107
+[05-Sep-2023 16:27:36 Asia/Shanghai] PHP Fatal error:  Uncaught think\exception\HttpException: controller not exists:app\controller\Tmot in C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php:76
+Stack trace:
+#0 C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\Dispatch.php(90): think\route\dispatch\Controller->exec()
+#1 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Route.php(785): think\route\Dispatch->run()
+#2 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(59): think\Route->think\{closure}()
+#3 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(66): think\Pipeline->think\{closure}()
+#4 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Route.php(786): think\Pipeline->then()
+#5 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(216): think\Route->dispatch()
+#6 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(206): think\Http->dispatchToRoute()
+#7 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(59): think\Http->think\{closure}()
+#8 C:\modyfing\jbbot\vendor\topthink\framework\src\think\middleware\AllowCrossDomain.php(61): think\Pipeline->think\{closure}()
+#9 [internal function]: think\middleware\AllowCrossDomain->handle()
+#10 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Middleware.php(142): call_user_func()
+#11 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(85): think\Middleware->think\{closure}()
+#12 C:\modyfing\jbbot\vendor\topthink\think-trace\src\TraceDebug.php(71): think\Pipeline->think\{closure}()
+#13 [internal function]: think\trace\TraceDebug->handle()
+#14 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Middleware.php(142): call_user_func()
+#15 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(85): think\Middleware->think\{closure}()
+#16 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(66): think\Pipeline->think\{closure}()
+#17 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(207): think\Pipeline->then()
+#18 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(170): think\Http->runWithRequest()
+#19 C:\modyfing\jbbot\public\index.php(73): think\Http->run()
+#20 {main}
+  thrown in C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php on line 76
+[05-Sep-2023 16:27:36 Asia/Shanghai] PHP Fatal error:  Uncaught think\exception\ErrorException: Uncaught think\exception\HttpException: controller not exists:app\controller\Tmot in C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php:76
+Stack trace:
+#0 C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\Dispatch.php(90): think\route\dispatch\Controller->exec()
+#1 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Route.php(785): think\route\Dispatch->run()
+#2 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(59): think\Route->think\{closure}()
+#3 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(66): think\Pipeline->think\{closure}()
+#4 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Route.php(786): think\Pipeline->then()
+#5 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(216): think\Route->dispatch()
+#6 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(206): think\Http->dispatchToRoute()
+#7 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(59): think\Http->think\{closure}()
+#8 C:\modyfing\jbbot\vendor\topthink\framework\src\think\middleware\AllowCrossDomain.php(61): think\Pipeline->think\{closure}()
+#9 [internal function]: think\middleware\AllowCrossDomain->handle()
+#10 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Middleware.php(142): call_user_func()
+#11 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(85): think\Middleware->think\{closure}()
+#12 C:\modyfing\jbbot\vendor\topthink\think-trace\src\TraceDebug.php(71): think\Pipeline->think\{closure}()
+#13 [internal function]: think\trace\TraceDebug->handle()
+#14 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Middleware.php(142): call_user_func()
+#15 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(85): think\Middleware->think\{closure}()
+#16 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Pipeline.php(66): think\Pipeline->think\{closure}()
+#17 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(207): think\Pipeline->then()
+#18 C:\modyfing\jbbot\vendor\topthink\framework\src\think\Http.php(170): think\Http->runWithRequest()
+#19 C:\modyfing\jbbot\public\index.php(73): think\Http->run()
+#20 {main}
+  thrown in C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php:76
+Stack trace:
+#0 [internal function]: think\initializer\Error->appShutdown()
+#1 {main}
+  thrown in C:\modyfing\jbbot\vendor\topthink\framework\src\think\route\dispatch\Controller.php on line 76

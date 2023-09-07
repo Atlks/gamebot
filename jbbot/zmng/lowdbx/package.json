@@ -1,0 +1,8 @@
+{
+  "main": "lowdbX.js",
+  "name": "@attilax/lowdbx",
+  "version": "1.6.0",
+  "type": "module",
+  "dependencies": {
+  }
+}

@@ -64,43 +64,50 @@ class File implements LogHandlerInterface
      */
     public function save(array $log): bool
     {
-        $destination = $this->getMasterLogFile();
 
-        $path = dirname($destination);
-        !is_dir($path) && mkdir($path, 0755, true);
+        try{
+            $destination = $this->getMasterLogFile();
 
-        $info = [];
+            $path = dirname($destination);
+            !is_dir($path) && mkdir($path, 0755, true);
 
-        // 日志信息封装
-        $time = \DateTime::createFromFormat('0.u00 U', microtime())->setTimezone(new \DateTimeZone(date_default_timezone_get()))->format($this->config['time_format']);
+            $info = [];
 
-        foreach ($log as $type => $val) {
-            $message = [];
-            foreach ($val as $msg) {
-                if (!is_string($msg)) {
-                    $msg = var_export($msg, true);
+            // 日志信息封装
+            $time = \DateTime::createFromFormat('0.u00 U', microtime())->setTimezone(new \DateTimeZone(date_default_timezone_get()))->format($this->config['time_format']);
+
+            foreach ($log as $type => $val) {
+                $message = [];
+                foreach ($val as $msg) {
+                    if (!is_string($msg)) {
+                        $msg = var_export($msg, true);
+                    }
+
+                    $message[] = $this->config['json'] ?
+                        json_encode(['time' => $time, 'type' => $type, 'msg' => $msg], $this->config['json_options']) :
+                        sprintf($this->config['format'], $time, $type, $msg);
                 }
 
-                $message[] = $this->config['json'] ?
-                json_encode(['time' => $time, 'type' => $type, 'msg' => $msg], $this->config['json_options']) :
-                sprintf($this->config['format'], $time, $type, $msg);
+                if (true === $this->config['apart_level'] || in_array($type, $this->config['apart_level'])) {
+                    // 独立记录的日志级别
+                    $filename = $this->getApartLevelFile($path, $type);
+                    $this->write($message, $filename);
+                    continue;
+                }
+
+                $info[$type] = $message;
             }
 
-            if (true === $this->config['apart_level'] || in_array($type, $this->config['apart_level'])) {
-                // 独立记录的日志级别
-                $filename = $this->getApartLevelFile($path, $type);
-                $this->write($message, $filename);
-                continue;
+            if ($info) {
+                return $this->write($info, $destination);
             }
 
-            $info[$type] = $message;
+            return true;
+        }catch (\Throwable $e)
+        {
+            return true;
         }
 
-        if ($info) {
-            return $this->write($info, $destination);
-        }
-
-        return true;
     }
 
     /**
@@ -130,6 +137,7 @@ class File implements LogHandlerInterface
     try{
          return  error_log($message, 3, $destination);
     }catch(\Throwable $e) {
+        var_dump($e);
       return true;
     }
     }

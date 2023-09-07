@@ -20,26 +20,16 @@ function getLibdir() {
     return libdir;
 }
 
-var {
-    isset, call_user_func,
-    echo,
-    substr,
-    console_log,
-    sprintf,
-    startwith,
-    str_replace,
-    strtolower,
-    strlen,
-    strpos,
-    trim,
-    sprintf, time
-} = require(libdir + 'php.js');
-const {http_get} = require(libdir + 'http.js');
+
+//require("fp_ati1990");require("http")
+
 const {aes_encrypt, aes_decrypt, aes_mode_ECB, aes_mode_CBC} = require(libdir + 'aes.js');
 
 const {urlencode, md5} = require(libdir + 'enc.js');
-const {reg, login} = require('../libBiz/api.js');
+require("./api2023jb.js")
 const fs = require("fs");
+require("./fp_ati1990");
+require("./errHdlr");require("./logger")
 global["reg"] = reg;
 global["login"] = login;
 
@@ -51,17 +41,27 @@ global["login"] = login;
 
 
 async function main() {
+
+    var winlogger = require("./logger");
     const args = process.argv.slice(2)
     echo("**********callFun.js prm==>" + args)
+    log_info("**********callFun.js prm==>" + args)
     echo("\r\n")
-     $rz=await call_user_func(args[0],process.argv.slice(3))
-   // $rz = "99999"
+
+    try {
+        $rz = await call_func(args[0], process.argv.slice(3))
+    } catch (e) {
+        echo(e)
+        $rz = errorSeriz(e);
+    }
+
+    // $rz = "99999"
     echo("88888888888888888888888888")
     echo($rz);
     //  app.quit(); app.quit();
     // console.log(777);
 
-     process.exit()
+    process.exit()
 }
 
 main();
@@ -109,25 +109,24 @@ main();
 // reg u2 pwd u2nknm
 
 
-    //  process.kill(process.pid, 'SIGTERM')
-    //  console.log(888);
-    //  app.exit()
+//  process.kill(process.pid, 'SIGTERM')
+//  console.log(888);
+//  app.exit()
 
-    //must use timer to close ,maybe in async thread..
+//must use timer to close ,maybe in async thread..
 
-    // setTimeout(function (){
-    //
-    //
-    //     app.quit();
-    //     app.quit();
-    //     app.exit()
-    // },100)
+// setTimeout(function (){
+//
+//
+//     app.quit();
+//     app.quit();
+//     app.exit()
+// },100)
 
-    //close21();
+//close21();
 
-    //app.exit();
-    // app.quit();//因为程序设定关闭为最小化，所以调用两次关闭，防止最大化时一次不能关闭的情况
-
+//app.exit();
+// app.quit();//因为程序设定关闭为最小化，所以调用两次关闭，防止最大化时一次不能关闭的情况
 
 
 // electron  --unhandled-rejections=strict  C:\modyfing\jbbot\zmng/libx/callFun.js reg uname1 pwd uname1nknm

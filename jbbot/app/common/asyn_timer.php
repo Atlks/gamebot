@@ -6,10 +6,11 @@
 
 function swoole_timer_afterx($fun, $args, $delaytime_sec)
 {
+  try{
     $get_included_files553 = get_included_files();
     require_once __DIR__ . "/../../lib/iniAutoload.php";
     $get_included_files553 = get_included_files();
-     require_once __DIR__ . "/../../lib/file.php";
+    require_once __DIR__ . "/../../lib/file.php";
     log23::Timerinfo(__LINE__.__METHOD__, "args", json_encode(func_get_args(), JSON_UNESCAPED_UNICODE));
 
 
@@ -18,6 +19,11 @@ function swoole_timer_afterx($fun, $args, $delaytime_sec)
     $nextFuncIvkTxt = asyn_build_async_task($fun, $args, $exeTime);
     $fil = sprintf("%s/../../pushmsg/%s_%s.txt", __DIR__, time(), rand());
     file_put_contentsx($fil, $nextFuncIvkTxt);
+
+  }catch(\Throwable $ex){
+    var_dump($ex);
+
+  }
 
 
 }
