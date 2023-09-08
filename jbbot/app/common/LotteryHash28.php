@@ -5,11 +5,11 @@ namespace app\common;
 use app\common\Lottery;
 use app\common\helper;
 use app\common\Logs;
-  //   app\common\LotteryHash28
+//   app\common\LotteryHash28
 class LotteryHash28 extends Lottery
 {
 
-    protected $api_url = "https://apilist.tronscanapi.com/api/block";
+    protected $api_url = "https://api.kzx71.vip/getLastNo";
     protected $http_helper;
     public $data = false;
     protected $start = false;
@@ -29,39 +29,53 @@ class LotteryHash28 extends Lottery
     // 获取最后彩期
     public function get_last_no()
     {
-        $log = Logs::get_last_lottery_log();
-        $today = date("Y-m-d", time());
-        $no = ""; //date("md", time());
-
-        $tm = time();
-        $url = "https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=$tm&closest=before&apikey=VASRGU6XT768WSKI2VME6Z8ZK3GK5E3UDT";
-        $res = $this->http_helper->http_request($url);
-        $res = json_decode($res);
-        $hash = $res->result + 12;
-        $this->data = [
-            'lottery_no' => $hash,
-            'hash_no' => $hash,
-            'opentime' => time()
-        ];
-        return $this->data;
+        //$url = "https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=$tm&closest=before&apikey=VASRGU6XT768WSKI2VME6Z8ZK3GK5E3UDT";
+        try {
+            $res = file_get_contents($this->api_url);
+            $res = json_decode($res, true);
+            if (empty($res) || !isset($res['data'])) return false;
+            $issue = $res['data']['issue'];
+            $hash_no = $res['data']['hash_no'];
+            $time = $res['data']['openTime'];
+            $this->data = [
+                'lottery_no' => $issue,
+                'hash_no' => $hash_no,
+                'opentime' => $time
+            ];
+            return $this->data;
+        } catch (\Exception $e) {
+            $dbgstr = $e->getMessage() . " " . $e->getFile() . ":" . $e->getLine();
+            trace($dbgstr, "debug");
+            return false;
+        }
     }
 
     // 获取当前彩期
     public function get_current_no()
     {
         //if this data ,ret true
-        if (!$this->data) return false;
-
-        $now = time();
-        // 120秒一期
-        $elapsed = $now - $this->last_opentime;
-        $step = 1 + intval($elapsed / 120);
-        $mod = $elapsed % 120;
-        if ($mod > 14)
-            $step += 1;
-        $this->data['hash_no'] += 12 * $step;
-        $this->data['lottery_no'] = $this->data['hash_no'];
-        return $this->data;
+        try {
+            if (!$this->data) return false;
+            $res = file_get_contents($this->api_url);
+            $res = json_decode($res, true);
+            if (empty($res) || !isset($res['data'])) return false;
+            $issue = $res['data']['issue'];
+            $hash_no = $res['data']['hash_no'];
+            $time = $res['data']['openTime'];
+            if (intval($issue) > intval($this->data['lottery_no'])) {
+                $this->data = [
+                    'lottery_no' => $issue,
+                    'hash_no' => $hash_no,
+                    'opentime' => $time
+                ];
+                return $this->data;
+            }
+            return false;
+        } catch (\Exception $e) {
+            $dbgstr = $e->getMessage() . " " . $e->getFile() . ":" . $e->getLine();
+            trace($dbgstr, "debug");
+            return false;
+        }
     }
 
 
@@ -86,9 +100,9 @@ class LotteryHash28 extends Lottery
 
     public function drawV2()
     {
-         var_dump("drawV2");
-         \think\facade\Log::info("drawV2843");
-         var_dump($this->data);
+        var_dump("drawV2");
+        \think\facade\Log::info("drawV2843");
+        var_dump($this->data);
         if (!$this->data) return false;
         try {
             $HexNum = dechex($this->data['hash_no']);
@@ -99,16 +113,16 @@ class LotteryHash28 extends Lottery
             \think\facade\Log::info($lineNumStr);
             \think\facade\Log::info($url);
             var_dump($url);
-            $t = file_get_contents ($url);
-          //  var_dump($t);
+            $t = file_get_contents($url);
+            //  var_dump($t);
             \think\facade\Log::info($t);
             $json = json_decode($t, true);
             return  $json['result']['hash'];
         } catch (\Exception $e) {
-            $dbgstr=$e->getMessage()." ".$e->getFile().":".$e->getLine();
+            $dbgstr = $e->getMessage() . " " . $e->getFile() . ":" . $e->getLine();
             var_dump($dbgstr);
             \think\facade\Log::warning($dbgstr);
-            $j_tx=json_encode($e,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+            $j_tx = json_encode($e, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             \think\facade\Log::warning($j_tx);
             trace($e->getMessage(), "debug");
             return false;

@@ -32,6 +32,7 @@ class Logs
     }
 
 
+    //date not use ..
     public static function addLotteryLog($date, $lottery_no, $hash_no)
     {
         \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));

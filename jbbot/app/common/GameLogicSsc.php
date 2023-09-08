@@ -1054,6 +1054,8 @@ class GameLogicSsc
         $temp_arr = [];  //榜单显示临时变量
         //---------------------#开始计算输赢   得到中奖玩家名单 get bingo user lst
         foreach ($records as $k => $v) :
+          try {
+
             $record_id = $v['Id'];
             $user_id = $v['UserId'];  //tg id
             $betType_id = $v['Type'];
@@ -1071,45 +1073,45 @@ class GameLogicSsc
             $player = $v['player'];
             $payout = 0;
 
-          //  var_dump($income);
+            //  var_dump($income);
             $user = $this->userDb->findByUserId($user_id);
             $player = new \app\common\Player($user);
 
             $rzt_dwojyo= betstrX__compare_dwijyo($betContext, $kaij_num);
-              //  dwijyo($betContext, $kaij_num);
+            //  dwijyo($betContext, $kaij_num);
             if (!$rzt_dwojyo) {
-                \think\facade\Log::info("dwijyuo rzt false");
-                var_dump("dwijyuo rzt false");
+              \think\facade\Log::info("dwijyuo rzt false");
+              var_dump("dwijyuo rzt false");
             } else {
-                //-----------------中奖啦
-                var_dump("dwijyuo rzt true");
-                \think\facade\Log::info("dwijyuo rzt true");
-                $odds = $v['Odds'];
-                var_dump($odds);
-                var_dump($v);
-                $payout = $v['Bet'] * $odds;
-                var_dump($payout);
-                //---------------------### 赢家 结算之后计入玩家流水----------------------
+              //-----------------中奖啦
+              var_dump("dwijyuo rzt true");
+              \think\facade\Log::info("dwijyuo rzt true");
+              $odds = $v['Odds'];
+              var_dump($odds);
+              var_dump($v);
+              $payout = $v['Bet'] * $odds;
+              var_dump($payout);
+              //---------------------### 赢家 结算之后计入玩家流水----------------------
 
 
 
-                // 玩家需要更新字段,Total_Payout;
-                // 玩家的日报需要更新字段 PayoutAmount,Income;
-                // 结算之后计入玩家流水
+              // 玩家需要更新字段,Total_Payout;
+              // 玩家的日报需要更新字段 PayoutAmount,Income;
+              // 结算之后计入玩家流水
 
-                //  var_dump(  $user);
-                // $user['']
-                var_dump($user);
-                \think\facade\Db::name('bet_record')
-                    ->where('userid', $user_id)->where('id', $record_id)
-                    ->update(['Payout' => $payout,"Status"=>1]);
+              //  var_dump(  $user);
+              // $user['']
+              var_dump($user);
+              \think\facade\Db::name('bet_record')
+                ->where('userid', $user_id)->where('id', $record_id)
+                ->update(['Payout' => $payout,"Status"=>1]);
             }
 
 
             //关闭注单状态完成周期
-             \think\facade\Db::name('bet_record')
-            ->where('userid', $user_id)->where('id', $record_id)
-            ->update(["Status"=>1]);
+            \think\facade\Db::name('bet_record')
+              ->where('userid', $user_id)->where('id', $record_id)
+              ->update(["Status"=>1]);
 
             //  win （betAmt,PaybackAmt,IncomeAmt
             //不管输赢都要计算流水
@@ -1121,6 +1123,12 @@ class GameLogicSsc
             ////======-------------================= 回显榜单 zhun背
 
             $total_payout += $payout;
+
+          }catch (\Throwable $e)
+          {
+
+          }
+
         endforeach;
         //  结束对讲
 
@@ -1204,6 +1212,7 @@ class GameLogicSsc
             }
             return join("", $a);
         } catch (\Throwable $exception) {
+          try{
             $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
             \think\facade\Log::error("----------------errrrr5---------------------------");
             \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
@@ -1211,6 +1220,8 @@ class GameLogicSsc
             \think\facade\Log::error("errtraceStr:" . $exception->getTraceAsString());
             var_dump($exception);
             return "";
+          } catch (\Throwable $exception) {  return "";}
+
             // throw $exception; // for test
         }
     }

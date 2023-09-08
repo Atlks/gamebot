@@ -96,11 +96,14 @@ die();
     }
 
 
-    public function msghdl($frmNet)
-    {
-        try{
-            $update = json_decode($frmNet, true);
-            $message = $update["message"];
+  public function msghdl($frmNet) {
+    try {
+      $update = json_decode($frmNet, true);
+      if (!$update)
+        return;
+      $message = $update["message"];
+      if (!$message)
+        return;
 
             $text = $message['text'];
             $chat_id = $message['chat']['id'];

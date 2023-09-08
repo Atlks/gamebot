@@ -86,6 +86,8 @@ class LotteryHashSsc extends Lottery
                 $GLOBALS['qihao']= $qihao;
               // $GLOBALS['kaijtime']=$kaijtime;
                 $GLOBALS['kaijtime']=$jsonobj['data']['closeTime'];
+                $GLOBALS['nextBlknum']=$jsonobj['data']['hash_no'];
+              $GLOBALS['kaijBlknum']=$jsonobj['data']['hash_no'];
                 //
 //                var_dump($blknum);
 //                // die();
@@ -108,7 +110,8 @@ class LotteryHashSsc extends Lottery
 
                 $this->data = [
                     'lottery_no' => $qihao,
-                    'hash_no' => $qihao,
+                  //  'hash_no' => $qihao,
+                  'hash_no' =>  $GLOBALS['nextBlknum'],
                     'closetime'=> $jsonobj['data']['closeTime']
                 ];
                 return $this->data;

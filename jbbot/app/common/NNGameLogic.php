@@ -447,6 +447,25 @@ class NNGameLogic
                 } else if ($k === "c") {
                     imagefilledrectangle($img, $x - $col_x - $x_padding * 2 + $room_in, $temp_height - $row_hight - $y_padding + 1 + $room_in, $x - $room_in, $temp_height - $room_in, $big_2_color);
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $text_nn_color, $font, $value);
+                } else if ($k === "result") {
+                    if (preg_match_all('/\d+/', $value, $num_array)) {
+                        //var_dump($num_array);
+                        $box = imagettfbbox($font_size, 0, $font, "1");
+                        $w = $box[2] - $box[0];
+                        $box = imagettfbbox($font_size, 0, $font, " ");
+                        $space = $box[2] - $box[0];
+                        for ($i = 0; $i < 3; $i++) {
+                            $num = $num_array[0][$i];
+                            $offset_w = $i * $w * 2;
+                            $color = $small_1_color;
+                            if ($num > 4) {
+                                $color = $big_2_color;
+                            }
+                            imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $offset_w, $temp_height - $font_size / 2, $color, $font, $num . "");
+                            if ($i < 2)
+                                imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding) + $space + $offset_w, $temp_height - $font_size / 2, $text_color, $font, " ");
+                        }
+                    }
                 } else {
                     imagettftext($img, $font_size, 0, intval($pre_col_x[$k] - $pre_col_w[$k] - $x_padding), $temp_height - $font_size / 2, $text_color, $font, $value);
                 }

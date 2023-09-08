@@ -484,6 +484,7 @@ function getKaijNumFromBlkhash_cye5vi($blkHash)
 
 function getKaijNumFromBlkhash($blkHash)
 {
+
     \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     $blkHash = trim($blkHash);
     $blkHash = substr($blkHash, 2);

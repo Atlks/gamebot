@@ -1,6 +1,5 @@
-// C:\w\sdkprj\node_modules\electron\dist\electron.exe  C:\modyfing\jbbot\zmng\dsktp.js
+// C:\w\sdkprj\node_modules\electron\dist\electron.exe  C:\w\sdkprj\agt\dsktp.js
 
-require("./libx/errHdlr")
 
 /////------------- stgart web
 const express = require('express')
@@ -15,20 +14,10 @@ app_web.get('/about', (req, res) => {
     res.send('about')
 })
 
-app_web.get('/tmot', (req, res) => {
-
-  setTimeout(()=>{
-
-
-      res.send('tmot')
-  },15000)
-
-})
-
 
 console.log(77)
 
-var server = app_web.listen(8000, function () {
+var server = app_web.listen(80, function () {
 
     var host = server.address().address
     var port = server.address().port
@@ -46,16 +35,13 @@ const {
     Menu,
     Tray
 } = require('electron')
-const path = require("path");
-const ini = require("ini");
-const fs = require("fs");
 
 function createWindow() {
     // 创建浏览器窗口
     const win = new BrowserWindow({
-        icon:"res/icon.jpg",
-        width: 1024,
-        height: 768,
+        icon:"icon.jpg",
+        width: 800,
+        height: 600,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -63,60 +49,10 @@ function createWindow() {
         }
     })
 
-
-    // 菜单模板设置
-    let template = [
-        {
-            label: '用户',
-            submenu: [
-                {label: '切换用户'}
-            ]
-        },
-        {
-            label: '帮助',
-            submenu: [
-                {
-                    label: '控制台',
-                    click: () => {
-                        win.webContents.openDevTools({ mode: 'bottom' })
-                    }
-                },
-                {label: '关于'}
-            ]
-        }
-    ]
-
-    // 加载菜单
-    let m = Menu.buildFromTemplate([])
-  //  Menu.setApplicationMenu(m)
-
     // 并且为你的应用加载index.html
     win.loadFile('index.html')
-
-    var ini= require("ini")
-    var path=require("path")
-    var fs=require("fs")
-    const iopath = path.join(__dirname, './cfg.ini'); // 引用Pos.ini的相对地址
-    const Info = ini.parse(fs.readFileSync(iopath, 'utf-8'));
-
-    require("./libx/logger")
-    log_info("Info.debug "+ Info.debug)
-    console.log("Info.debug "+ Info.debug)
-
-    if(Info.debug==1)
-    {
-        win.openDevTools();// win.openDevTools();
-    }
-   // win.openDevTools();
+    // win.openDevTools();
     creatTray();
-
-    // setTimeout(function (){
-    //
-    //
-    //     app.quit();
-    //     app.quit();
-    //     app.exit()
-    // },5000)
 
 }
 
@@ -156,7 +92,7 @@ function creatTray() {
         }
     ];
     //系统托盘图标
-    appTray = new Tray('res/icon.jpg')
+    appTray = new Tray('icon.jpg')
     //图标的上下文菜单
     const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
     //设置此托盘图标的悬停提示内容
@@ -165,7 +101,7 @@ function creatTray() {
     appTray.setContextMenu(contextMenu);
     //单击右下角小图标显示应用左键
     appTray.on('click', function () {
-       // mainWindow.show();
+        mainWindow.show();
     })
     //右键
     appTray.on('right-click', () => {

@@ -48,7 +48,7 @@ function dsl__callFunCmdMode($cmd) {
 function dsl__execSql_tp($fun) {
 
   include_once __DIR__ . "/iniAutoload.php";
-  $rows = dbx_execSql_tp($fun);
+   return dbx_execSql_tp($fun);
 
 }
 

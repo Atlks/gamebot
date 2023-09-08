@@ -5,6 +5,7 @@ use function libspc\log_err;
 
 function sendmessageBotNConsole($msg)
 {
+  try {
     \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     echo PHP_EOL;
     echo $msg;
@@ -14,10 +15,39 @@ function sendmessageBotNConsole($msg)
     //  $chat_id = -1001903259578;
     //global $bot_token, $chat_id;
     bot_sendMsg($msg, $GLOBALS['BOT_TOKEN'], $GLOBALS['chat_id']);
+  }catch (\Throwable $e){}
+
+}
+
+
+function bot_sendMsgTxtModeEx($msg, $bot_token, $chat_id)
+{
+  $i=0;
+  $retryTime=0;
+  while (true)
+  {
+    $retryTime++;
+
+    if($retryTime>3)
+      break;
+
+    try {
+      bot_sendMsgTxtMode($msg, $bot_token, $chat_id);
+      break;
+    }catch (\Throwable $e)
+    {
+      $i++;
+      //bot_sendMsgTxtMode($msg, $bot_token, $chat_id);
+      log_err($e,__METHOD__);
+    }
+
+  }
+
 }
 
 function bot_sendMsgTxtMode($msg, $bot_token, $chat_id)
 {
+  try{
     \think\facade\Log::notice(__METHOD__ . json_encode(func_get_args()));
     //  $rplmsgid = $json['message_id'];
     // $chat_id = $json['chat']['id'];
@@ -35,6 +65,33 @@ function bot_sendMsgTxtMode($msg, $bot_token, $chat_id)
     require_once  __DIR__ . "/iniAutoload.php";
     echo http_get_curl($url_tmp);
     echo PHP_EOL;
+  }catch (\Throwable $e)
+  {
+        log_err($e,__METHOD__);
+  }
+
+}
+
+
+function bot_sendMsgX(mixed $chat_id, string $text) {
+  try {
+    $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
+    $bot->sendmessage($GLOBALS['chat_id'], $text);
+  } catch (\Throwable $e) {
+    try {
+      $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
+      $bot->sendmessage($GLOBALS['chat_id'], $text);
+    } catch (\Throwable $e) {
+      try {
+        $bot = new \TelegramBot\Api\BotApi($GLOBALS['BOT_TOKEN']);
+        $bot->sendmessage($GLOBALS['chat_id'], $text);
+      }   catch (\Throwable $e) {
+        log_err($e ,__METHOD__);
+      }
+    }
+
+  }
+
 }
 
 

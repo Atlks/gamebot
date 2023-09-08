@@ -2,6 +2,7 @@
 /.vscode
 *.log
 /node_modules
+node_modules
 public/trend.jpg
 *.7z
 *.rar
@@ -17,6 +18,5 @@ zmsglg
 pushmsg
 /pushmsg
 /pushmsg/
-/pushmsg
-/zpatch/
+zpatch
 /zpatch

@@ -466,7 +466,6 @@ namespace {
 
   function log_setReqChainLog_enterMeth($LineFun, $args) {
 
-
     try {
      if(is_array($LineFun))
        $LineFun=json_encode($LineFun);

@@ -39,12 +39,18 @@ function convert_kaij_echo_ex($result_text)
         return  kaij_echo($result_text);
     } catch (\Throwable $exception) {
 
+      try {
         $lineNumStr = __FILE__ . ":" . __LINE__ . " f:" . __FUNCTION__ . " m:" . __METHOD__ . "  ";
         \think\facade\Log::error(" kaij_echo($result_text)");
         \think\facade\Log::error("errmsg:" . $exception->getMessage());
         \think\facade\Log::error("file_linenum:" . $exception->getFile() . ":" . $exception->getLine());
         \think\facade\Log::error("errtraceStr:" . $exception->getTraceAsString());
         return "";
+      } catch (\Throwable $exception) {
+
+        return "";
+      }
+
     }
 }
 

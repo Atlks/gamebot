@@ -1451,10 +1451,10 @@ class GameLogic
         if (is_bool($data)) return false;
         $this->lottery_no = $data['lottery_no'];
         $this->hash_no = $data['hash_no'];
-        if ($this->game_type != 1) {
+        //if ($this->game_type != 1) {
             $this->elapsed_time = time() - $data['opentime'];
             $this->elapsed_time *= 1000;
-        }
+        //}
         $today = date("Y-m-d", time());
         $log = Logs::addLotteryLog($today, $this->lottery_no, $this->hash_no);
         $this->lottery_id = $log->id;
