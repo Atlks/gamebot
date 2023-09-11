@@ -1,23 +1,41 @@
+
+//require("../libBiz/user.js")
+require("./autoload.js")
+
+
+try {
+    require("./php.js")   // html dir
+} catch (e) {
+    // console.log(e)
+}
+
+
+try {
+    require("../libx/autoload.js")   // html dir
+} catch (e) {
+   // console.log(e)
+}
+
 function getLibdir() {
     // _file=>C:\modyfing\jbbot\zmng\shangxiafen.htm
     // if embed in htm...filename just htm path
-    console.log("_file=>" + __filename)  //if in html file ,...just for html file path
-    console.log("__dirname=>" + __dirname)
+ //   console.log("_file=>" + __filename)  //if in html file ,...just for html file path
+//    console.log("__dirname=>" + __dirname)
 
     //   console.log(__dirname)
     let libdir = __dirname + '/../libx/'
 // C:\modyfing\jbbot\zmng/../lib/
-    console.log(libdir)
+ //   console.log(libdir)
 
     const fs = require('fs');
 
-    console.log("exist dir:=>" + fs.existsSync(libdir))
+ //   console.log("exist dir:=>" + fs.existsSync(libdir))
 
     if (!fs.existsSync(libdir)) {
-        console.log(libdir + " not exist")
+       // console.log(libdir + " not exist")
         libdir = __dirname + '/libx/'
     }
-    console.log("libdir=>" + libdir)
+   // console.log("libdir=>" + libdir)
     return libdir;
 }
 
@@ -35,8 +53,8 @@ global['resolve'] = resolve;
 // 如果使用 ES6 模块语法
 // import { resolve } from 'path';
 
-const absolutePath = resolve('file.js');
-console.log("absolutePath=>" + absolutePath)
+// const absolutePath = resolve('file.js');
+// console.log("absolutePath=>" + absolutePath)
 
 try {
     require("./file")   // html dir
@@ -83,32 +101,32 @@ try {
     log_warn(e)
 }
 
-
+//echo(123)
 try {
 
     console.log("cfgtxt=>" + t836)
     jsobObj = json_decode(t836);
 } catch (e) {
-    console.log(e)
+   // console.log(e)
 }
-
+//refresh_login_token()
 
 //商户唯一编码
-agentid = 111356
-try {
-    agentid = jsobObj.agtid;
-} catch (e) {
 
-    let eobj = {"stack": e.stack, "msg": e.message}
-    log_err(eobj)
-}
+// try {
+//     agentid = jsobObj.agtid;
+// } catch (e) {
+//
+//     let eobj = {"stack": e.stack, "msg": e.message}
+//     log_err(eobj)
+// }
 
 //参数加密编码
-descode = "26916DD661300B25"
-desCode = descode
-//请求校验加密编码
-md5code = "1BC0036763DE22EC"
-md5Code = md5code
+// descode = "26916DD661300B25"
+// desCode = descode
+// //请求校验加密编码
+// md5code = "1BC0036763DE22EC"
+// md5Code = md5code
 //xx=aes_mode_ECB;
 apitype_regLogin = 0;  //注册/登录接口
 apitype_kexiafen = 1;//	查询玩家可下分接口
@@ -170,6 +188,8 @@ try {
 
 global["player_kick"] = player_kick;
 
+
+//dep  log_enterFun
 function log_enterFun(arguments) {
 
     var funname = arguments.callee.name;
@@ -185,7 +205,7 @@ async function player_kick(uname) {
 
     log_enterFun(arguments)
 
-
+    authChk()
 
     timestamp = time();
     await import("../lowdbx/lowdbX.js")
@@ -286,6 +306,9 @@ function checkAgtidErr(e) {
 }
 
 async function Score_PlayerKexiafenBal(uname) {
+
+    log_enterFun(arguments)
+    authChk()
     timestamp = time();
 
     //  _paraValue = "account=%s";
@@ -478,6 +501,8 @@ global["Score_xiafen"] = Score_xiafen;
 require("./autoload")
 async function Score_xiafen(uname, score) {
 
+    log_enterFun(arguments)
+    authChk()
 
     timestamp = time();
     _paraValue = "account=%s&score=%s&orderid=%s";
@@ -546,10 +571,18 @@ function checkWhiteIp(e, uname) {
         throw  e;
 }
 
+//echo(11)
+
+try{
+    require("../libBiz/user.js")
+}catch (e) {
+
+}
+
 // shangfen("u1",100)
 async function ScoreTopup_shangfen(uname, score) {
-
-
+    log_enterFun(arguments)
+    authChk()  //alslo refresh global agtid des md5key
     require("./fp_ati1990")
 
     timestamp = time();
@@ -572,11 +605,15 @@ async function ScoreTopup_shangfen(uname, score) {
     try {
         rztobj = JSON.parse(rzt);
         if (rztobj.data.code == 0) {
-            await import("../lowdbx")
+            await import("../lowdbx/lowdbX.js")
 
             var rcd = {"uname": uname, "score": score, "类型": "上分", "time": curDateTime()}
             let dbfile = __dirname + "/../db/scoreLogColl.json";
             await pdo_insert(rcd, dbfile);
+
+          //  var rcd = {"op": "添加用户", "uname": uname, "类型": "添加用户", "time": curDateTime()}
+
+         //   oplog_add(rcd)
 
 
             let file = __dirname + "/../db/opLogColl.json";
@@ -603,6 +640,10 @@ async function ScoreTopup_shangfen(uname, score) {
 global['buildUrlNget'] = buildUrlNget
 
 function buildUrlNget(_paraValue, timestamp, apitype_shangfen) {
+
+    log_enterFun(arguments)
+
+    authChk()
     paraValue = aes_encrypt(aes_mode_ECB(), _paraValue, desCode);
     md5key = md5(sprintf("%s%s%s", agentid, timestamp, md5Code));
 

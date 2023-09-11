@@ -3,8 +3,8 @@ function clk() {
     console.log(1111111111111111)
 
 
-    writeFileSyncx("43200x.txt", "999");
-    mainPrcsFun1();
+  //  writeFileSyncx("43200x.txt", "999");
+   // mainPrcsFun1();
 }
 
 

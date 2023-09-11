@@ -3,7 +3,7 @@
 global['call_func'] = call_func
 global['call_funcNoEx'] = call_funcNoEx
 
-async function call_func(fun, params) {
+async function call_func_dep(fun, params) {
    let arg = JSON.stringify(arguments);
    // arg = JSON.stringify(params);
    let ivkFundbg = "******[call_func]" + arg

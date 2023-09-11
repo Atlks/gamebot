@@ -43,5 +43,5 @@ return JSON.parse($s)
 }
 function  json_encode($s)
 {
- return   JSON.stringify($s)
+ return   JSON.stringify($s,null,2)
 }

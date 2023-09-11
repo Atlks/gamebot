@@ -1,26 +1,27 @@
-
-
-
-
-
-
 //   cd  zmng/libx
 //cd  zmng/lowdbx
 //  npm publish --access=public
+//  C:\prgrm\nodejs\npm.cmd  publish --access=public
 
-require("./logger.js")
 
-try{
+try {
     require("./logger")
-}catch (e){}
+} catch (e) {
+}
 //  npm publish --access=public
-try{
+try {
     require("./php");
     require("./secury");
-}catch (e){}
+} catch (e) {
+}
 
-require("./php");
-require("./secury");
+
+try {
+    require("./php");
+    require("./secury");
+
+} catch (e) {
+}
 
 /**
  * 模拟PHP sprintf 的函数
@@ -31,23 +32,22 @@ try {
 } catch (e) {
     console.log(e)
 }
-require("./dsl")
+
 try {
+    require("./dsl")
     require("./enc")
 } catch (e) {
 
-   // console.log(e)
+    // console.log(e)
 }
 
-global["curDateTime"] = curDateTime;
-require("./logger")
+
 function curDateTime() {
     var sd = require('silly-datetime');
     var time = sd.format(new Date(), 'YYYY-MM-DD HH:mm:ss');
     return time;
 }
 
-global["array_sum"] = array_sum;
 
 function array_sum(arr) {
     var sum = 0;
@@ -58,10 +58,17 @@ function array_sum(arr) {
 }
 
 
-const {join, dirname} = require('path')
-global["dirname"] = dirname;
+try {
+    global["curDateTime"] = curDateTime;
+    require("./logger")
+    global["array_sum"] = array_sum;
 
-global["sprintf"] = sprintf;
+
+    global["sprintf"] = sprintf;
+} catch (e) {
+
+}
+
 
 function sprintf() {
     let args = arguments, string = args[0];
@@ -74,14 +81,6 @@ function sprintf() {
 
 //global["call_func"] = call_func;
 
-
-
-require("./enc")
-global["call_user_func"] = call_user_func;
-
-//    call_user_func(funcs[i], ["ddd", "cc"]);
-
-global["removeBlankLines"] = removeBlankLines;
 
 function removeBlankLines($t) {
     $t = $t.replace(/(\n[\s\t]*\r*\n)/g, '\n');
@@ -110,11 +109,11 @@ function funtion_exist(funcName) {
         } else { //不是函数
             return false;
         }
-    } catch(e) {
-        return  false
+    } catch (e) {
+        return false
     }
 }
-global['__METHOD__']=__METHOD__
+
 
 function __METHOD__(e) {
     //Error
@@ -124,14 +123,26 @@ function __METHOD__(e) {
     // var re = /(\w+)@|at (\w+) \(/g, st = e.stack, m;
     // re.exec(st), m = re.exec(st);
     // callerName = m[1] || m[2];
-    let  funname = arr[1]
+    let funname = arr[1]
     funname = funname.trim();
     let brk = funname.indexOf("(")
     funname = funname.substr(3, brk - 3)
     return funname.trim();
 }
 
-global['display']=echo
+try {
+    global['display'] = echo
+    global['__METHOD__'] = __METHOD__
+    require("./enc")
+    global["call_user_func"] = call_user_func;
+
+//    call_user_func(funcs[i], ["ddd", "cc"]);
+
+    global["removeBlankLines"] = removeBlankLines;
+} catch (e) {
+
+}
+
 
 //echo( funtion_exist("isset"))
 
@@ -149,53 +160,45 @@ function isset(varname) {
 
 }
 
-global["substr"] = substr;
 function substr(string, start, length) {
     return string.substring(start, length + start);
 
 }
 
-global["startwith"] = str_starts_with;
-global["str_starts_with"] = str_starts_with;
+
 function str_starts_with(string, wzstr) {
-    return string.startsWith(string,wzstr)
+    return string.startsWith(string, wzstr)
 
 }
 
-require("./易语言")
 
-function echo(str) {
+function echo_dp(str) {
     console.log(str)
 }
-global["echo"] = echo;
+
+
+try {
+    require("./易语言")
+    global["echo"] = echo;
+
+    global["startwith"] = str_starts_with;
+    global["str_starts_with"] = str_starts_with;
+
+    global["substr"] = substr;
+    global["console_log"] = console_log;
+} catch (e) {
+
+}
 
 
 function console_log(str) {
     console.log(str)
 }
 
-global["console_log"] = console_log;
 
 //alert(module)
 //if(module!=undefined)
 // for use in broswer
-if (isset("module"))
-    module.exports = {
-        call_user_func,
-        isset,
-        time,
-        echo,
-        substr,
-        console_log,
-        sprintf,
-        startwith,
-        str_replace,
-        strtolower,
-        strlen,
-        strpos,
-        trim,
-        sprintf
-    }
 
 // sec from 1970
 function time() {
@@ -203,49 +206,61 @@ function time() {
     return timestamp;
 }
 
-global["array_filter"] = array_filter;
-function  array_filter(arr)
-{
-    let newArr=arr.filter(i=>
-        i && i.trim())
-    newArr= newArr.map(i=>i.trim())
+
+function array_filter(arr) {
+    let newArr = arr.filter(function (i) {
+            return i && i.trim()
+        }
+    )
+    newArr = newArr.map(function (i) {
+        return i.trim()
+    })
     return newArr
 }
-global["foreach"] = foreach;
-function  foreach(arr,f)
-{
-    for (const v of arr) {
 
-       rzt= f(v);
+function foreach(arr, f) {
+    for (var i = 0; i < arr.length; i++)
+        //   for (const v of arr)
+    {
+        let v = arr[i];
+        let rzt = f(v);
 
-        if(rzt=="$break")
+        if (rzt == "$break")
             break;
     }
 }
-global["time"] = time;
-global["echo"] = echo;
-global["trim"] = trim;
-global["修剪"] = trim;
+
+try {
+    global["time"] = time;
+    global["echo"] = echo;
+    global["trim"] = trim;
+    global["修剪"] = trim;
+    global["foreach"] = foreach;
+    global["array_filter"] = array_filter;
+    global["explode"] = explode;
+
+    global["var_dump"] = var_dump;
+    global["key"] = key;
+    global["current"] = current;
+
+    global["log"] = log;
+} catch (e) {
+}
+
 function trim(str) {
     return str.trim();
 }
 
-global["explode"] = explode;
-
-global["var_dump"] = var_dump;
 
 function var_dump(s) {
     echo(s)
 }
 
-global["log"] = log;
 
 function log(s) {
     echo(s)
 }
 
-global["key"] = key;
-global["current"] = current;
 
 function key(obj) {
     return Object.keys(obj)[0]
@@ -274,14 +289,12 @@ function explode(sprtr, str) {
     return str.split(sprtr);
 }
 
-global["str_replace"] = str_replace;
 
 function str_replace(find, replace, string) {
     return string.replaceAll(find, replace);
 
 }
 
-global["require_once"] = require_once;
 
 function require_once($f) {
     try {
@@ -296,7 +309,17 @@ function strpos(string, find, start) {
     return string.indexOf(find, start);
 
 }
-global["startwith"] = startwith;
+
+try {
+    global["startwith"] = startwith;
+
+    global["require_once"] = require_once;
+    global["str_replace"] = str_replace;
+} catch (e) {
+
+}
+
+
 function startwith(str, wz) {
     return str.startsWith(wz);
 

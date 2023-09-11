@@ -7,43 +7,146 @@
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0,maximum-scale=1">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
+
+    <script src="libx/browerNode.js"></script>
+    <script src="libx/sys.js"></script>
+
+    <script>
+
+    </script>
 
 
-    <title>Hel!</title>
+
+    <script
+            src="https://code.jquery.com/jquery-3.0.0.js"
+            integrity="sha256-jrPLZ+8vDxt2FnE1zvZXCkCcebI/C8Dt5xyaQBjxQIo="
+            crossorigin="anonymous"></script>
+
+    <scriptxx src="node_modules/errHdlr.js"></scriptxx>
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+
+
+
+
+
+
+    <!--
+
+
+        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+        crossorigin="anonymous"></script>
+-->
+
+
+
+
+    <title>管理工具v1.0</title>
+    <script src="libx/php.js"></script>
+
+
+
 </head>
 <body style="padding: 20px">
 
+<script>
+ //   alert(isWinformEnv)
+</script>
+<script
+        src="https://code.jquery.com/jquery-3.0.0.js"
+        integrity="sha256-jrPLZ+8vDxt2FnE1zvZXCkCcebI/C8Dt5xyaQBjxQIo="
+        crossorigin="anonymous"></script>
 
-<button type="button" class="btn btn-primary">首页</button>
-<button type="button" class="btn btn-success">上下分管理</button>
-<button type="button" class="btn btn-danger">群管家设置</button>
-<button type="button" class="btn btn-warning">上下分群设置</button>
-<button type="button" class="btn btn-info">日志</button>
-
-
-
-
-
-<p></p><p></p><p style="height: 30px"></p>
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 
-用户名:<input type="text" id="fname" name="fname"><br><br>
-密  码：<input type="password" id="fname" name="fname"><br>
+<script src="libx/errHdlr.js"></script>
+<script src="libBiz/user.js"></script>
+<script src="libx/logger.js"></script>
+<script src="libx/php.js"></script>
+<script src="libx/fp_ati1990.js"></script>
+
+
+<button   type="button" class="btn btn-primary">首页</button>
+<button onclick="location='shangxiafen.htm'"   type="button" class="btn btn-success">上下分管理</button>
+<button onclick="location='user.htm'" type="button" class="btn btn-danger">玩家管理</button>
+<button   type="button" class="btn btn-warning" > 设置</button>
+<button  onclick="location='oplog.htm'" type="button" class="btn btn-info">日志</button>
+<button onclick="agtbal648()" id=" " type="button" class="btn btn-primary" style="">代理商余额查询</button>
+
+<button class="btn btn-primary" disabled id="loaddiv" style="xdisplay:none ">
+    <span class="spinner-border spinner-border-sm"></span>
+    Loading..
+</button>
+
+<script>
+
+</script>
+
+<form role="form" id="loginFm">
+    <div class="form-group">
+        <label for="fname">代理id,descode,md5code</label>
+        <input placeholder="1234,descodexxxx,md5codexxxx" class="form-control" value="" type="text" id="uid" name="fname">
+    </div>
+
+    <div class="form-group" style="display: none">
+        <label for="password">descode</label>
+        <input class="form-control" type="password" id="password" name="password">
+    </div>
+
+    <div class="form-group"  style="display: none">
+        <label for="md5code">md5code</label>
+        <input class="form-control" type="md5key" id="md5key" name="md5code">
+    </div>
+
+
+    <script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js "></script>
+    <script000 src="libBiz/api.js"></script000>
+    <button onclick="loginLocal()" id="btnLg" type="button" class="btn btn-primary" style="width00: 100%">登录</button>
+
+
+
+</form>
+
+
+
+
+
+<div id="logined" style="display: none;margin-top: 20px">
+
+    代理id：
+<span id="unameLab"></span>
+    <button onclick="exit()">退出</button>
+
+</div>
+
+
+
+
 <p></p>
-<button onclick="clk()" type="button" class="btn btn-primary" style="width: 100%">登录</button>
 
-<script src="ctrl.js"></script>
+
+<script src="index.js"></script>
+
+<scriptx src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></scriptx>
+
+<script>
+  //  var db = new PouchDB('my_database');
+</script>
+
+
+<script>
+
+ //alert(   window.external)
+    user_ini_ui()
+
+</script>
+
+
 
 </body>
 </html>

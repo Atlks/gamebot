@@ -1,6 +1,6 @@
 // for db http  url cmd lib core warp
 
-global['call_func'] = call_func
+//global['call_func'] = call_func
 global['call_funcNoEx'] = call_funcNoEx
 
 
@@ -8,7 +8,7 @@ require("./php");
 require("./core")
 require("./fp_ati1990")
 
-async function call_func(fun, params) {
+async function call_func_dp(fun, params) {
    let arg = JSON.stringify(arguments);
    // arg = JSON.stringify(params);
    let ivkFundbg = "******[call_func]" + arg

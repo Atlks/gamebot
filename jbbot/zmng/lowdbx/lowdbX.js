@@ -5,8 +5,8 @@ import {JSONFile, JSONFileSync} from 'lowdb/node'
 import _ from 'lodash';
 
 //only for test
-// import aaaa from '../node_modules/secury.js';
-// import bbb from '../node_modules/logger.js';
+  import aaaa from '../libx/secury.js';
+  import bbb from '../libx/logger.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -41,8 +41,8 @@ async function ini_db_conn(file) {
 
 
 function pdo_conn(file) {
-
-
+  //  require("../libx/logger.js")
+ //   log_enterFun( arguments)
     const defaultData = []
     //  file = join(__dirname, file);
     let jsonFile = new JSONFileSync(file);

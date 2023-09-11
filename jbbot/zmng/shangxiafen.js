@@ -1,82 +1,60 @@
-const fs = require("fs");
+try {
+    const fs = require("fs");
+} catch (e) {
+}
+
 
 function getLibdir() {
     // _file=>C:\modyfing\jbbot\zmng\shangxiafen.htm
     // if embed in htm...filename just htm path
-    console.log("_file=>" + __filename)  //if in html file ,...just for html file path
-    console.log("__dirname=>" + __dirname)
+    // if(!__filename)
+    //     __filename=""
 
-    //   console.log(__dirname)
-    let libdir = __dirname + '/../libx/'
+
+    //   console.log("_file=>" + __filename)  //if in html file ,...just for html file path
+    //   console.log("__dirname=>" + __dirname)
+    try {
+        //   console.log(__dirname)
+        let libdir = __dirname + '/../libx/'
 // C:\modyfing\jbbot\zmng/../lib/
-    console.log(libdir)
+        //   console.log(libdir)
 
-    const fs = require('fs');
+        const fs = require('fs');
 
-    console.log("exist dir:=>" + fs.existsSync(libdir))
+        //   console.log("exist dir:=>" + fs.existsSync(libdir))
 
-    if (!fs.existsSync(libdir)) {
-        console.log(libdir + " not exist")
-        libdir = __dirname + '/libx/'
+        if (!fs.existsSync(libdir)) {
+            //   console.log(libdir + " not exist")
+            libdir = __dirname + '/libx/'
+        }
+        //   console.log("libdir=>" + libdir)
+        return libdir;
+    } catch (e) {
+        return ""
+
     }
-    console.log("libdir=>" + libdir)
-    return libdir;
+
 }
 
 let libdir = getLibdir();
-require(libdir + "api2023jb.js");
-require(libdir + "fp_ati1990");
-require(libdir + "logger")
-require(libdir + "jq.js");
+
+
+try {
+    require(libdir + "api2023jb.js");
+    require(libdir + "fp_ati1990");
+    require(libdir + "logger")
+    require(libdir + "jq.js");
+} catch (e) {
+}
 
 // import(libdir+"ui.js")
 // require("fp_ati1990")
 // require("logger")
 
-function xiafen745() {
-    var funname = arguments.callee.name;
-    // arguments.callee.name
-    arg = JSON.stringify(arguments);
-    console.log("*********=>" + funname + arg);
-
-    $("#loaddiv").show()
-
-
-    setTimeout(() => {
-
-
-        //rzt=  dsl_callFunCmdMode("playerStat",$("#uname").val() )
-        rzt = dsl_callFunCmdMode("Score_xiafen", $("#uname").val(), $("#score").val())
-
-
-        //  {"maintype":"/GameHandle","type":7,"data":{"code":0,"agentid":111356,"linecode":"10001_1","status":0,"userid":32076939,"account":"uname1","totalScore":300.0,"integralvalue":6.0,"addscore":300.0,"subscore":0.0,"addscoretimes":2,"subscoretimes":0,"totalwinlose":0.0,"totalrevenue":0.0}}
-        console.log("[xiafen745] rzt=>" + rzt)
-        rztobj = JSON.parse(rzt);
-        if (rztobj.msg_to_ui)
-            alert(rztobj.msg_to_ui)
-
-        else if (rztobj?.data?.code == 0) {
-            alert("下分成功")
-            playerStat237();
-            //  orderQryShagnxiafen415();
-
-        } else if(rztobj?.data?.code) {
-            require("zmng/test/excel")
-            let errmsg = errcodeMsg(rztobj.data.code)
-            alert("发生错误:" + errmsg + " ")
-        }else
-            alert("发生错误"+rzt)
-        //   alert(rzt)
-
-
-        $("#loaddiv").hide();
-
-    }, 50);
-
-
-}
 
 function PlayerKexiafenBal638() {
+    chkAop();
+    authChk()
     var funname = arguments.callee.name;
     // arguments.callee.name
     arg = JSON.stringify(arguments);
@@ -84,7 +62,7 @@ function PlayerKexiafenBal638() {
 
     $("#loaddiv").show()
 
-    setTimeout(() => {
+    setTimeout(function () {
 
         //rzt=  dsl_callFunCmdMode("playerStat",$("#uname").val() )
         rzt = dsl_callFunCmdMode("Score_PlayerKexiafenBal", $("#uname").val())
@@ -110,17 +88,16 @@ function PlayerKexiafenBal638() {
 
 
             } else {
-                require("zmng/test/excel")
+                require("./libx/excel.js")
                 let errmsg = errcodeMsg(rztobj.data.code)
                 alert("发生错误:" + errmsg + " ")
             }
         } catch (e) {
 
 
+            if (rztobj.msg_to_ui) {
 
-            if (rztobj.msg_to_ui  ) {
-
-                alert(rztobj.msg_to_ui )
+                alert(rztobj.msg_to_ui)
             } else
                 alert(e)
         }
@@ -138,6 +115,8 @@ function PlayerKexiafenBal638() {
 
 
 function player_kickInform() {
+    chkAop();
+    authChk()
 
     var funname = arguments.callee.name;
     // arguments.callee.name
@@ -146,7 +125,7 @@ function player_kickInform() {
 
     $("#loaddiv2").show()
 
-    setTimeout(() => {
+    setTimeout(function () {
 
         try {
             //rzt=  dsl_callFunCmdMode("playerStat",$("#uname").val() )
@@ -182,8 +161,7 @@ function player_kickInform() {
                     let retObj = JSON.parse(httpRzt_clr);
                     let errmsgObj = retObj.errors;
                     alert("发生错误" + JSON.stringify(errmsgObj))
-                }
-                else
+                } else
                     alert("ok")
             }
 
@@ -206,7 +184,16 @@ function player_kickInform() {
 }
 
 
+function chkAop() {
+
+    if ($("#uname").val() == "") {
+        throw ("查询玩家账户不能为空")
+    }
+}
+
 function orderQryShagnxiafen415() {
+    // chkAop()
+    authChk()
     var funname = arguments.callee.name;
     // arguments.callee.name
     arg = JSON.stringify(arguments);
@@ -215,7 +202,7 @@ function orderQryShagnxiafen415() {
 
 //return
 
-    setTimeout(() => {
+    setTimeout(function () {
 
         rzt = dsl_callFunCmdMode("score_orderQryShagnxiafen", $("#uname").val())
 
@@ -225,7 +212,7 @@ function orderQryShagnxiafen415() {
         //  window['loadToTable'](json_decode(rzt),"tab_sxf")
         // console.log("[playerStat237] rzt=>" + rzt)
 
-        $("#tab_sxf tr").each((idx, item) => {
+        $("#tab_sxf tr").each(function (idx, item) {
             // item.show();  item.css("display","");
             //  alert(item)
             //  alert($(item)[0])
@@ -239,7 +226,9 @@ function orderQryShagnxiafen415() {
 }
 
 //dep
-function score_qry() {
+function _score_qry() {
+    chkAop();
+    authChk()
 
     var funname = arguments.callee.name;
     // arguments.callee.name
@@ -275,7 +264,7 @@ function score_qry() {
             console.log(window['loadToTable'])
             window['loadToTable'](arr, "app3")
 
-            $("#app3 tr").each((idx, item) => {
+            $("#app3 tr").each(function (idx, item) {
                 // item.show();  item.css("display","");
                 //  alert(item)
                 //  alert($(item)[0])
@@ -294,6 +283,8 @@ function score_qry() {
 }
 
 function playerStatV2() {
+    chkAop();
+    authChk()
 
     var funname = arguments.callee.name;
     // arguments.callee.name
@@ -330,7 +321,7 @@ function playerStatV2() {
             console.log(window['loadToTable'])
             loadToTableVue(arr, "app3")
 
-            $("#app3 tr").each((idx, item) => {
+            $("#app3 tr").each(function (idx, item) {
                 // item.show();  item.css("display","");
                 //  alert(item)
                 //  alert($(item)[0])
@@ -339,7 +330,7 @@ function playerStatV2() {
             })
 
         } else {
-            require("zmng/test/excel")
+            require("./libx/excel")
             let errmsg = errcodeMsg(rztobj.data.code)
             alert("发生错误:" + errmsg + " ")
         }
@@ -351,113 +342,36 @@ function playerStatV2() {
         //  console.log("[playerStat237] rzt=>" + rzt)
 
 
-    },jqFailFun)
+    }, jqFailFun)
 
 
 }
 
 
-function jqFailFun(jqXHR, textStatus, errorThrown) {
+// function jqFailFundp(jqXHR, textStatus, errorThrown) {
+//
+//     $("#loaddiv").hide();
+//     let arg = JSON.stringify(arguments);
+//     log_err(arg)
+//
+//     if(jqXHR.responseJSON)
+//     if (jqXHR.responseJSON.errors)
+//     {
+//         alert("参数错误 检查代理id " + JSON.stringify(jqXHR.responseJSON.errors));
+//         return;
+//     }
+//
+//     if (jqXHR.status == 403)
+//         alert("错误 检查ip加白处理 " + jqXHR.responseText)
+//
+//
+// }
 
-    $("#loaddiv").hide();
-    let arg = JSON.stringify(arguments);
-    log_err(arg)
-    if( jqXHR?. responseJSON?.errors )
-        alert("参数错误 检查代理id "+   JSON.stringify(  jqXHR?. responseJSON?.errors));
-    if(jqXHR?.status==403)
-        alert("错误 检查ip加白处理 "+ jqXHR.responseText)
-
-
-
-}
-
-
-function  adduserFm()
-{
-
-    var funname = arguments.callee.name;
-    // arguments.callee.name
-    arg = JSON.stringify(arguments);
-    console.log("*********=>" + funname + arg);
-
-
-    log_info("");
-    log_info("");
-    log_info("");
-    log_info("*********=>" + funname + arg)
-
-
-
-    timestamp = time();
-
-
-    let uname=$("#uname").val();
-    if(uname=="")
-    {
-        $("#loaddiv").hide();
-        alert("用户名不能为空")
-
-        return
-    }
-
-    $("#loaddiv").show()
-    let nickname=$("#nknm").val();
-   // _paraValue = sprintf("account=%s", $("#uname").val());
-    _paraValue = "account=%s&nickname=%s&headindex=0&linecode=10001_1&lastloginip=255.224.22.12&gamebackurl=www.test.com&logintype=1&gameid=0";
-    _paraValue = sprintf(_paraValue, uname, nickname);
-
-
-    echo("_paraValue==>" + _paraValue)
-    let url = buildUrlNget(_paraValue, timestamp, apitype_regLogin);
-    console.log(url)
-
-
-    jqGet(url, function (data) {
-        console.log("["+funname+"] rzt=>" + data)
-        rztobj = JSON.parse(data);
-
-        // $("#loaddiv").hide();
-
-        //rzt=  dsl_callFunCmdMode("playerStat",$("#uname").val() )
-        //  rzt=  dsl_callFunCmdMode("PlayerScoreQry",$("#uname").val() )
-
-
-        //  {"maintype":"/GameHandle","type":7,"data":{"code":0,"agentid":111356,"linecode":"10001_1","status":0,"userid":32076939,"account":"uname1","totalScore":300.0,"integralvalue":6.0,"addscore":300.0,"subscore":0.0,"addscoretimes":2,"subscoretimes":0,"totalwinlose":0.0,"totalrevenue":0.0}}
-
-        // rztobj=JSON.parse(rzt);
-
-
-        if (rztobj.data.code == 0) {
-            alert("ok")
-            arr = [];
-            arr.push(rztobj.data)
-            //    console.log( window['loadToTable'])
-          //  loadToTableVue(arr, "app3")
-
-            // $("#app3 tr").each((idx, item) => {
-            //     // item.show();  item.css("display","");
-            //     //  alert(item)
-            //     //  alert($(item)[0])
-            //     $(item).css("display", "");
-            //     $(item).show();
-            // })
-        } else {
-            require(libdir + "excel.js")
-            let errmsg = errcodeMsg(rztobj.data.code)
-            alert(errmsg + " ")
-        }
-
-
-        //  console.log("[playerStat237] rzt=>" + rzt)
-
-        $("#loaddiv").hide();
-
-
-    },jqFailFun)
-}
 
 //  apitype_PlayerScore
 function playerStat237() {
+    chkAop();
+    authChk()
 
     var funname = arguments.callee.name;
     // arguments.callee.name
@@ -476,7 +390,12 @@ function playerStat237() {
 
     _paraValue = sprintf("account=%s", $("#uname").val());
     echo("_paraValue==>" + _paraValue)
-    let url = buildUrlNget(_paraValue, timestamp, apitype_PlayerScore);
+    let url;
+    if (isWinformEnv())
+          url = window.external.callFun("buildUrlNget " + _paraValue + " " + timestamp + " " + apitype_PlayerScore);
+    else
+          url = buildUrlNget(_paraValue, timestamp, apitype_PlayerScore);
+  //  alert("url=>"+url)
     console.log(url)
 
 
@@ -501,7 +420,7 @@ function playerStat237() {
             //    console.log( window['loadToTable'])
             loadToTableVue(arr, "app3")
 
-            $("#app3 tr").each((idx, item) => {
+            $("#app3 tr").each(function (idx, item) {
                 // item.show();  item.css("display","");
                 //  alert(item)
                 //  alert($(item)[0])
@@ -520,59 +439,8 @@ function playerStat237() {
         $("#loaddiv").hide();
 
 
-    },jqFailFun)
+    }, jqFailFun)
 
 
 }
 
-function shangfen1236() {
-    var winlogger = require(libdir + "logger");
-
-    var funname = arguments.callee.name;
-    // arguments.callee.name
-    arg = JSON.stringify(arguments);
-    console.log("*********=>" + funname + arg);
-    log_info("*********=>" + funname + arg);
-    $("#loaddiv").show()
-    // setTimeout(()=>{    },50)
-
-
-    // return;
-
-
-    setTimeout(() => {
-
-        rzt = dsl_callFunCmdMode("ScoreTopup_shangfen", $("#uname").val(), $("#score").val())
-        //  winlogger.info("[shangfen1236] rzt=>" +rzt);
-
-
-        console.log("[shangfen1236] rzt=>" + rzt)
-        rztobj = JSON.parse(rzt);
-
-
-        if (rztobj.msg_to_ui)
-            alert(rztobj.msg_to_ui)
-
-
-        else if (rztobj.data.code == 0) {
-            setTimeout(() => {
-
-                alert("上分成功")
-                playerStat237();
-
-            }, 300)
-
-        } else {
-            require(libdir + "excel")
-            let errmsg = errcodeMsg(rztobj.data.code)
-            alert("发生错误:" + errmsg + " ")
-        }
-        // alert(rzt)
-
-        $("#loaddiv").hide();
-
-
-    }, 50)
-
-
-}

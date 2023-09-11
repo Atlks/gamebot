@@ -1,22 +1,22 @@
 libdir = getLibdir()
-
+require("./sys.js")
 
 function getLibdir() {
-    console.log("_file=>" + __filename)  //if in html file ,...just for html file path
+  //  console.log("_file=>" + __filename)  //if in html file ,...just for html file path
     //   console.log(__dirname)
     libdir = __dirname + '/../libx/'
 // C:\modyfing\jbbot\zmng/../lib/
-    console.log(libdir)
+ //   console.log(libdir)
 
     const fs = require('fs');
 
-    console.log("exist dir:=>" + fs.existsSync(libdir))
+ //   console.log("exist dir:=>" + fs.existsSync(libdir))
 
     if (!fs.existsSync(libdir)) {
-        console.log(libdir + " not exist")
+      //  console.log(libdir + " not exist")
         libdir = __dirname + '/libx/'
     }
-    console.log("libdir=>" + libdir)
+ //  console.log("libdir=>" + libdir)
     return libdir;
 }
 
@@ -32,38 +32,63 @@ require("./fp_ati1990");
 require("./errHdlr");require("./logger")
 global["reg"] = reg;
 global["login"] = login;
+require("./php.js")
+require("./ref.js")
+//echo(11)
 
+try {
+    require("./php.js")   // html dir
+} catch (e) {
+    // console.log(e)
+}
+
+var {readFileSync,writeFileSync,appendFileSync} = require("fs");
 
 // uname = "uname1"
 // nickname = uname + "nknm";
 // pwd = "";
 //reg(uname, pwd, nickname);
 
+function urldecode(params) {
 
+    let arr_r=[];
+    for(var i=0;i<params.length;i++)
+    {
+        let v=params[i];
+        v=decodeURIComponent(v);
+        arr_r.push(v)
+    }
+    return arr_r;
+}
+
+//  node C:\modyfing\apiprj\jbbot\zmng\libx\callFun.js echo 123
 async function main() {
 
     var winlogger = require("./logger");
     const args = process.argv.slice(2)
-    echo("**********callFun.js prm==>" + args)
+    console.log  ("**********callFun.js prm==>" + args)
     log_info("**********callFun.js prm==>" + args)
     echo("\r\n")
 
     try {
-        $rz = await call_func(args[0], process.argv.slice(3))
+        let params = process.argv.slice(3);
+        params=urldecode(params);
+
+        $rz = await call_func(args[0], params)
     } catch (e) {
         echo(e)
         $rz = errorSeriz(e);
     }
 
     // $rz = "99999"
-    echo("88888888888888888888888888")
-    echo($rz);
+    console.log("88888888888888888888888888")
+    console.log($rz);
     //  app.quit(); app.quit();
     // console.log(777);
 
     process.exit()
 }
-
+console.log  (":66L")
 main();
 
 // function createWindow() {

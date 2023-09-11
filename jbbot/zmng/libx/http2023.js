@@ -77,7 +77,7 @@ try{
 }catch (e){}
 
 //http_get("http://localhost:8000/tmot",{ timeout: 5000 })
-async  function  http_get($url,opt={ timeout: 5000 })
+async  function  http_get($url,opt)
 {
    // const winlogger = require("logger");
     let   funname;
@@ -97,11 +97,11 @@ async  function  http_get($url,opt={ timeout: 5000 })
 
     try {
         let lasterr;
-        setTimeout(() => {
-            lasterr = "timeout:" + json_encode(opt)
-        //    throw  "timeout:" + json_encode(opt)
-
-        }, opt.timeout);
+        // setTimeout(() => {
+        //     lasterr = "timeout:" + json_encode(opt)
+        // //    throw  "timeout:" + json_encode(opt)
+        //
+        // }, opt?.timeout);
         let s = await http_get_core($url, opt);
         if(lasterr)
         {

@@ -39,3 +39,20 @@ function  ExChkChain()
 
 
 }
+
+
+
+function catchHdl(e, extype, catchFun) {
+
+    if (typeof e === 'string') {
+        if (e.startsWith(extype)) {
+            catchFun();
+
+        } else {
+            throw e;
+        }
+
+    } else
+        throw e;
+
+}

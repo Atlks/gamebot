@@ -1,0 +1,30 @@
+status 	Int32 	玩家状态(0离线，1大厅，2游戏中)
+
+
+图形库版本
+
+
+Windows 10
+
+10.0.10240 (1507)
+
+.NET Framework 4.6
+
+
+.NET Core3.1发布
+
+
+
+2015年7月29日 — 北京时间7月29日零点起，微软正式开始向包含中国在内的全球用户推送Windows 10正式版安装包，Win7、Win8正版用户从29日零点起就可以免费升级到Win 10
+
+
+
+博客园
+https://www.cnblogs.com › yyfh
+2019年12月4日 — NET Core3.1发布我们很高兴宣布.NET Core 3.1的发布。实际上，这只是对我们两个多月前发布的.NET Core 3.0的一小部分修复和完善。最重要的是.
+
+
+2021年10月5日 — Win11 正式版发布，微软宣布Windows 11 全面
+
+
+随Windows 11提供的是. NET Framework 4.8，该环境可以运行任何. NET Framework 4.x 应用。2023年3月13日

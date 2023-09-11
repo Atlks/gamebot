@@ -8,14 +8,50 @@ try{
 }catch (e){
 
 }
+
+try{
+    require("../ref.js")
+}catch (e){
+
+}
+try{
+    require("./ref.js")
+}catch (e){
+
+}
+try{
+    const winlogger = require("./logger.js");
+}catch (e){
+
+}
 try{
     require(__dirname+"/./secury.js")
 }catch (e){
      console.log(e)
 }
-const winlogger = require("./logger.js");
-global["sprintf"] = sprintf;
-global["字符串连接"] = sprintf;
+
+try{
+
+    global["sprintf"] = sprintf;
+    global["字符串连接"] = sprintf;
+    global["call_user_func"] = call_user_func;
+    global["call_user_funcV2"] = call_user_funcV2;
+
+    global["removeBlankLines"] = removeBlankLines;
+    global['echo']=echo
+    global["console_log"] = console_log;
+    global["时间戳"] = time;
+    global["time"] = time;
+    global["echo"] = echo;
+    global["str_replace"] = str_replace;global["require_once"] = require_once;global["explode"] = explode;
+
+
+}catch (e)
+{
+
+}
+
+
 function sprintf() {
     let args = arguments, string = args[0];
     for (let i = 1; i < args.length; i++) {
@@ -25,37 +61,12 @@ function sprintf() {
     return string;
 }
 
-global["call_func"] = call_func;
-
-function call_func(cb, params) {
 
 
-    echo("\r\n\r\n");
-    arg = JSON.stringify(params);
-    echo("******" + cb + arg);
-
-    //in js   apply fun is Fun obj proty.meth..heyou bind call ...
-
-    if (isset("window"))
-        func = window[cb];
-    else
-        func = global[cb];
-
-    //  func=eval(cb);
-
-    //window[cb];
-    $r = func.apply("thisobj", params);
-    echo(sprintf("[%s] ret==>%s", cb, $r));
-    echo("\r\n\r\n");
-    return $r;
-}
 
 
-global["call_user_func"] = call_user_func;
-global["call_user_funcV2"] = call_user_funcV2;
 
-
-async function call_user_funcV2(cb, params) {
+  function call_user_funcV2(cb, params) {
 
 
     echo("\r\n\r\n");
@@ -71,7 +82,7 @@ async function call_user_funcV2(cb, params) {
     //  func=eval(cb);
 
     //window[cb];
-    $r = await func.apply("thisobj", params);
+    $r =   func.apply("thisobj", params);
     echo(sprintf("[%s] ret==>%s", cb, $r));
     echo("\r\n\r\n");
     return $r;
@@ -79,7 +90,7 @@ async function call_user_funcV2(cb, params) {
 
 
 //    call_user_func(funcs[i], ["ddd", "cc"]);
-async function call_user_func(cb, params) {
+  function call_user_func(cb, params) {
 
 
     echo("\r\n\r\n");
@@ -101,7 +112,7 @@ async function call_user_func(cb, params) {
     //  func=eval(cb);
 
     //window[cb];
-    $r = await func.apply("thisobj", params);
+    $r =   func.apply("thisobj", params);
     let msg = sprintf("[%s] ret==>%s", cb, $r);
     echo(msg);
 
@@ -110,7 +121,7 @@ async function call_user_func(cb, params) {
     return $r;
 }
 
-global["removeBlankLines"] = removeBlankLines;
+
 
 function removeBlankLines($t) {
     $t = $t.replace(/(\n[\s\t]*\r*\n)/g, '\n');
@@ -149,65 +160,48 @@ function substr(string, start, length) {
 
 }
 
-global['echo']=echo
 function echo(str) {
+    var funname = arguments.callee.name;
+    // arguments.callee.name
+    let arg = JSON.stringify(arguments);
+    console.log(":145 " + funname + arg);
     console.log(str)
+    return str;
 }
 
 function console_log(str) {
     console.log(str)
 }
 
-global["console_log"] = console_log;
-
 //alert(module)
 //if(module!=undefined)
 // for use in broswer
-if (isset("module"))
-    module.exports = {
-        call_user_func,
-        isset,
-        time,
-        echo,
-        substr,
-        console_log,
-        sprintf,
-        startwith,
-        str_replace,
-        strtolower,
-        strlen,
-        strpos,
-        trim,
-        sprintf
-    }
+
 
 // sec from 1970
 function time() {
     var timestamp = Date.parse(new Date());
     return timestamp;
 }
-global["时间戳"] = time;
-global["time"] = time;
-global["echo"] = echo;
+
 
 function trim(str) {
     return str.trim();
 }
 
-global["explode"] = explode;
+
 
 function explode(sprtr, str) {
     return str.split(sprtr);
 }
 
-global["str_replace"] = str_replace;
 
 function str_replace(find, replace, string) {
     return string.replaceAll(find, replace);
 
 }
 
-global["require_once"] = require_once;
+
 
 function require_once($f) {
     try {
@@ -235,3 +229,10 @@ function strlen(str) {
 function strtolower(str) {
     return str.toLowerCase();
 }
+
+
+
+try{
+    window["funtion_exist"]=funtion_exist;
+
+}catch (e){}

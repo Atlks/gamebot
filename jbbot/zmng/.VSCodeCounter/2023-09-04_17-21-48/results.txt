@@ -1,0 +1,124 @@
+Date : 2023-09-04 17:21:48
+Directory : c:\在修改的内容\jbbot\zmng
+Total : 80 files,  3181 codes, 779 comments, 1620 blanks, all 5580 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         47 |      2,327 |        649 |      1,294 |      4,270 |
+| JSON       |         16 |        348 |          0 |          2 |        350 |
+| HTML       |          4 |        339 |        122 |        138 |        599 |
+| SQL        |          3 |        114 |          6 |        138 |        258 |
+| Markdown   |          2 |         22 |          0 |         26 |         48 |
+| Go         |          2 |         17 |          2 |         10 |         29 |
+| CSS        |          1 |          7 |          0 |          2 |          9 |
+| PHP        |          2 |          4 |          0 |          7 |         11 |
+| TypeScript |          2 |          2 |          0 |          2 |          4 |
+| Log        |          1 |          1 |          0 |          1 |          2 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                            | files      | code       | comment    | blank      | total      |
++-------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                               |         80 |      3,181 |        779 |      1,620 |      5,580 |
+| . (Files)                                       |         13 |        815 |        247 |        508 |      1,570 |
+| .git-robot                                      |          1 |          1 |          0 |          1 |          2 |
+| db                                              |          5 |        223 |          0 |          0 |        223 |
+| doc                                             |          3 |         31 |          2 |         21 |         54 |
+| ini                                             |          1 |          4 |          0 |          9 |         13 |
+| libBiz                                          |          4 |         91 |         24 |         53 |        168 |
+| libx                                            |         15 |        456 |        159 |        208 |        823 |
+| lowdbx                                          |          4 |         87 |         51 |         72 |        210 |
+| node_modu                                       |         17 |      1,278 |        261 |        601 |      2,140 |
+| res                                             |         10 |         84 |          1 |         24 |        109 |
+| test                                            |          7 |        111 |         34 |        123 |        268 |
++-------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                        | language   | code       | comment    | blank      | total      |
++-------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\在修改的内容\jbbot\zmng\.git-robot\git-robot.log   | Log        |          1 |          0 |          1 |          2 |
+| c:\在修改的内容\jbbot\zmng\agt.js                     | JavaScript |         62 |          5 |         23 |         90 |
+| c:\在修改的内容\jbbot\zmng\cfg.js                     | JavaScript |          1 |          0 |          0 |          1 |
+| c:\在修改的内容\jbbot\zmng\ctrl.js                    | JavaScript |         12 |          1 |          5 |         18 |
+| c:\在修改的内容\jbbot\zmng\db\coll_user.json          | JSON       |          6 |          0 |          0 |          6 |
+| c:\在修改的内容\jbbot\zmng\db\db400.json              | JSON       |          7 |          0 |          0 |          7 |
+| c:\在修改的内容\jbbot\zmng\db\opLogColl.json          | JSON       |        140 |          0 |          0 |        140 |
+| c:\在修改的内容\jbbot\zmng\db\scoreLogColl.json       | JSON       |         56 |          0 |          0 |         56 |
+| c:\在修改的内容\jbbot\zmng\db\userColl.json           | JSON       |         14 |          0 |          0 |         14 |
+| c:\在修改的内容\jbbot\zmng\doc\playstatRet.json       | JSON       |          1 |          0 |          0 |          1 |
+| c:\在修改的内容\jbbot\zmng\doc\publish npm pkg.md     | Markdown   |         18 |          0 |         17 |         35 |
+| c:\在修改的内容\jbbot\zmng\doc\starter.go             | Go         |         12 |          2 |          4 |         18 |
+| c:\在修改的内容\jbbot\zmng\dsktp.js                   | JavaScript |         70 |         28 |         27 |        125 |
+| c:\在修改的内容\jbbot\zmng\dsl.sql                    | SQL        |         26 |          2 |         27 |         55 |
+| c:\在修改的内容\jbbot\zmng\dslAsm.sql                 | SQL        |         43 |          2 |         47 |         92 |
+| c:\在修改的内容\jbbot\zmng\dslV3.sql                  | SQL        |         45 |          2 |         64 |        111 |
+| c:\在修改的内容\jbbot\zmng\index.html                 | HTML       |         59 |          2 |         30 |         91 |
+| c:\在修改的内容\jbbot\zmng\index.js                   | JavaScript |         75 |         35 |         61 |        171 |
+| c:\在修改的内容\jbbot\zmng\ini\bp.md                  | Markdown   |          4 |          0 |          9 |         13 |
+| c:\在修改的内容\jbbot\zmng\libBiz\api——dep.js         | JavaScript |         87 |         23 |         45 |        155 |
+| c:\在修改的内容\jbbot\zmng\libBiz\exec.php            | PHP        |          1 |          0 |          6 |          7 |
+| c:\在修改的内容\jbbot\zmng\libBiz\jsphpT.js           | JavaScript |          2 |          1 |          2 |          5 |
+| c:\在修改的内容\jbbot\zmng\libBiz\t.ts                | TypeScript |          1 |          0 |          0 |          1 |
+| c:\在修改的内容\jbbot\zmng\libx\aes.js                | JavaScript |         61 |         11 |         22 |         94 |
+| c:\在修改的内容\jbbot\zmng\libx\agt.js                | JavaScript |         62 |          5 |         23 |         90 |
+| c:\在修改的内容\jbbot\zmng\libx\autoldTst.js          | JavaScript |          4 |          0 |          8 |         12 |
+| c:\在修改的内容\jbbot\zmng\libx\autoload.js           | JavaScript |         22 |         10 |         14 |         46 |
+| c:\在修改的内容\jbbot\zmng\libx\callFun.js            | JavaScript |         46 |         79 |         30 |        155 |
+| c:\在修改的内容\jbbot\zmng\libx\dsl.js                | JavaScript |         16 |          4 |         10 |         30 |
+| c:\在修改的内容\jbbot\zmng\libx\enc.js                | JavaScript |         23 |          6 |          8 |         37 |
+| c:\在修改的内容\jbbot\zmng\libx\file.js               | JavaScript |          6 |          0 |          7 |         13 |
+| c:\在修改的内容\jbbot\zmng\libx\http.js               | JavaScript |         68 |         11 |         36 |        115 |
+| c:\在修改的内容\jbbot\zmng\libx\php.js                | JavaScript |        112 |         18 |         35 |        165 |
+| c:\在修改的内容\jbbot\zmng\libx\php.php               | PHP        |          3 |          0 |          1 |          4 |
+| c:\在修改的内容\jbbot\zmng\libx\phpT.htm.html         | HTML       |         14 |          0 |          7 |         21 |
+| c:\在修改的内容\jbbot\zmng\libx\phpT.js               | JavaScript |          2 |         15 |          2 |         19 |
+| c:\在修改的内容\jbbot\zmng\libx\phpTest.js            | JavaScript |         15 |          0 |          2 |         17 |
+| c:\在修改的内容\jbbot\zmng\libx\pkgtst.js             | JavaScript |          2 |          0 |          3 |          5 |
+| c:\在修改的内容\jbbot\zmng\lowdbx\lowdbTst.js         | JavaScript |         13 |         12 |         24 |         49 |
+| c:\在修改的内容\jbbot\zmng\lowdbx\lowdbX.js           | JavaScript |         60 |         39 |         47 |        146 |
+| c:\在修改的内容\jbbot\zmng\lowdbx\package.json        | JSON       |          8 |          0 |          1 |          9 |
+| c:\在修改的内容\jbbot\zmng\lowdbx\userColl.json       | JSON       |          6 |          0 |          0 |          6 |
+| c:\在修改的内容\jbbot\zmng\node_modu\aes.js           | JavaScript |         61 |         11 |         22 |         94 |
+| c:\在修改的内容\jbbot\zmng\node_modu\api.js           | JavaScript |         87 |         24 |         85 |        196 |
+| c:\在修改的内容\jbbot\zmng\node_modu\api2023jb.js     | JavaScript |        234 |         58 |        137 |        429 |
+| c:\在修改的内容\jbbot\zmng\node_modu\apidoc.json      | JSON       |          5 |          0 |          0 |          5 |
+| c:\在修改的内容\jbbot\zmng\node_modu\autoload.js      | JavaScript |         22 |         10 |         14 |         46 |
+| c:\在修改的内容\jbbot\zmng\node_modu\core.js          | JavaScript |          8 |          0 |          5 |         13 |
+| c:\在修改的内容\jbbot\zmng\node_modu\dsl.js           | JavaScript |         16 |          4 |         10 |         30 |
+| c:\在修改的内容\jbbot\zmng\node_modu\dslParse.js      | JavaScript |        219 |         23 |         99 |        341 |
+| c:\在修改的内容\jbbot\zmng\node_modu\enc.js           | JavaScript |         33 |          6 |          8 |         47 |
+| c:\在修改的内容\jbbot\zmng\node_modu\exprs.js         | JavaScript |         79 |         15 |         10 |        104 |
+| c:\在修改的内容\jbbot\zmng\node_modu\file.js          | JavaScript |         33 |          5 |         10 |         48 |
+| c:\在修改的内容\jbbot\zmng\node_modu\fp_ati1990.js    | JavaScript |        199 |         43 |         76 |        318 |
+| c:\在修改的内容\jbbot\zmng\node_modu\http.js          | JavaScript |         74 |         13 |         36 |        123 |
+| c:\在修改的内容\jbbot\zmng\node_modu\package.json     | JSON       |          8 |          0 |          1 |          9 |
+| c:\在修改的内容\jbbot\zmng\node_modu\php.js           | JavaScript |        137 |         21 |         57 |        215 |
+| c:\在修改的内容\jbbot\zmng\node_modu\secury.js        | JavaScript |          0 |          0 |          1 |          1 |
+| c:\在修改的内容\jbbot\zmng\node_modu\ui.js            | JavaScript |         63 |         28 |         30 |        121 |
+| c:\在修改的内容\jbbot\zmng\oplog.htm                  | HTML       |        121 |         60 |         49 |        230 |
+| c:\在修改的内容\jbbot\zmng\res\agtBal.json            | JSON       |          1 |          0 |          0 |          1 |
+| c:\在修改的内容\jbbot\zmng\res\apidoc.json            | JSON       |          5 |          0 |          0 |          5 |
+| c:\在修改的内容\jbbot\zmng\res\g.go                   | Go         |          5 |          0 |          6 |         11 |
+| c:\在修改的内容\jbbot\zmng\res\kexiafen.json          | JSON       |          9 |          0 |          0 |          9 |
+| c:\在修改的内容\jbbot\zmng\res\kill.js                | JavaScript |          9 |          0 |          5 |         14 |
+| c:\在修改的内容\jbbot\zmng\res\playerQryRzt.json      | JSON       |         20 |          0 |          0 |         20 |
+| c:\在修改的内容\jbbot\zmng\res\sheofenRzt.json        | JSON       |         12 |          0 |          0 |         12 |
+| c:\在修改的内容\jbbot\zmng\res\style.css              | CSS        |          7 |          0 |          2 |          9 |
+| c:\在修改的内容\jbbot\zmng\res\ts11.ts                | TypeScript |          1 |          0 |          2 |          3 |
+| c:\在修改的内容\jbbot\zmng\res\web.js                 | JavaScript |         15 |          1 |          9 |         25 |
+| c:\在修改的内容\jbbot\zmng\shangxiafen.htm            | HTML       |        145 |         60 |         52 |        257 |
+| c:\在修改的内容\jbbot\zmng\shangxiafen.js             | JavaScript |        141 |         49 |        114 |        304 |
+| c:\在修改的内容\jbbot\zmng\test\ati1990fp4nodeTest.js | JavaScript |          2 |          0 |          7 |          9 |
+| c:\在修改的内容\jbbot\zmng\test\dblowT.js             | JavaScript |         12 |         10 |         24 |         46 |
+| c:\在修改的内容\jbbot\zmng\test\lowDbTest.js          | JavaScript |         23 |          9 |         23 |         55 |
+| c:\在修改的内容\jbbot\zmng\test\lowdbTst.js           | JavaScript |         10 |          3 |         14 |         27 |
+| c:\在修改的内容\jbbot\zmng\test\pkgTest.js            | JavaScript |          9 |          3 |         12 |         24 |
+| c:\在修改的内容\jbbot\zmng\test\userColl4.json        | JSON       |         50 |          0 |          0 |         50 |
+| c:\在修改的内容\jbbot\zmng\test\web.js                | JavaScript |          5 |          9 |         43 |         57 |
+| c:\在修改的内容\jbbot\zmng\web.js                     | JavaScript |         15 |          1 |          9 |         25 |
+| Total                                           |            |      3,181 |        779 |      1,620 |      5,580 |
++-------------------------------------------------+------------+------------+------------+------------+------------+

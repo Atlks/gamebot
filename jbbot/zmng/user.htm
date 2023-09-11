@@ -25,23 +25,25 @@
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
     <script type="module" src="libx/ui.js"></script>
+    <script src="libBiz/user.js"></script>
+    <script src="libx/incUtil.js"></script>
 
 </head>
 <body>
 
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-
-        <li class="breadcrumb-item"><a href="index.html" target="_top"> home </a></li>
-
-        <li class="breadcrumb-item"><a href="shangxiafen.htm">上下分管理</a></li>
-        <li class="breadcrumb-item"><a href="user.htm">用户管理</a></li>
-        <li class="breadcrumb-item"><a href="oplog.htm">日志</a></li>
+<script>
 
 
-    </ol>
-</nav>
+    let hedtx=readFileSyncx("./head.htm")
+    document.write(hedtx)
+
+</script>
+
+<script>
+    $("#aUser a").addClass("CurTab")
+ //   $("#aUser").css("color","red");
+</script>
 
 
 <p></p>

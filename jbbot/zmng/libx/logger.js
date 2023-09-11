@@ -20,13 +20,48 @@
 // module.exports = logger606;
 
 //require("datetime")
-require("./datetime")
-require( __dirname+"/datetime.js")
-require("./datetime.js")
-var {readFileSync,writeFileSync,appendFileSync} = require("fs");
-global["readFileSync"]=readFileSync;
-global["writeFileSync"]=writeFileSync;
-global["appendFileSync"]=appendFileSync;
+try{
+    require("./datetime")
+    require( __dirname+"/datetime.js")
+    require("./datetime.js")
+ //   var {readFileSync,writeFileSync,appendFileSync} = require("fs");
+    global["readFileSync"]=readFileSync;
+    global["writeFileSync"]=writeFileSync;
+    global["appendFileSync"]=appendFileSync;
+    global['log_enterFun' ]=log_enterFun
+    global['log_fun_enter' ]=log_fun_enter
+
+    global['log_fun_ret' ]=log_fun_ret
+    global['log_errV2' ]=log_errV2
+
+    global['errorSeriz' ]=errorSeriz
+    global['log_warn'] = log_warn
+    global['log_err'] = log_err
+    global['log_info'] = log_info
+
+}catch (e){
+    //maybe use in html env
+
+}
+
+function  appendFileSync(f,msg)
+{
+    if (isWinformEnv())
+    {
+
+        callOBj = "appendFileSync " + encodeURIComponent(f)+" "+encodeURIComponent(msg);
+
+       return  window.external.callFun(callOBj)
+    }
+
+    else {
+        //win env   node env
+        var  fs = require("fs");
+
+        fs.appendFileSync(f,msg)
+    }
+}
+
 function log_info(msg) {
     try {
         //  logger606.info(msg);   info: Sep-05-2023 18:34:26:
@@ -37,7 +72,7 @@ function log_info(msg) {
 
 }
 
-global['log_enterFun' ]=log_enterFun
+
 function log_enterFun(arguments) {
 
     var funname = arguments.callee.name;
@@ -47,7 +82,57 @@ function log_enterFun(arguments) {
 
 }
 
-global['errorSeriz' ]=errorSeriz
+function log_fun_enter(arguments) {
+
+    var funname = arguments.callee.name;
+    // arguments.callee.name
+    arg = JSON.stringify(arguments);
+    console.log("*********=>" + funname + arg);
+    log_info("*********=>" + funname + arg)
+
+}
+
+function log_fun_ret(arguments,retVal) {
+
+    var funname = arguments.callee.name;
+    // arguments.callee.name
+    arg = JSON.stringify(arguments);
+
+  //  "*********=>" + funname + arg
+    console.log("["+funname+"] ret=>"+retVal);
+
+}
+
+
+
+function err_castSerizErr(e) {
+    let s= errorSeriz(e)
+     return json_decode(s)
+}
+
+function log_errV2(e,arguments) {
+
+    try{
+        var funname = arguments.callee.name;
+        // arguments.callee.name
+        arg = JSON.stringify(arguments);
+
+        //  "*********=>" + funname + arg
+        let eo={"e":err_castSerizErr(e),"fun":funname,"args":arguments }
+
+        console.log(eo);
+        let msg=json_encode(eo)
+        appendFileSync("./err_log636.log", curDatetime() + " ERR " + msg + "\r\n")
+      return eo;
+    }catch (e){
+        console.log(e)
+    }
+
+
+
+}
+
+
 function errorSeriz(e) {
     msg = json_encode(e)    //cuztm errobj
     if (msg.length < 5) {
@@ -59,7 +144,7 @@ function errorSeriz(e) {
 }
 
 function log_err(e) {
-    require("./fp_ati1990")
+   // require("./fp_ati1990")
     try {
         if(  typeof(e)=='string')
             msg=e;
@@ -75,7 +160,8 @@ function log_err(e) {
         console.log(e)
     }
 }
-global['log_warn'] = log_warn
+
+
 function log_warn(e) {
     require("./fp_ati1990")
     try {
@@ -97,8 +183,8 @@ function log_warn(e) {
 
 // const winlogger = require("logger");
 // winlogger.info(url);
-global['log_err'] = log_err
-global['log_info'] = log_info
+
+
 
 try {
     window['log_info'] = log_info

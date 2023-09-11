@@ -5,6 +5,11 @@
     <title>Title</title>
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0,maximum-scale=1">
+    <script src="libx/sys.js"></script>
+    <script src="libx/browerNode.js"></script>
+
+
+
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
@@ -19,41 +24,70 @@
 
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="node_modules/api2023jb.js"></script>
-    <script src="node_modules/fp_ati1990.js"></script>
+
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css"/>
 
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
     <script type="module" src="libx/ui.js"></script>
-    <script src="node_modules/jq.js"></script>
-    <script src="node_modules/logger.js"></script>
+
+    <script src="libx/errHdlr.js"></script>
+    <script src="libBiz/user.js"></script>
+    <script src="libBiz/acc.js"></script>
+
+
+
+    <link rel="stylesheet" href="https://layui.itze.cn/layui-v2.6.8/layui/css/layui.css">
+    <script src="https://layui.itze.cn/layui-v2.6.8/layui/layui.js"></script>
+    <script src="libx/dsl.js"></script>
+    <script src="libx/logger.js"></script>
+    <script src="libx/php.js"></script>
+    <script src="libx/jq.js"></script>
+    <script src="libBiz/bizHttp.js"></script>
+
 </head>
 <body>
 
-
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-
-        <li class="breadcrumb-item"><a href="index.html" target="_top"> home </a></li>
-
-        <li class="breadcrumb-item"><a href="shangxiafen.htm">上下分管理</a></li>
-        <li class="breadcrumb-item"><a href="user.htm">用户管理</a></li>
-        <li class="breadcrumb-item"><a href="oplog.htm">日志</a></li>
+<style>
 
 
-    </ol>
-</nav>
+</style>
 
+<script>
+
+   if(isWinformEnv())
+   {
+       var hedtx=window.external.callFun("readFileSyncx __rootdir__/head.htm");
+   }
+   else
+   {
+       var hedtx=readFileSyncx("./head.htm")
+   }
+
+     document.write(hedtx)
+
+</script>
+
+
+<script>
+    $("#aSxf a").addClass("CurTab")
+    $("#aSxf").css("color","red");
+</script>
 
 
 <p></p>
 
-用户名：<input type="text" value="uname1" id="uname" name="fname" style="width: 100px">
-上下分：<input type="text" value="200" id="score" name="fname" style="width: 80px"><br>
+用户名：<input type="text" value="" id="uname" name="fname" style="width: 100px">
+
+<!--
+上下分：
+--><input type="text" value="" id="score" name="fname" style="width: 80px;display: none">
+
 <button onclick="playerStat237()" type="button" class="btn btn-success" style="width00: 100%">搜索</button>
-<button onclick="shangfen1236()" type="button" class="btn btn-primary" style="width00: 100%">上分</button>
-<button onclick="xiafen745()" type="button" class="btn btn-primary" style="width00: 100%">下分</button>
+
+<button id="sfbtn" data-method="notice" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick00="shangfen1236()" type="button" class="layui-btn btn btn-primary" style="width00: 100%">上分</button>
+<button id="xfbtn" data-method="notice"  onclick00="xiafen745()" type="button" class=" layui-btn btn btn-primary" style="width00: 100%">下分</button>
+
 
 <button class="btn btn-primary" disabled id="loaddiv" style="xdisplay:none ">
     <span class="spinner-border spinner-border-sm"></span>
@@ -80,36 +114,105 @@
 <p></p>
 
 
-<div class="card">
-    <div class="card-header">
-        玩家管理
-    </div>
-    <div class="card-body">
 
-
-        <table class="table" id="app3">
-            <tr>
-                <td>玩家id</td>
-                <td>昵称</td>
-                <td>余额</td>
-                <td>类型</td>
-                <td>玩家状态</td>
-            </tr>
-
-
-            <tr v-for="item in items" class="hid" style="display: none">
-
-                <td>{{ item.userid }} </td>
-                <td>{{ item.account }}</td>
-                <td> {{ item.totalScore }}</td>
-                <td></td>
-                <td>{{ item.status }}</td>
-            </tr>
-
-
-        </table>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
     </div>
 </div>
+<!-- end Modal -->
+
+
+
+<div class="container" style="width: 100%; max-width: 100%;padding: 5px">
+    <div class="row" style="width: 100%">
+        <div class="col">
+               <div class="card">
+                <div class="card-header">
+                    玩家管理
+                </div>
+                <div class="card-body">
+
+
+                    <table class="table" id="app3">
+                        <tr>
+                            <td>玩家id</td>
+                            <td>昵称</td>
+                            <td>余额</td>
+                            <td>类型</td>
+                            <td>玩家状态</td>
+                        </tr>
+
+
+                        <tr v-for="item in items" class="hid" style="display: none">
+
+                            <td>{{ item.userid }} </td>
+                            <td>{{ item.account }}</td>
+                            <td> {{ item.totalScore }}</td>
+                            <td></td>
+                            <td>{{ item.status }}</td>
+                        </tr>
+
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="col">
+
+
+            <div class="card" id="app_sxfV2">
+                <div class="card-header">
+                    上下分记录
+                    <button onclick="orderQryShagnxiafen415()" type="button" class="btn btn-primary" style="margin: 0px; width00: 100%">刷新
+                </button>
+                </div>
+                <div class="card-body">
+
+
+                    <table class="table" id="tab_sxf">
+                        <thead>
+                        <tr>
+                            <td>玩家id</td>
+                            <td></td>
+                            <td>分数</td>
+                            <td>时间</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="item in items" style="display: none ">
+
+                            <td> {{ item.uname }}</td>
+                            <td>{{ item.类型 }}</td>
+                            <td> {{ item.score }}</td>
+                            <td>{{ item.time }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+
 
 <script  type="module" src="https://unpkg.com/vue@3/dist/vue.esm-browser.js"></script>
 <!--
@@ -212,34 +315,6 @@
 
 <p></p>
 
-<div class="card" id="app_sxfV2">
-    <div class="card-header">
-        上下分记录
-    </div>
-    <div class="card-body">
-
-
-        <table class="table" id="tab_sxf">
-            <thead>
-            <tr>
-                <td>玩家id</td>
-                <td></td>
-                <td>分数</td>
-                <td>时间</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="item in items" style="display: none ">
-
-                <td> {{ item.uname }}</td>
-                <td>{{ item.类型 }}</td>
-                <td> {{ item.score }}</td>
-                <td>{{ item.time }}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
 
 
 <p></p>
@@ -273,5 +348,94 @@
 
 
 </script>
+
+
+
+
+    <script>
+        layui.use('layer', function(){ //独立版的layer无需执行这一句
+            var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+
+            //触发事件
+            var active = {
+                confirmTrans: function(){
+                    //配置一个透明的询问框
+                    layer.msg('大部分参数都是可以公用的<br>合理搭配，展示不一样的风格', {
+                        time: 20000, //20s后自动关闭
+                        btn: ['明白了', '知道了', '哦']
+                    });
+                }
+                ,notice: function(){
+                    //示范一个公告层
+                    layer.open({
+                        type: 1
+                        ,title: "上下分" //不显示标题栏
+                        ,closeBtn: false
+                        ,area: '300px;'
+                        ,shade: 0.8
+                        ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                        ,btn: ['确定', '取消']
+                        ,btnAlign: 'c'
+                        ,moveType: 1 //拖拽模式，0或者1
+                        ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">用户名：<input type="text" value="" id="uname_sxf" name="fname" style="width: 100px"><br></br>上下分：<input type="text" value="" id="score_sxf" name="fname" style="width: 100px">\n</div>'
+                        ,success: function(layero){
+                            var btn = layero.find('.layui-layer-btn');
+                          //  exe first
+                          //  alert("ok..")
+                        }
+                        ,yes: function(){
+                          //  alert("ok..")
+                            console.log("selectBtn-->"+selectBtn)
+                           // alert(selectBtn)
+                            $("#uname").val( $("#uname_sxf").val())
+                            if(selectBtn=="sfbtn")
+                                  pipe( chkSxfUname,shangfen1236)  ;
+                            else
+                                pipe( chkSxfUname,xiafen745)
+                            layer.closeAll();
+                        }
+                    });
+                }
+                ,offset: function(othis){
+                    var type = othis.data('type')
+                        ,text = othis.text();
+
+                    layer.open({
+                        type: 1
+                        ,offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                        ,id: 'layerDemo'+type //防止重复弹出
+                        ,content: '<div style="padding: 20px 100px;">'+ text +'</div>'
+                        ,btn: '关闭全部'
+                        ,btnAlign: 'c' //按钮居中
+                        ,shade: 0 //不显示遮罩
+                        ,yes: function(){
+
+                            layer.closeAll();
+                        }
+                    });
+                }
+            };
+
+            $(' .layui-btn').on('click', function(){
+
+                window['selectBtn']=$(this).attr("id");
+                console.log($(this).attr("id"))
+                var othis = $(this), method = othis.data('method');
+
+
+                active[method] ? active[method].call(this, othis) : '';
+
+
+            });
+
+
+            //多窗口模式 - esc 键
+            $(document).on('keyup', function(e){
+                if(e.keyCode === 27){
+                    layer.close(layer.escIndex ? layer.escIndex[0] : 0);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

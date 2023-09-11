@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<button onclick="clk()">clkkkkk</button>
+
+自定义弹窗
+<script defer>
+
+    function clk(){
+        //alert( window.external)
+        window.external.invkFrmWeb("自定义弹窗");
+    }
+//alert(typeof(window.external))
+    setTimeout(function (){
+       // clk()
+    },3000);
+
+    alert(navigator.userAgent);
+
+
+
+
+</script>
+
+<script>
+
+    window.onerror = function(message, url, lineNumber)
+    {
+
+
+        let eobj={"msg":message,"url":url,"line":lineNumber};
+
+        window.external.errorHandler( JSON.stringify(eobj) );
+    }
+
+</script>
+
+
+
+</body>
+</html>

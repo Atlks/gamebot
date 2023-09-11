@@ -1,3 +1,7 @@
+
+// need merge to http..
+//todo  need merge to http..
+
 try {
     const winlogger = require("./logger.js");
 } catch (e) {
@@ -13,10 +17,11 @@ try{
 }catch (e){}
 
 
+//dep  should http_get_jqget
 function jqGet($url, f ,failF) {
 
     console.log(" [http_get_jqget] " + $url)
-    const winlogger = require("./logger");
+
 
     // log_info("\r\n");
 

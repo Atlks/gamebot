@@ -1,0 +1,15 @@
+{
+  "main": "fp_ati1990.js",
+  "name": "attilax/fp",
+  "version": "1.7.0",
+  "description": "fp php style api fun",
+  "keywords": [
+    "php",
+    "tool",
+    "escape"
+  ],
+  "type": "commonjs",
+  "dependencies": {
+
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "main": "fp_ati1990.js",
+  "name": "@attilax/fp",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+  }
+}

@@ -2,8 +2,17 @@
 
 global["file_exists"]=file_exists;
 
+var  {join, dirname} = require('path')
+var  {dirname} = require("path");
 
 
+global["dirname"] = dirname;
+global['readFileAsJson'] = readFileAsJson
+
+function readFileAsJson(f) {
+    return json_decode(readFileSyncx(f));
+}
+global['file_exists'] = file_exists
 function file_exists(fil) {
 
 
@@ -44,8 +53,22 @@ global["readFileSyncx"]=readFileSyncx;
 global["file_get_contents"]=readFileSyncx;
 global["file_get_contentsx"]=readFileSyncx;
 function readFileSyncx(fil) {
+
+
+
+    // process.env.USERPROFILE +
+  //  let f = "@USERPROFILE@/lgky.json"
+    fil=fil.replace("__USERPROFILE__",process.env.USERPROFILE);
+    fil=fil.replace("__rootdir__",__dirname+"/../");
+
+
+
     //  filepath=>C:\modyfing\jbbot\zmng\cfg.js
      console.log("filepath=>"+resolve(fil))
+
+    if(!file_exists(fil))
+        return "";
+
     var fs = require("fs");
     var path = require("path");
   //  fs.mkdirSync(path.dirname(fil), { recursive: true });
