@@ -1,0 +1,18 @@
+{
+  "name": "emp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dsktp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^9.0.4",
+    "electron-installer-dmg": "^3.0.0",
+    "electron-packager": "^14.2.1"
+  }
+}

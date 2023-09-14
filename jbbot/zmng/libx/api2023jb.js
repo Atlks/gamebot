@@ -45,7 +45,9 @@ global['libdir'] = libdir
 
 const {aes_encrypt, aes_decrypt, aes_mode_ECB, aes_mode_CBC} = require(libdir + 'aes.js');
 
-const {urlencode, md5} = require(libdir + 'enc.js');
+console.log("libdir130=>"+libdir)
+
+  require(libdir + 'enc.js');
 
 
 const {resolve} = require('path');
@@ -218,7 +220,7 @@ async function player_kick(uname) {
 
 
     let file = __dirname + "/../db/opLogColl.json";
-    var rcd = {"op": "踢玩家下线", "uname": uname, "类型": "踢玩家下线", "time": curDateTime()}
+    var rcd = {"agtid":agtid,"op": "踢玩家下线", "uname": uname, "类型": "踢玩家下线", "time": curDateTime()}
     pdo_insert(rcd, file);
 
     let rzt=""
@@ -260,26 +262,7 @@ async function player_kick(uname) {
 }
 
 
-global["oplog_qry"] = oplog_qry;
 
-async function oplog_qry(uname) {
-
-    await import("../lowdbx/lowdbX.js")
-    let dbfile = __dirname + "/../db/opLogColl.json";
-
-    console.log("dbfile=>" + dbfile)
-//  pdo_exec_insert()
-
-
-    let _ = require('lodash');
-    rzt = pdo_query({}, dbfile);
-
-
-    rzt = _.orderBy(rzt, ['time'], ['desc']);
-    rzt = rzt.slice(0, 300)
-    return json_encode(rzt)
-
-}
 
 
 global["Score_PlayerKexiafenBal"] = Score_PlayerKexiafenBal;
@@ -359,32 +342,8 @@ async function PlayerScoreQry(uname) {
 
 }
 
-global["score_orderQryShagnxiafen"] = score_orderQryShagnxiafen;
-
-async function score_orderQryShagnxiafen(uname) {
-
-    await import("../lowdbx/lowdbX.js")
-    let dbfile = __dirname + "/../db/scoreLogColl.json";
-
-    console.log("dbfile=>" + dbfile)
-    //  pdo_exec_insert()
 
 
-    let _ = require('lodash');
-   let rzt = pdo_query({'uname': uname}, dbfile);
-    //  _.sortBy()
-
-    //   let _ = require('lodash');
-
-
-    rzt = _.orderBy(rzt, ['time'], ['desc']);
-    rzt = rzt.slice(0, 300)
-
-
-    console.log(rzt)
-    return json_encode(rzt);
-
-}
 
 
 async function score_orderQryShagnxiafenByUnameOrderid(uname, orderid) {
@@ -525,7 +484,7 @@ let    rzt=""
     includeEsm("../lowdbx/lowdbX.js")
      await import("../lowdbx/lowdbX.js")
     let file = __dirname + "/../db/opLogColl.json";
-    var rcd = {"op": "下分操作", "uname": uname, "score": score, "类型": "下分", "time": curDateTime()}
+    var rcd = {"agtid":agtid,"op": "下分操作", "uname": uname, "score": score, "类型": "下分", "time": curDateTime()}
       pdo_insert(rcd, file);
 
     //-------------add score log
@@ -553,11 +512,11 @@ let    rzt=""
 // }
 
 require("./logger");
-global["ScoreTopup_shangfen"] = ScoreTopup_shangfen;
+
 
 //reg("u1","","u1nicknm")
 function checkWhiteIp(e, uname) {
-    if (e?.httpStatuCode == 502) {
+    if (e.httpStatuCode == 502) {
         let rzt = e.httpRzt_clr;
         //  let obj = json_decode(rzt);
         let eobj = {
@@ -580,61 +539,12 @@ try{
 }
 
 // shangfen("u1",100)
-async function ScoreTopup_shangfen(uname, score) {
-    log_enterFun(arguments)
-    authChk()  //alslo refresh global agtid des md5key
-    require("./fp_ati1990")
-
-    timestamp = time();
-    _paraValue = "account=%s&score=%s&orderid=%s";
-    orderid = sprintf("%s%s%s", agentid, timestamp, uname)
-    _paraValue = sprintf(_paraValue, uname, score, orderid);
-
-    let url = buildUrlNget(_paraValue, timestamp, apitype_shangfen);
 
 
-    log_info(url);
-    let rzt=""
-    try {
-          rzt = await http_get(url);
-    } catch (e) {
-        checkWhiteIp(e, uname);
-    }
 
-
-    try {
-        rztobj = JSON.parse(rzt);
-        if (rztobj.data.code == 0) {
-            await import("../lowdbx/lowdbX.js")
-
-            var rcd = {"uname": uname, "score": score, "类型": "上分", "time": curDateTime()}
-            let dbfile = __dirname + "/../db/scoreLogColl.json";
-            await pdo_insert(rcd, dbfile);
-
-          //  var rcd = {"op": "添加用户", "uname": uname, "类型": "添加用户", "time": curDateTime()}
-
-         //   oplog_add(rcd)
-
-
-            let file = __dirname + "/../db/opLogColl.json";
-            var rcd = {"op": "上分操作", "uname": uname, "score": score, "类型": "上分", "time": curDateTime()}
-            await pdo_insert(rcd, file);
-
-
-        }
-    } catch (e) {
-        let eobj = {"stack": e.stack, "msg": e.message}
-        log_err(eobj)
-    }
-
-
-    // else
-    //     alert(rzt)
-
-
-    return rzt;
-
-
+function md5V2(data) {
+    var CryptoJS = require("crypto-js");
+    return CryptoJS.MD5(data).toString();
 }
 
 global['buildUrlNget'] = buildUrlNget
@@ -644,8 +554,9 @@ function buildUrlNget(_paraValue, timestamp, apitype_shangfen) {
     log_enterFun(arguments)
 
     authChk()
+    require("./enc")
     paraValue = aes_encrypt(aes_mode_ECB(), _paraValue, desCode);
-    md5key = md5(sprintf("%s%s%s", agentid, timestamp, md5Code));
+    md5key = md5V2(sprintf("%s%s%s", agentid, timestamp, md5Code));
 
 
     $url_tpmplt = "https://ng.mqbsx.com/GameHandle?agentid=%s&timestamp=%s&type=%s&paraValue=%s&key=%s";

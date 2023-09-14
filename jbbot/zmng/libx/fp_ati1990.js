@@ -320,8 +320,17 @@ try {
 }
 
 
+String.prototype.startWith=function(str){
+    var reg=new RegExp("^"+str);
+    return reg.test(this);
+}
 function startwith(str, wz) {
-    return str.startsWith(wz);
+    try{
+        return str.startsWith(wz);
+    }catch (e) {
+        return  str.startWith(wz)
+    }
+
 
 }
 

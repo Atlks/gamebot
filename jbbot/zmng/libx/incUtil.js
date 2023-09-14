@@ -40,4 +40,11 @@ function getLibdir() {
     return libdir;
 }
 
-window['libdir']=getLibdir()
+try{
+    window['libdir']=getLibdir()
+}catch (e)
+{
+
+    //winform env
+    window['libdir']=""
+}

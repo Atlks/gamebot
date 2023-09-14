@@ -2,7 +2,7 @@
 //const {default: fetch} = require("node-fetch");
 
 try{
-    const winlogger = require("./logger.js");
+     require("./logger.js");
 }catch (e){}
 
 try{
@@ -22,8 +22,8 @@ function isset(varname) {
 
 }
 
-if (isset("module"))
-    module.exports = {http_get }
+// if (isset("module"))
+//     module.exports = {http_get }
 
 
 function  get($url)
@@ -32,22 +32,22 @@ function  get($url)
 }
 
 //http_get("urllll",2)
-async function http_get_syncReqLib($url) {
-    console.log("\r\n");
-    var funname = arguments.callee.name;
-    // arguments.callee.name
-    arg = JSON.stringify(arguments);
-    console.log("*********=>" + funname + arg);
-
-    //  console.log($url);
-    var request = require('sync-request');
-    var res = await request('GET', $url);
-    let body =await res.getBody().toString();
-    console.log(" [http_get():] ret=>" + body);
-    console.log("\r\n");
-    return body;
-
-}
+//   function http_get_syncReqLib($url) {
+//     console.log("\r\n");
+//     var funname = arguments.callee.name;
+//     // arguments.callee.name
+//     arg = JSON.stringify(arguments);
+//     console.log("*********=>" + funname + arg);
+//
+//     //  console.log($url);
+//     var request = require('sync-request');
+//     var res = await request('GET', $url);
+//     let body =await res.getBody().toString();
+//     console.log(" [http_get():] ret=>" + body);
+//     console.log("\r\n");
+//     return body;
+//
+// }
 global["http_get"]=http_get;global["fetchx"]=http_get;
 function  strip_tagsx($t)
 {
@@ -70,10 +70,10 @@ function  strip_tags($t)
 }
 
 try{
-    const winlogger = require("./logger.js");
+     require("./logger.js");
 }catch (e){}
 try{
-    const winlogger = require("zmng/libx/logger");
+     require("./libx/logger.js");
 }catch (e){}
 
 //http_get("http://localhost:8000/tmot",{ timeout: 5000 })
@@ -195,3 +195,6 @@ function removeBlankLines($t){
 
  return $t;
 }
+
+
+

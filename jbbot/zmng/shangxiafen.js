@@ -115,6 +115,13 @@ function PlayerKexiafenBal638() {
 
 
 function player_kickInform() {
+
+    var r = confirm("确定要踢下线吗");
+    if (r == true) {
+
+    } else {
+        return
+    }
     chkAop();
     authChk()
 
@@ -191,39 +198,6 @@ function chkAop() {
     }
 }
 
-function orderQryShagnxiafen415() {
-    // chkAop()
-    authChk()
-    var funname = arguments.callee.name;
-    // arguments.callee.name
-    arg = JSON.stringify(arguments);
-    console.log("*********=>" + funname + arg);
-    $("#loaddiv").show()
-
-//return
-
-    setTimeout(function () {
-
-        rzt = dsl_callFunCmdMode("score_orderQryShagnxiafen", $("#uname").val())
-
-
-        loadToTableVue(json_decode(rzt), "tab_sxf")
-
-        //  window['loadToTable'](json_decode(rzt),"tab_sxf")
-        // console.log("[playerStat237] rzt=>" + rzt)
-
-        $("#tab_sxf tr").each(function (idx, item) {
-            // item.show();  item.css("display","");
-            //  alert(item)
-            //  alert($(item)[0])
-            $(item).css("display", "");
-            $(item).show();
-        })
-        $("#loaddiv").hide()
-
-    }, 50)
-
-}
 
 //dep
 function _score_qry() {
@@ -282,70 +256,6 @@ function _score_qry() {
 
 }
 
-function playerStatV2() {
-    chkAop();
-    authChk()
-
-    var funname = arguments.callee.name;
-    // arguments.callee.name
-    arg = JSON.stringify(arguments);
-    console.log("*********=>" + funname + arg);
-
-    $("#loaddiv").show()
-
-    timestamp = time();
-
-    _paraValue = sprintf("account=%s", $("#uname").val());
-    echo("_paraValue==>" + _paraValue)
-    let url = buildUrlNget(_paraValue, timestamp, apitype_playerStat);
-    console.log(url)
-
-    jqGet(url, function (data) {
-        console.log("[playerStat237] rzt=>" + data)
-        rztobj = JSON.parse(data);
-
-        // $("#loaddiv").hide();
-
-        //rzt=  dsl_callFunCmdMode("playerStat",$("#uname").val() )
-        //  rzt=  dsl_callFunCmdMode("PlayerScoreQry",$("#uname").val() )
-
-
-        //  {"maintype":"/GameHandle","type":7,"data":{"code":0,"agentid":111356,"linecode":"10001_1","status":0,"userid":32076939,"account":"uname1","totalScore":300.0,"integralvalue":6.0,"addscore":300.0,"subscore":0.0,"addscoretimes":2,"subscoretimes":0,"totalwinlose":0.0,"totalrevenue":0.0}}
-
-        // rztobj=JSON.parse(rzt);
-
-
-        if (rztobj.data.code == 0) {
-            arr = [];
-            arr.push(rztobj.data)
-            console.log(window['loadToTable'])
-            loadToTableVue(arr, "app3")
-
-            $("#app3 tr").each(function (idx, item) {
-                // item.show();  item.css("display","");
-                //  alert(item)
-                //  alert($(item)[0])
-                $(item).css("display", "");
-                $(item).show();
-            })
-
-        } else {
-            require("./libx/excel")
-            let errmsg = errcodeMsg(rztobj.data.code)
-            alert("发生错误:" + errmsg + " ")
-        }
-        // alert(window["errcodeMsg" + rztobj.data.code] + " " + data)
-
-
-        $("#loaddiv").hide()
-
-        //  console.log("[playerStat237] rzt=>" + rzt)
-
-
-    }, jqFailFun)
-
-
-}
 
 
 // function jqFailFundp(jqXHR, textStatus, errorThrown) {
@@ -366,81 +276,4 @@ function playerStatV2() {
 //
 //
 // }
-
-
-//  apitype_PlayerScore
-function playerStat237() {
-    chkAop();
-    authChk()
-
-    var funname = arguments.callee.name;
-    // arguments.callee.name
-    arg = JSON.stringify(arguments);
-    console.log("*********=>" + funname + arg);
-
-
-    log_info("");
-    log_info("");
-    log_info("");
-    log_info("*********=>" + funname + arg)
-
-    $("#loaddiv").show()
-
-    timestamp = time();
-
-    _paraValue = sprintf("account=%s", $("#uname").val());
-    echo("_paraValue==>" + _paraValue)
-    let url;
-    if (isWinformEnv())
-          url = window.external.callFun("buildUrlNget " + _paraValue + " " + timestamp + " " + apitype_PlayerScore);
-    else
-          url = buildUrlNget(_paraValue, timestamp, apitype_PlayerScore);
-  //  alert("url=>"+url)
-    console.log(url)
-
-
-    jqGet(url, function (data) {
-        console.log("[playerStat237] rzt=>" + data)
-        rztobj = JSON.parse(data);
-
-        // $("#loaddiv").hide();
-
-        //rzt=  dsl_callFunCmdMode("playerStat",$("#uname").val() )
-        //  rzt=  dsl_callFunCmdMode("PlayerScoreQry",$("#uname").val() )
-
-
-        //  {"maintype":"/GameHandle","type":7,"data":{"code":0,"agentid":111356,"linecode":"10001_1","status":0,"userid":32076939,"account":"uname1","totalScore":300.0,"integralvalue":6.0,"addscore":300.0,"subscore":0.0,"addscoretimes":2,"subscoretimes":0,"totalwinlose":0.0,"totalrevenue":0.0}}
-
-        // rztobj=JSON.parse(rzt);
-
-
-        if (rztobj.data.code == 0) {
-            arr = [];
-            arr.push(rztobj.data)
-            //    console.log( window['loadToTable'])
-            loadToTableVue(arr, "app3")
-
-            $("#app3 tr").each(function (idx, item) {
-                // item.show();  item.css("display","");
-                //  alert(item)
-                //  alert($(item)[0])
-                $(item).css("display", "");
-                $(item).show();
-            })
-        } else {
-            require(libdir + "excel.js")
-            let errmsg = errcodeMsg(rztobj.data.code)
-            alert(errmsg + " ")
-        }
-
-
-        //  console.log("[playerStat237] rzt=>" + rzt)
-
-        $("#loaddiv").hide();
-
-
-    }, jqFailFun)
-
-
-}
 

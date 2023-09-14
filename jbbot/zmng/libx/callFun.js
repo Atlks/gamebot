@@ -1,6 +1,13 @@
 libdir = getLibdir()
 require("./sys.js")
-
+require("./enc.js")
+require("../libBiz/bizErr.js")
+require("../libx/aes.js")
+require("../libBiz/bizHttp.js")
+require("../libBiz/shangfen.js");
+require("../libBiz/shangfenNode.js")
+  require(libdir + 'enc.js');
+console.log(urlencode(111))
 function getLibdir() {
   //  console.log("_file=>" + __filename)  //if in html file ,...just for html file path
     //   console.log(__dirname)
@@ -25,7 +32,7 @@ function getLibdir() {
 
 const {aes_encrypt, aes_decrypt, aes_mode_ECB, aes_mode_CBC} = require(libdir + 'aes.js');
 
-const {urlencode, md5} = require(libdir + 'enc.js');
+
 require("./api2023jb.js")
 const fs = require("fs");
 require("./fp_ati1990");
@@ -33,6 +40,7 @@ require("./errHdlr");require("./logger")
 global["reg"] = reg;
 global["login"] = login;
 require("./php.js")
+require("../libBiz/acc.js")
 require("./ref.js")
 //echo(11)
 
@@ -60,10 +68,14 @@ function urldecode(params) {
     }
     return arr_r;
 }
-
+require("../libBiz/bizHttp.js")
+require("../libBiz/oplog.js")
+require("./err.js")
+require("./crpto.js")
 //  node C:\modyfing\apiprj\jbbot\zmng\libx\callFun.js echo 123
 async function main() {
 
+    //node  xxx.js  p abc
     var winlogger = require("./logger");
     const args = process.argv.slice(2)
     console.log  ("**********callFun.js prm==>" + args)
@@ -73,11 +85,14 @@ async function main() {
     try {
         let params = process.argv.slice(3);
         params=urldecode(params);
+        console.log("prm=>"+json_encode(params))
 
         $rz = await call_func(args[0], params)
     } catch (e) {
         echo(e)
-        $rz = errorSeriz(e);
+        $e2 = errorCast(e);
+        let eobj={"type":"ex","msg_to_ui":JSON.stringify($e2) ,"e":$e2};
+        $rz=JSON.stringify(eobj);
     }
 
     // $rz = "99999"

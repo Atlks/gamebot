@@ -1,0 +1,657 @@
+{
+  "msg": {
+    "type": "error",
+    "timeStamp": 1694507386014,
+    "jQuery37009797221710274213": true,
+    "isTrigger": 3,
+    "namespace": "dt",
+    "rnamespace": {},
+    "target": {
+      "jQuery370097972217102742132": {},
+      "jQuery370097972217102742131": {
+        "hasDataAttrs": true
+      }
+    }
+  },
+  "source": {
+    "oFeatures": {
+      "bAutoWidth": true,
+      "bDeferRender": false,
+      "bFilter": true,
+      "bInfo": true,
+      "bLengthChange": true,
+      "bPaginate": true,
+      "bProcessing": false,
+      "bServerSide": false,
+      "bSort": true,
+      "bSortMulti": true,
+      "bSortClasses": true,
+      "bStateSave": null
+    },
+    "oScroll": {
+      "bCollapse": false,
+      "iBarWidth": 17,
+      "sX": "",
+      "sXInner": "",
+      "sY": ""
+    },
+    "oLanguage": {
+      "fnInfoCallback": null,
+      "oAria": {
+        "sSortAscending": ": activate to sort column ascending",
+        "sSortDescending": ": activate to sort column descending",
+        "_hungarianMap": {
+          "sortAscending": "sSortAscending",
+          "sortDescending": "sSortDescending"
+        }
+      },
+      "oPaginate": {
+        "sFirst": "First",
+        "sLast": "Last",
+        "sNext": "Next",
+        "sPrevious": "Previous",
+        "_hungarianMap": {
+          "first": "sFirst",
+          "last": "sLast",
+          "next": "sNext",
+          "previous": "sPrevious"
+        }
+      },
+      "sEmptyTable": "No data available in table",
+      "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+      "sInfoEmpty": "Showing 0 to 0 of 0 entries",
+      "sInfoFiltered": "(filtered from _MAX_ total entries)",
+      "sInfoPostFix": "",
+      "sDecimal": "",
+      "sThousands": ",",
+      "sLengthMenu": "Show _MENU_ entries",
+      "sLoadingRecords": "Loading...",
+      "sProcessing": "",
+      "sSearch": "Search:",
+      "sSearchPlaceholder": "",
+      "sUrl": "",
+      "sZeroRecords": "No matching records found",
+      "_hungarianMap": {
+        "aria": "oAria",
+        "paginate": "oPaginate",
+        "emptyTable": "sEmptyTable",
+        "info": "sInfo",
+        "infoEmpty": "sInfoEmpty",
+        "infoFiltered": "sInfoFiltered",
+        "infoPostFix": "sInfoPostFix",
+        "decimal": "sDecimal",
+        "thousands": "sThousands",
+        "lengthMenu": "sLengthMenu",
+        "loadingRecords": "sLoadingRecords",
+        "processing": "sProcessing",
+        "search": "sSearch",
+        "searchPlaceholder": "sSearchPlaceholder",
+        "url": "sUrl",
+        "zeroRecords": "sZeroRecords"
+      }
+    },
+    "oBrowser": {
+      "bScrollOversize": false,
+      "bScrollbarLeft": false,
+      "bBounding": true,
+      "barWidth": 17
+    },
+    "ajax": null,
+    "aanFeatures": [],
+    "aoData": [
+      {
+        "nTr": {
+          "_DT_RowIndex": 0
+        },
+        "anCells": [
+          {
+            "_DT_CellIndex": {
+              "row": 0,
+              "column": 0
+            }
+          }
+        ],
+        "_aData": {
+          "code": 0,
+          "account": "777",
+          "status": 0
+        },
+        "_aSortData": null,
+        "_aFilterData": null,
+        "_sFilterRow": null,
+        "_sRowStripe": "",
+        "src": "data",
+        "idx": 0
+      }
+    ],
+    "aiDisplay": [],
+    "aiDisplayMaster": [
+      0
+    ],
+    "aIds": {},
+    "aoColumns": [
+      {
+        "idx": 0,
+        "aDataSort": [
+          0
+        ],
+        "asSorting": [
+          "asc",
+          "desc"
+        ],
+        "bSearchable": true,
+        "bSortable": true,
+        "bVisible": true,
+        "_sManualType": null,
+        "_bAttrSrc": false,
+        "fnCreatedCell": null,
+        "mData": "userid",
+        "mRender": null,
+        "nTh": {
+          "jQuery370097972217102742132": {},
+          "jQuery370097972217102742131": {
+            "hasDataAttrs": true
+          }
+        },
+        "nTf": null,
+        "sClass": "",
+        "sContentPadding": "",
+        "sDefaultContent": null,
+        "sName": "",
+        "sSortDataType": "std",
+        "sSortingClass": "sorting",
+        "sSortingClassJUI": "",
+        "sTitle": "玩家id",
+        "sType": null,
+        "sWidth": null,
+        "sWidthOrig": null,
+        "iDataSort": -1,
+        "sCellType": "td",
+        "_hungarianMap": {
+          "dataSort": "iDataSort",
+          "sorting": "asSorting",
+          "searchable": "bSearchable",
+          "sortable": "bSortable",
+          "visible": "bVisible",
+          "createdCell": "fnCreatedCell",
+          "data": "mData",
+          "render": "mRender",
+          "cellType": "sCellType",
+          "class": "sClass",
+          "contentPadding": "sContentPadding",
+          "defaultContent": "sDefaultContent",
+          "name": "sName",
+          "sortDataType": "sSortDataType",
+          "title": "sTitle",
+          "type": "sType",
+          "width": "sWidth"
+        },
+        "_setter": null,
+        "data": "userid"
+      },
+      {
+        "idx": 1,
+        "aDataSort": [
+          1
+        ],
+        "asSorting": [
+          "asc",
+          "desc"
+        ],
+        "bSearchable": true,
+        "bSortable": true,
+        "bVisible": true,
+        "_sManualType": null,
+        "_bAttrSrc": false,
+        "fnCreatedCell": null,
+        "mData": "account",
+        "mRender": null,
+        "nTh": {
+          "jQuery370097972217102742132": {},
+          "jQuery370097972217102742131": {
+            "hasDataAttrs": true
+          }
+        },
+        "nTf": null,
+        "sClass": "",
+        "sContentPadding": "",
+        "sDefaultContent": null,
+        "sName": "",
+        "sSortDataType": "std",
+        "sSortingClass": "sorting",
+        "sSortingClassJUI": "",
+        "sTitle": "昵称",
+        "sType": null,
+        "sWidth": null,
+        "sWidthOrig": null,
+        "iDataSort": -1,
+        "sCellType": "td",
+        "_hungarianMap": {
+          "dataSort": "iDataSort",
+          "sorting": "asSorting",
+          "searchable": "bSearchable",
+          "sortable": "bSortable",
+          "visible": "bVisible",
+          "createdCell": "fnCreatedCell",
+          "data": "mData",
+          "render": "mRender",
+          "cellType": "sCellType",
+          "class": "sClass",
+          "contentPadding": "sContentPadding",
+          "defaultContent": "sDefaultContent",
+          "name": "sName",
+          "sortDataType": "sSortDataType",
+          "title": "sTitle",
+          "type": "sType",
+          "width": "sWidth"
+        },
+        "_setter": null,
+        "data": "account"
+      },
+      {
+        "idx": 2,
+        "aDataSort": [
+          2
+        ],
+        "asSorting": [
+          "asc",
+          "desc"
+        ],
+        "bSearchable": true,
+        "bSortable": true,
+        "bVisible": true,
+        "_sManualType": null,
+        "_bAttrSrc": false,
+        "fnCreatedCell": null,
+        "mData": "totalScore",
+        "mRender": null,
+        "nTh": {
+          "jQuery370097972217102742132": {},
+          "jQuery370097972217102742131": {
+            "hasDataAttrs": true
+          }
+        },
+        "nTf": null,
+        "sClass": "",
+        "sContentPadding": "",
+        "sDefaultContent": null,
+        "sName": "",
+        "sSortDataType": "std",
+        "sSortingClass": "sorting",
+        "sSortingClassJUI": "",
+        "sTitle": "余额",
+        "sType": null,
+        "sWidth": null,
+        "sWidthOrig": null,
+        "iDataSort": -1,
+        "sCellType": "td",
+        "_hungarianMap": {
+          "dataSort": "iDataSort",
+          "sorting": "asSorting",
+          "searchable": "bSearchable",
+          "sortable": "bSortable",
+          "visible": "bVisible",
+          "createdCell": "fnCreatedCell",
+          "data": "mData",
+          "render": "mRender",
+          "cellType": "sCellType",
+          "class": "sClass",
+          "contentPadding": "sContentPadding",
+          "defaultContent": "sDefaultContent",
+          "name": "sName",
+          "sortDataType": "sSortDataType",
+          "title": "sTitle",
+          "type": "sType",
+          "width": "sWidth"
+        },
+        "_setter": null,
+        "data": "totalScore"
+      },
+      {
+        "idx": 3,
+        "aDataSort": [
+          3
+        ],
+        "asSorting": [
+          "asc",
+          "desc"
+        ],
+        "bSearchable": true,
+        "bSortable": true,
+        "bVisible": true,
+        "_sManualType": null,
+        "_bAttrSrc": false,
+        "fnCreatedCell": null,
+        "mData": "status",
+        "mRender": null,
+        "nTh": {
+          "jQuery370097972217102742132": {},
+          "jQuery370097972217102742131": {
+            "hasDataAttrs": true
+          }
+        },
+        "nTf": null,
+        "sClass": "",
+        "sContentPadding": "",
+        "sDefaultContent": null,
+        "sName": "",
+        "sSortDataType": "std",
+        "sSortingClass": "sorting",
+        "sSortingClassJUI": "",
+        "sTitle": "玩家状态",
+        "sType": null,
+        "sWidth": null,
+        "sWidthOrig": null,
+        "iDataSort": -1,
+        "sCellType": "td",
+        "_hungarianMap": {
+          "dataSort": "iDataSort",
+          "sorting": "asSorting",
+          "searchable": "bSearchable",
+          "sortable": "bSortable",
+          "visible": "bVisible",
+          "createdCell": "fnCreatedCell",
+          "data": "mData",
+          "render": "mRender",
+          "cellType": "sCellType",
+          "class": "sClass",
+          "contentPadding": "sContentPadding",
+          "defaultContent": "sDefaultContent",
+          "name": "sName",
+          "sortDataType": "sSortDataType",
+          "title": "sTitle",
+          "type": "sType",
+          "width": "sWidth"
+        },
+        "_setter": null,
+        "data": "status"
+      }
+    ],
+    "aoHeader": [
+      [
+        {
+          "cell": {
+            "jQuery370097972217102742132": {},
+            "jQuery370097972217102742131": {
+              "hasDataAttrs": true
+            }
+          },
+          "unique": true
+        },
+        {
+          "cell": {
+            "jQuery370097972217102742132": {},
+            "jQuery370097972217102742131": {
+              "hasDataAttrs": true
+            }
+          },
+          "unique": true
+        },
+        {
+          "cell": {
+            "jQuery370097972217102742132": {},
+            "jQuery370097972217102742131": {
+              "hasDataAttrs": true
+            }
+          },
+          "unique": true
+        },
+        {
+          "cell": {
+            "jQuery370097972217102742132": {},
+            "jQuery370097972217102742131": {
+              "hasDataAttrs": true
+            }
+          },
+          "unique": true
+        }
+      ]
+    ],
+    "aoFooter": [],
+    "oPreviousSearch": {
+      "bCaseInsensitive": true,
+      "sSearch": "",
+      "bRegex": false,
+      "bSmart": true,
+      "return": false,
+      "_hungarianMap": {
+        "caseInsensitive": "bCaseInsensitive",
+        "search": "sSearch",
+        "regex": "bRegex",
+        "smart": "bSmart"
+      }
+    },
+    "aoPreSearchCols": [
+      {
+        "bCaseInsensitive": true,
+        "sSearch": "",
+        "bRegex": false,
+        "bSmart": true,
+        "return": false
+      },
+      {
+        "bCaseInsensitive": true,
+        "sSearch": "",
+        "bRegex": false,
+        "bSmart": true,
+        "return": false
+      },
+      {
+        "bCaseInsensitive": true,
+        "sSearch": "",
+        "bRegex": false,
+        "bSmart": true,
+        "return": false
+      },
+      {
+        "bCaseInsensitive": true,
+        "sSearch": "",
+        "bRegex": false,
+        "bSmart": true,
+        "return": false
+      }
+    ],
+    "aaSorting": [
+      [
+        0,
+        "asc"
+      ]
+    ],
+    "aaSortingFixed": [],
+    "asStripeClasses": [
+      "odd",
+      "even"
+    ],
+    "asDestroyStripes": [],
+    "sDestroyWidth": "",
+    "aoRowCallback": [],
+    "aoHeaderCallback": [],
+    "aoFooterCallback": [],
+    "aoDrawCallback": [
+      {
+        "sName": "state_save"
+      },
+      {},
+      {
+        "sName": "sc"
+      }
+    ],
+    "aoRowCreatedCallback": [],
+    "aoPreDrawCallback": [],
+    "aoInitComplete": [],
+    "aoStateSaveParams": [],
+    "aoStateLoadParams": [],
+    "aoStateLoaded": [],
+    "sTableId": "app3",
+    "nTable": {
+      "jQuery370097972217102742132": {},
+      "jQuery370097972217102742131": {
+        "hasDataAttrs": true
+      }
+    },
+    "nTHead": {},
+    "nTFoot": null,
+    "nTBody": {},
+    "nTableWrapper": null,
+    "bDeferLoading": false,
+    "bInitialised": false,
+    "aoOpenRows": [],
+    "sDom": "lfrtip",
+    "searchDelay": null,
+    "sPaginationType": "simple_numbers",
+    "iStateDuration": 7200,
+    "aoStateSave": [],
+    "aoStateLoad": [],
+    "oSavedState": null,
+    "oLoadedState": null,
+    "sAjaxSource": null,
+    "sAjaxDataProp": "data",
+    "jqXHR": null,
+    "fnServerData": null,
+    "aoServerParams": [],
+    "sServerMethod": "GET",
+    "aLengthMenu": [
+      10,
+      25,
+      50,
+      100
+    ],
+    "iDraw": 0,
+    "bDrawing": false,
+    "iDrawError": -1,
+    "_iDisplayLength": 10,
+    "_iDisplayStart": 0,
+    "_iRecordsTotal": 0,
+    "_iRecordsDisplay": 0,
+    "oClasses": {
+      "sTable": "dataTable",
+      "sNoFooter": "no-footer",
+      "sPageButton": "paginate_button",
+      "sPageButtonActive": "current",
+      "sPageButtonDisabled": "disabled",
+      "sStripeOdd": "odd",
+      "sStripeEven": "even",
+      "sRowEmpty": "dataTables_empty",
+      "sWrapper": "dataTables_wrapper",
+      "sFilter": "dataTables_filter",
+      "sInfo": "dataTables_info",
+      "sPaging": "dataTables_paginate paging_",
+      "sLength": "dataTables_length",
+      "sProcessing": "dataTables_processing",
+      "sSortAsc": "sorting_asc",
+      "sSortDesc": "sorting_desc",
+      "sSortable": "sorting",
+      "sSortableAsc": "sorting_desc_disabled",
+      "sSortableDesc": "sorting_asc_disabled",
+      "sSortableNone": "sorting_disabled",
+      "sSortColumn": "sorting_",
+      "sFilterInput": "",
+      "sLengthSelect": "",
+      "sScrollWrapper": "dataTables_scroll",
+      "sScrollHead": "dataTables_scrollHead",
+      "sScrollHeadInner": "dataTables_scrollHeadInner",
+      "sScrollBody": "dataTables_scrollBody",
+      "sScrollFoot": "dataTables_scrollFoot",
+      "sScrollFootInner": "dataTables_scrollFootInner",
+      "sHeaderTH": "",
+      "sFooterTH": "",
+      "sSortJUIAsc": "",
+      "sSortJUIDesc": "",
+      "sSortJUI": "",
+      "sSortJUIAscAllowed": "",
+      "sSortJUIDescAllowed": "",
+      "sSortJUIWrapper": "",
+      "sSortIcon": "",
+      "sJUIHeader": "",
+      "sJUIFooter": "",
+      "_hungarianMap": {}
+    },
+    "bFiltered": false,
+    "bSorted": false,
+    "bSortCellsTop": false,
+    "oInit": {
+      "data": [
+        {
+          "code": 0,
+          "account": "777",
+          "status": 0
+        }
+      ],
+      "columns": [
+        {
+          "data": "userid",
+          "mData": "userid"
+        },
+        {
+          "data": "account",
+          "mData": "account"
+        },
+        {
+          "data": "totalScore",
+          "mData": "totalScore"
+        },
+        {
+          "data": "status",
+          "mData": "status"
+        }
+      ],
+      "aaData": [
+        {
+          "code": 0,
+          "account": "777",
+          "status": 0
+        }
+      ],
+      "aoColumns": [
+        {
+          "data": "userid",
+          "mData": "userid"
+        },
+        {
+          "data": "account",
+          "mData": "account"
+        },
+        {
+          "data": "totalScore",
+          "mData": "totalScore"
+        },
+        {
+          "data": "status",
+          "mData": "status"
+        }
+      ]
+    },
+    "aoDestroyCallback": [],
+    "oInstance": {
+      "0": {
+        "jQuery370097972217102742132": {},
+        "jQuery370097972217102742131": {
+          "hasDataAttrs": true
+        }
+      },
+      "length": 1,
+      "internal": {},
+      "oApi": {}
+    },
+    "sInstance": "app3",
+    "iTabIndex": 0,
+    "nScrollHead": null,
+    "nScrollFoot": null,
+    "aLastSort": [
+      {
+        "src": 0,
+        "col": 0,
+        "dir": "asc",
+        "index": 0,
+        "type": "string"
+      }
+    ],
+    "oPlugins": {},
+    "rowId": "DT_RowId",
+    "oApi": {},
+    "renderer": null,
+    "iInitDisplayStart": 0,
+    "_rowReadObject": true
+  },
+  "lineno": 4
+}

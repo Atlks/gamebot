@@ -1,3 +1,5 @@
+// import _ from 'lodash';
+
 function pdo_exec_query(qryDsl, dbfile) {
     //  alert("上分成功")
     // await import("../lowdbx/lowdbX.js")
@@ -7,11 +9,42 @@ function pdo_exec_query(qryDsl, dbfile) {
 }
 
 
+global["pdo_query"] = pdo_query
+
+
+
+
+  function pdo_query(qryDsl, dbfile) {
+
+log_enterFun(arguments)
+   // var  _ = await import("lodash")  not err,but cant use _.flt said cant find this fun
+    // import  lds = require('lodash') ;
+     console.log("::23")
+    let data;
+    var {readFileSync, writeFileSync, appendFileSync} = require("fs");
+    var txt = readFileSync(dbfile).toString();
+    console.log(" dbtxt len100 =>"+ txt.substring(0,100))
+    data = JSON.parse(txt)
+
+    require("esm-hook");
+  //  const _ = require('lodash').default
+    const _ = require('lodash')
+    let rzt =  _.filter(data, qryDsl)
+    //console.log("rzt is=>"+JSON.stringify(rzt) )
+    return rzt;
+
+}
+
+
+
+
+
 global['pdo_insert'] = pdo_insert
 
 async function pdo_insert(rcd, dbfile) {
 
-
+   // f=f.replace("__rootdir__",__dirname)
+    dbfile=dbfile.replace("__rootdir__/",__dirname+"/../")
     let arg = JSON.stringify(arguments);
     let ivkFundbg = "******[pdo_insert]" + arg
     console.log(ivkFundbg);
@@ -86,6 +119,8 @@ function pdo_insert_coreV2(rcd, dbfile) {
     console.log("68 pdo_insert_coreV2")
     db = pdo_connV2(dbfile)
 
+    if( typeof rcd=="string")
+        rcd=JSON.parse(rcd)
     db.data.push(rcd)
 
 // Finally write db.data content to file

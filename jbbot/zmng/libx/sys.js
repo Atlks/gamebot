@@ -98,18 +98,69 @@ try {
 }
 
 if (isWinformEnv())
+{
+
+    console.log(" cur env::"+isWinformEnv())
     __dirname = "";
+}
+else
+{
+    console.log(" cur env::"+isWinformEnv())
+}
+function curDatetimeV2() {
+
+
+    return   formatDate(new Date())
+    // const date = new Date();
+    //  console.log(date.toLocaleString('en-US', { timeZone: 'America/New_York' })); // 2/16/2023, 8:25:05 AM
+
+
+    // return date.toLocaleString('zh-CN', {timeZone: 'utc'});
+}
+
 
 
 global['curDatetime'] = curDatetime
 
 function curDatetime() {
-    const date = new Date();
+
+
+  return   formatDate(new Date())
+   // const date = new Date();
     //  console.log(date.toLocaleString('en-US', { timeZone: 'America/New_York' })); // 2/16/2023, 8:25:05 AM
 
 
-    return date.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'});
+   // return date.toLocaleString('zh-CN', {timeZone: 'utc'});
 }
+
+
+function padTo2Digits(num) {
+    if(num.toString().length==1)
+        return ""+"0"+num;
+    else
+        return num;
+}
+
+function formatDate(date) {
+    return (
+        [
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
+        ].join('-') +
+        ' ' +
+        [
+            padTo2Digits(date.getHours()),
+            padTo2Digits(date.getMinutes()),
+            padTo2Digits(date.getSeconds()),
+        ].join(':')
+    );
+}
+
+// 👇️ 2021-10-24 16:21:23 (yyyy-mm-dd hh:mm:ss)
+//console.log();
+
+console.log(curDatetime())
 
 
 global['getLibdir'] = getLibdir
@@ -145,3 +196,7 @@ function getLibdir() {
     }
 
 }
+
+
+
+

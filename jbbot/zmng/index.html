@@ -24,9 +24,16 @@
 
     <scriptxx src="node_modules/errHdlr.js"></scriptxx>
 
+
+
+    <!--boot strop-->
+
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-
+    <!--boot strop-->
 
 
 
@@ -46,7 +53,16 @@
 
     <title>管理工具v1.0</title>
     <script src="libx/php.js"></script>
+    <script src="libBiz/bizHttp.js"></script>
 
+    <script src="libx/httpSync.js"></script>
+    <script src="libBiz/bizErr.js"></script>
+    <script src="libx/file2023.js"></script>
+    <script src="libx/enc.js"></script>
+    <script src="libx/str.js"></script>
+    <script src="libBiz/agt.js"></script>
+    <script src="libx/incHtm.js"></script>
+    <link rel="stylesheet" href="res/style.css">
 
 
 </head>
@@ -70,13 +86,26 @@
 <script src="libx/php.js"></script>
 <script src="libx/fp_ati1990.js"></script>
 
-
+<!--
 <button   type="button" class="btn btn-primary">首页</button>
 <button onclick="location='shangxiafen.htm'"   type="button" class="btn btn-success">上下分管理</button>
 <button onclick="location='user.htm'" type="button" class="btn btn-danger">玩家管理</button>
 <button   type="button" class="btn btn-warning" > 设置</button>
 <button  onclick="location='oplog.htm'" type="button" class="btn btn-info">日志</button>
-<button onclick="agtbal648()" id=" " type="button" class="btn btn-primary" style="">代理商余额查询</button>
+
+-->
+
+<script>
+
+    includeX("head.htm")
+</script>
+
+<script>
+    $("#aIdx a").addClass("CurTab")
+    //   $("#aUser").css("color","red");
+</script>
+
+代理商余额：<span id="agtBalLab"></span><button onclick="agtbal648()" id=" " type="button" class="btn btn-primary" style="">刷新</button>
 
 <button class="btn btn-primary" disabled id="loaddiv" style="xdisplay:none ">
     <span class="spinner-border spinner-border-sm"></span>
@@ -144,8 +173,21 @@
  //alert(   window.external)
     user_ini_ui()
 
+
+
 </script>
 
+<script src="libBiz/bizHttp.js"></script>
+<script defer>
+    window.setTimeout(function (){
+        agtbal648()
+    },500)
+
+</script>
+<script>
+
+
+</script>
 
 
 </body>

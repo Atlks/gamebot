@@ -36,15 +36,20 @@ async function call_func(fun, params) {
    require("./fp_ati1990")
    //in js   apply fun is Fun obj proty.meth..heyou bind call ...
 
+   var func=""
    if (isset("window"))
       func = window[fun];
    else
       func = global[fun];
+    if(!func)
+       throw "cant find fun ex@errcode@ fun=》"+fun;
 
    //  func=eval(cb);
  //  console.log("[call_func] func=> "+func)
 
    try {
+      // if(params.length==0)
+      //    params=null;
       $r = await func.apply("thisobj", params);
       let str = sprintf("[call_func] ret==>%s",  $r);
       echo(str);

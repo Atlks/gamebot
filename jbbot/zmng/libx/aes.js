@@ -25,7 +25,7 @@ function isset(varname) {
 
 }
 //aes_mode_ECB=CryptoJS.mode.ECB;  //simple
-
+global['aes_mode_ECB']=aes_mode_ECB
 function aes_mode_ECB()
 {
     return CryptoJS.mode.ECB;;
@@ -40,8 +40,28 @@ if (isset("module"))
     module.exports = {aes_mode_CBC,aes_encrypt,aes_decrypt,md5,aes_mode_ECB}
 
 
+global['aes_encrypt']=aes_encrypt
 // 加密过程
 function aes_encrypt(mode, plainText, key, iv = null) {
+    const uKey = parseKey(key);
+    const uIv = parseKey(iv);
+
+    return CryptoJS.AES.encrypt(plainText, uKey,
+        {
+            iv: uIv,
+            mode: mode,
+            padding: CryptoJS.pad.Pkcs7
+        }
+    ).toString();
+}
+
+
+
+global['aes_encrypt_ecb']=aes_encrypt_ecb
+// 加密过程
+function aes_encrypt_ecb( plainText, key, iv = null) {
+
+   var mode=aes_mode_ECB();
     const uKey = parseKey(key);
     const uIv = parseKey(iv);
 

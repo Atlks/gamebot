@@ -1,5 +1,11 @@
 // C:\w\sdkprj\node_modules\electron\dist\electron.exe  C:\modyfing\jbbot\zmng\dsktp.js
 
+//   npm i  electron
+//   npm i chalk
+//   npm i esm-hook
+//    npm i node-fetch
+//     node_modules/electron/dist/electron  dsktp.js
+
 require("./libx/errHdlr")
 
 /////------------- stgart web

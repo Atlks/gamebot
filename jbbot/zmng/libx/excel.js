@@ -2,7 +2,18 @@
 
 
 global['errcodeMsg']=errcodeMsg
-function errcodeMsg(errcode) {
+
+function errcodeMsg(errcode)
+{
+    if (isWinformEnv())
+        return window.external.callFun("errcodeMsgNodeEnv " + errcode);
+    else
+        return errcodeMsgNodeEnv(errcode);
+
+}
+
+
+function errcodeMsgNodeEnv(errcode) {
 
     //  const xlsx = require("node-xlsx");
     const xlsx = require('node-xlsx')
@@ -51,6 +62,12 @@ function errcodeMsg(errcode) {
     }
 
 
+
+
+}
+
+
+
 // 输出每行内容  foreach cant stop ,,just ex can stp
 //     sheet.data.forEach(row => {
 //         try {
@@ -68,7 +85,5 @@ function errcodeMsg(errcode) {
 //         //   console.log(row);
 //         // 数组格式, 根据不同的索引取数据
 //     })
-
-}
 
 

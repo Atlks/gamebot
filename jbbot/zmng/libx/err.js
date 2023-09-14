@@ -1,15 +1,13 @@
-
-
-
-function json_encodeEx(e)
-{
- return    errorSeriz(e)
+function json_encodeEx(e) {
+    return errorSeriz(e)
 }
-global['json_encodeEx' ]=json_encodeEx
- global['error_json_encode' ]=json_encodeEx
+
+global['json_encodeEx'] = json_encodeEx
+global['error_json_encode'] = json_encodeEx
 
 
-global['errorSeriz' ]=errorSeriz
+global['errorSeriz'] = errorSeriz
+
 function errorSeriz(e) {
     msg = json_encode(e)    //cuztm errobj
     if (msg.length < 5) {
@@ -20,26 +18,36 @@ function errorSeriz(e) {
     return msg;
 }
 
+global['errorCast'] = errorCast
 
-global['ExChkChain' ]=ExChkChain
-function  ExChkChain()
-{
- let arr=arguments
+function errorCast(e) {
+    msg = json_encode(e)    //cuztm errobj
+    if (msg.length < 5) {
+        //sys error
+        let eobj = {"stack": e.stack, "msg": e.message}
+        return eobj;
+    } else
+        return e;
+}
+
+
+global['ExChkChain'] = ExChkChain
+
+function ExChkChain() {
+    let arr = arguments
     for (item of arr) {
-        try{
-         return    item()   //  if some ex,then ret this er let throw in another fun
-        }catch (e){
+        try {
+            return item()   //  if some ex,then ret this er let throw in another fun
+        } catch (e) {
 
         }
 
 
-      //  console.log(item)
+        //  console.log(item)
     }
 
 
-
 }
-
 
 
 function catchHdl(e, extype, catchFun) {

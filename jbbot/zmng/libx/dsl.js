@@ -101,30 +101,53 @@ try {
 } catch (e) {
 }
 
+function getRootDir(basename) {
 
-function dsl_callFunCmdMode() {
-    var funname = arguments.callee.name;
-    // arguments.callee.name
-    arg = JSON.stringify(arguments);
-    console.log("*********=>" + funname + arg);
+   // alert("__dirname=>"+__dirname)
 
-
-    log_info("");
-    log_info("");
-    log_info("");
-    log_info("*********=>" + funname + arg)
-
-    arr = Array.from(arguments);
-    cmdstr = arr.join(" ");
-    console.log("cmdstr=>" + cmdstr)
+    let f = __dirname + "/"+basename;
 
 
+    if(!file_exists(f))
+        f = __dirname + "/../"+basename;
+
+    // if (libdir)
+    //     f = libdir + "/../cfg.ini";
+   // alert("[getRootDir]f=>"+f)
+    return f;
+}
 
 
+function getlib(basename) {
+
+    let f = __dirname + "/"+basename;
+    if(!file_exists(f))
+        f = __dirname + "/../libx/"+basename;
+    if(!file_exists(f))
+        f = __dirname + "/../libxBiz/"+basename;
+
+
+
+    if(!file_exists(f))
+        f = __dirname + "/libx/"+basename;
+
+    if(!file_exists(f))
+        f = __dirname + "/libx/"+basename;
+
+
+
+    if(!file_exists(f))
+        f = __dirname + "/../"+basename;
+
+    // if (libdir)
+    //     f = libdir + "/../cfg.ini";
+  //  alert(f)
+    return f;
+}
+
+function execCmd(cmdstr) {
     exe = "node";
-    let f = __dirname + "/../cfg.ini";
-    if (libdir)
-        f = libdir + "/../cfg.ini";
+    let f = getRootDir("cfg.ini");
     let iniObj = parse_ini_file(f)
     exe = iniObj.cmdexe;
 
@@ -148,10 +171,34 @@ function dsl_callFunCmdMode() {
     console.log("cmd=>" + cmd)
     log_info("cmd=>" + cmd)
 
-    var  prcsmd = require('child_process');
-    rzt =prcsmd. execSync(cmd).toString();
+    var prcsmd = require('child_process');
+   let rzt = prcsmd.execSync(cmd).toString();
     rzt = rzt.split("88888888888888888888888888").pop();
-    console.log("[dsl_callFunCmdMode] rzt=>" + rzt)
+    return   rzt ;
+}
+
+function dsl_callFunCmdMode() {
+    var funname = arguments.callee.name;
+    // arguments.callee.name
+  let   arg = JSON.stringify(arguments);
+    console.log("*********=>" + funname + arg);
+
+
+    log_info("");
+    log_info("");
+    log_info("");
+    log_info("*********=>" + funname + arg)
+
+    let arr = Array.prototype.slice.apply(arguments) ;
+   let  cmdstr = arr.join(" ");
+    console.log("cmdstr=>" + cmdstr)
+
+    if (isWinformEnv())
+        var  rzt = window.external.callFun(cmdstr);
+    else
+     var  rzt  = execCmd(cmdstr);
+
+    console.log("[dsl_callFunCmdMode.] rzt=>" + rzt.substring(0,300))
     return rzt;
 }
 

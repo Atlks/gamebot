@@ -5,10 +5,17 @@
     <title>Title</title>
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0,maximum-scale=1">
+
+    <script src="libx/sys.js"></script>
+    <script src="libx/browerNode.js"></script>
+
+
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
     <script
             src="https://code.jquery.com/jquery-3.7.0.js"
             integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
@@ -18,25 +25,34 @@
     <link rel="stylesheet" href="res/style.css">
 
 
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css"/>
-
+    <script src="libx/dsl.js"></script>
+    <script src="libx/logger.js"></script>
+    <script src="libx/php.js"></script>
+    <script src="libx/jq.js"></script>
+    <script src="libBiz/bizHttp.js"></script>
+    <script src="libBiz/bzUI.js"></script>
+    <script src="libx/str.js"></script>
+    <script src="libx/enc.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
     <script type="module" src="libx/ui.js"></script>
     <script src="libBiz/user.js"></script>
     <script src="libx/incUtil.js"></script>
+    <script src="libx/incHtm.js"></script>
+    <script src="libx/logger.js"></script>
+    <script src="libBiz/oplog.js"></script>
+    <script src="libx/file2023.js"></script>
 
 </head>
 <body>
-
+<script src="libx/profill.js"></script>
 
 <script>
 
-
-    let hedtx=readFileSyncx("./head.htm")
-    document.write(hedtx)
+    includeX("head.htm")
+    // let hedtx=readFileSyncx("./head.htm")
+    // document.write(hedtx)
 
 </script>
 
@@ -49,7 +65,7 @@
 <p></p>
 
 
-
+添加用户
 <form role="form">
     <div class="form-group">
         <label for="fname">用 户 </label>
@@ -202,6 +218,11 @@
 
 <script src="shangxiafen.js">
 
+
+</script>
+<script>
+
+    refresh_login_token()
 
 </script>
 </body>
